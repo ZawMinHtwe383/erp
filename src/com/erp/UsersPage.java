@@ -39,9 +39,6 @@ public class UsersPage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        addBtn = new javax.swing.JButton();
         userNameTxt = new javax.swing.JTextField();
         passTxt = new javax.swing.JTextField();
         fullNameTxt = new javax.swing.JTextField();
@@ -52,27 +49,16 @@ public class UsersPage extends javax.swing.JPanel {
         typeCombo = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         statusCombo = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
+        addBtn = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        clearBtn = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         userTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
-
-        jButton1.setText("Update");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Delete");
-
-        addBtn.setText("Add");
-        addBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBtnActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("User Name");
 
@@ -88,19 +74,67 @@ public class UsersPage extends javax.swing.JPanel {
 
         statusCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
 
+        addBtn.setText("Add");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBtnActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Delete");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        clearBtn.setText("Clear");
+        clearBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearBtnActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Update");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addBtn)
+                    .addComponent(jButton2)
+                    .addComponent(clearBtn)
+                    .addComponent(jButton1))
+                .addContainerGap(112, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(41, Short.MAX_VALUE)
-                        .addComponent(addBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,7 +150,10 @@ public class UsersPage extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(statusCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(statusCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -142,12 +179,9 @@ public class UsersPage extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(statusCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(addBtn))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(258, Short.MAX_VALUE))
         );
 
         userTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -161,6 +195,11 @@ public class UsersPage extends javax.swing.JPanel {
                 "ID", "User Name", "Password", "Full Name", "User Type", "Status", "Created Date"
             }
         ));
+        userTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(userTable);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -169,14 +208,14 @@ public class UsersPage extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -205,7 +244,50 @@ public class UsersPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+         if(selectedUserId == 0){
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please select a user."
+        );
+
+        return;
+    }
+
+    UserDTO dto = new UserDTO();
+
+    dto.setId(selectedUserId);
+    dto.setUsername(userNameTxt.getText());
+    dto.setPassword(passTxt.getText());
+    dto.setFull_name(fullNameTxt.getText());
+    dto.setUsertype(
+            typeCombo.getSelectedItem().toString());
+    dto.setStatus(
+            statusCombo.getSelectedItem().toString());
+
+    UserDAO dao = new UserDAO();
+
+    boolean success = dao.updateUserDAO(dto);
+
+    if(success){
+
+        loadDataSet();
+        clearFields();
+
+        selectedUserId = 0;
+
+        JOptionPane.showMessageDialog(
+                this,
+                "User Updated Successfully"
+        );
+
+    }else{
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update Failed"
+        );
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     String userType;
@@ -224,16 +306,105 @@ public class UsersPage extends javax.swing.JPanel {
            userDTO.setFull_name(fullNameTxt.getText());
            userDTO.setUsertype(userType);
            userDTO.setStatus(status);
-           new UserDAO().addUserDAO(userDTO);
-           loadDataSet();
-           JOptionPane.showMessageDialog(null, "You have been added");
-            
-        }
+           
+            UserDAO dao = new UserDAO();
+
+            boolean success = dao.addUserDAO(userDTO);
+
+            if (success) {
+
+                loadDataSet();
+                clearFields();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "User Added Successfully"
+                );
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Username already exists."
+                );
+            }
+           
+       }
     }//GEN-LAST:event_addBtnActionPerformed
 
+    private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
+       clearFields();
+    }//GEN-LAST:event_clearBtnActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int row = userTable.getSelectedRow();
+        System.out.println(row);
+        
+        // not selected row -1
+        if (row == -1) { 
+            JOptionPane.showMessageDialog(this, "Please select a user.");
+            return;
+        }
+        
+        //user table to count index 0 row and column
+        int userId = Integer.parseInt(userTable.getValueAt(row, 0).toString());
+       
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to delete?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+
+            UserDAO dao = new UserDAO();
+
+            boolean success = dao.deleteUserDAO(userId);
+
+            if (success) {
+
+                loadDataSet();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "User Deleted Successfully"
+                );
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Delete Failed"
+                );
+            }
+        }
+
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+    private int selectedUserId = 0;
+    private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
+        int row = userTable.getSelectedRow();
+
+    selectedUserId = Integer.parseInt(
+            userTable.getValueAt(row, 0).toString());
+
+    userNameTxt.setText(
+            userTable.getValueAt(row, 1).toString());
+
+    passTxt.setText(
+            userTable.getValueAt(row, 2).toString());
+
+    fullNameTxt.setText(
+            userTable.getValueAt(row, 3).toString());
+
+    typeCombo.setSelectedItem(
+            userTable.getValueAt(row, 4).toString());
+
+    statusCombo.setSelectedItem(
+            userTable.getValueAt(row, 5).toString());
+    }//GEN-LAST:event_userTableMouseClicked
+
+    
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
+    private javax.swing.JButton clearBtn;
     private javax.swing.JTextField fullNameTxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -245,6 +416,7 @@ public class UsersPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField passTxt;
     private javax.swing.JComboBox<String> statusCombo;
@@ -252,4 +424,10 @@ public class UsersPage extends javax.swing.JPanel {
     private javax.swing.JTextField userNameTxt;
     private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
+
+    private void clearFields() {
+       userNameTxt.setText("");
+           passTxt.setText("");
+           fullNameTxt.setText("");
+    }
 }

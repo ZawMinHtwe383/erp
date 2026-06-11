@@ -66,87 +66,81 @@ public class UserDAO {
     }
 
         // Methods to add new user
-    public void addUserDAO(UserDTO userDTO) {
-        //username,password,full_name,usertype,status;
-//          userType = (String) typeCombo.getSelectedItem();
-//           status = (String) statusCombo.getSelectedItem();
-//           userDTO.setUsername(userNameTxt.getText());
-//           userDTO.setPassword(passTxt.getText());
-//           userDTO.setFull_name(fullNameTxt.getText());
-//           userDTO.setUsertype(userType);
-//           userDTO.setStatus(status);
-        
-        
-        
-        
+    public boolean addUserDAO(UserDTO userDTO) {
+
         try {
-            String query = "SELECT * FROM users WHERE username ='"
-                    +userDTO.getUsername()
-                    +"' AND password='"
-                    +userDTO.getPassword()
-                    +"' AND full_name='"
-                    +userDTO.getFull_name()
-                    +"' AND usertype='"
-                    +userDTO.getUsertype()
-                     +"' AND status='"
-                    +userDTO.getStatus()
-                    +"'";
-            resultSet = statement.executeQuery(query);
-            if(resultSet.next())
-                JOptionPane.showMessageDialog(null, "User already exists");
-            else
-                addFunction(userDTO);
+        ResultSet rs;
+        PreparedStatement checkStmt ;
+        String checkSql = "SELECT username FROM users WHERE username=?";
+
+         checkStmt = conn.prepareStatement(checkSql);
+
+        checkStmt.setString(1,userDTO.getUsername());
+
+        rs = checkStmt.executeQuery();
+
+        if(rs.next()){
+            return false;
+        }
+             String insertSql = "INSERT INTO users(username,password,full_name,usertype,status) VALUES(?,?,?,?,?)";
+
+        PreparedStatement ps = conn.prepareStatement(insertSql);
+
+        ps.setString(1, userDTO.getUsername());
+        ps.setString(2, userDTO.getPassword());
+        ps.setString(3, userDTO.getFull_name());
+        ps.setString(4, userDTO.getUsertype());
+        ps.setString(5, userDTO.getStatus());
+
+        ps.executeUpdate();
+
+        return true;    
         } catch (Exception ex) {
             ex.printStackTrace();
+              return false;
         }
     }
-
-    private void addFunction(UserDTO userDTO) {
-         try {
-            String username = null;
-            String password = null;
-            String oldUsername = null;
-            String resQuery = "SELECT * FROM users";
-            resultSet = statement.executeQuery(resQuery);
-
-            if(!resultSet.next()){
-                username = "ZMH";
-                password = "123456";
-            }
-//            else {
-//                String resQuery2 = "SELECT * FROM users ORDER BY id DESC";
-//                resultSet = statement.executeQuery(resQuery2);
-//
-//                if(resultSet.next()){
-//                    oldUsername = resultSet.getString("username");
-//                    Integer uCode = Integer.parseInt(oldUsername.substring(4));
-//                    uCode++;
-//                    username = "user" + uCode;
-//                    password = "user" + uCode;
-//                }
-//            }
-
-            String query = "INSERT INTO users (username,password,full_name,usertype,status) " +
-                    "VALUES(?,?,?,?,?)";
-            preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1, userDTO.getUsername());
-            preparedStatement.setString(2, userDTO.getPassword());
-            preparedStatement.setString(3, userDTO.getFull_name());
-            preparedStatement.setString(4, userDTO.getUsertype());
-            preparedStatement.setString(5, userDTO.getStatus());
-          
-            preparedStatement.executeUpdate();
-
-            if("Admin".equals(userDTO.getUsertype()))
-                JOptionPane.showMessageDialog(null, "New administrator added.");
-            else JOptionPane.showMessageDialog(null, "New employee added.");
-
-        } catch (Exception ex){
-            ex.printStackTrace();
+    public boolean deleteUserDAO(int userId){
+        try {
+            String sql = "DELETE FROM users WHERE id = ?";
+            PreparedStatement ps = conn.prepareCall(sql);
+            ps.setInt(1, userId);
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
     
-    
+    public boolean updateUserDAO(UserDTO userDTO) {
+
+    try {
+
+        String sql =
+            "UPDATE users " +
+            "SET username=?,password=?,full_name=?,usertype=?,status=? " +
+            "WHERE id=?";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setString(1, userDTO.getUsername());
+        ps.setString(2, userDTO.getPassword());
+        ps.setString(3, userDTO.getFull_name());
+        ps.setString(4, userDTO.getUsertype());
+        ps.setString(5, userDTO.getStatus());
+        ps.setInt(6, userDTO.getId());
+
+        int row = ps.executeUpdate();
+
+        return row > 0;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+        return false;
+    }
+}
     
     
 }
