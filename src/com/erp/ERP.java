@@ -27,6 +27,8 @@ public void showPanel(javax.swing.JPanel panel) {
     // ၂။ ရောက်လာမည့် Panel အသစ်ကို နေရာအပြည့် Layout ချမည်
     panel.setSize(mainContentPanel.getWidth(), mainContentPanel.getHeight());
     
+
+    
     // ၃။ Panel အသစ်ကို content panel ထဲသို့ ထည့်မည်
     mainContentPanel.add(panel);
     
@@ -46,10 +48,14 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jButton1.setText("User Page");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -72,20 +78,22 @@ public void showPanel(javax.swing.JPanel panel) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jButton1)
-                .addContainerGap(577, Short.MAX_VALUE))
+                .addContainerGap(439, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
+
+        mainContentPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout mainContentPanelLayout = new javax.swing.GroupLayout(mainContentPanel);
         mainContentPanel.setLayout(mainContentPanelLayout);
         mainContentPanelLayout.setHorizontalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 992, Short.MAX_VALUE)
+            .addGap(0, 863, Short.MAX_VALUE)
         );
         mainContentPanelLayout.setVerticalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 615, Short.MAX_VALUE)
+            .addGap(0, 477, Short.MAX_VALUE)
         );
 
         getContentPane().add(mainContentPanel, java.awt.BorderLayout.CENTER);
@@ -96,7 +104,15 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
 
-        jMenu3.setText("Customers");
+        jMenu3.setText("Maintain Data");
+
+        jMenuItem2.setText("User Page");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
 
         jMenuItem1.setText("Customers");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -106,8 +122,16 @@ public void showPanel(javax.swing.JPanel panel) {
         });
         jMenu3.add(jMenuItem1);
 
-        jMenuItem2.setText("jMenuItem2");
-        jMenu3.add(jMenuItem2);
+        jMenuItem3.setText("Suppliers");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem3);
+
+        jMenuItem4.setText("Products");
+        jMenu3.add(jMenuItem4);
 
         jMenuBar1.add(jMenu3);
 
@@ -121,8 +145,16 @@ public void showPanel(javax.swing.JPanel panel) {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        showPanel(new CustomerPage());
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        showPanel(new SupplierPage());
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        showPanel(new UsersPage());
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     
     
@@ -182,6 +214,8 @@ public void showPanel(javax.swing.JPanel panel) {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel mainContentPanel;
     // End of variables declaration//GEN-END:variables

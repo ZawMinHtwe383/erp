@@ -28,7 +28,7 @@ public class UsersPage extends javax.swing.JPanel {
     public void loadDataSet(){
         try {
             UserDAO userDAO = new UserDAO();
-            userTable.setModel(userDAO.buildTableModel(userDAO.getQueryResult()));
+            userTable.setModel(userDAO.getUserTableModel());
         } catch (Exception e) {
         }
     }
@@ -181,7 +181,7 @@ public class UsersPage extends javax.swing.JPanel {
                     .addComponent(statusCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(258, Short.MAX_VALUE))
+                .addContainerGap(270, Short.MAX_VALUE))
         );
 
         userTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -215,7 +215,7 @@ public class UsersPage extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
