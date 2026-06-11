@@ -6,8 +6,6 @@ package com.erp;
 
 import com.erp.DAO.UserDAO;
 import com.erp.DTO.UserDTO;
-import java.sql.SQLException;
-import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 /**

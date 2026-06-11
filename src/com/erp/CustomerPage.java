@@ -7,6 +7,7 @@ package com.erp;
 import com.erp.DAO.CustomerDAO;
 import com.erp.DTO.CustomerDTO;
 import java.math.BigDecimal;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -272,26 +273,85 @@ public class CustomerPage extends javax.swing.JPanel {
 
     String status;
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCustomer_code(cusCodeTxt.getText());
-        customerDTO.setCustomer_name(cusNameTxt.getText());
-        customerDTO.setPhone(phoneTxt.getText());
-        customerDTO.setAddress(addressTxt.getText());
-        customerDTO.setTownship(townshipTxt.getText());
-        customerDTO.setCity(cityTxt.getText());
+//        CustomerDTO customerDTO = new CustomerDTO();
+//        customerDTO.setCustomer_code(cusCodeTxt.getText());
+//        customerDTO.setCustomer_name(cusNameTxt.getText());
+//        customerDTO.setPhone(phoneTxt.getText());
+//        customerDTO.setEmail(emailTxt.getText());
+//        customerDTO.setAddress(addressTxt.getText());
+//        customerDTO.setTownship(townshipTxt.getText());
+//        customerDTO.setCity(cityTxt.getText());
+//        
+//        String limitText = crLimitTxt.getText();
+//        BigDecimal creditLimit = new BigDecimal(limitText);
+//        customerDTO.setCreditLimit(creditLimit);
+//        
+//        status = (String)statusCombo.getSelectedItem();
+//        customerDTO.setStatus(status);
+//        
+//        CustomerDAO customerDAO = new CustomerDAO();
+//        boolean success = customerDAO.addCustomerDAO(customerDTO);
+//        
+//        if (success) {
+//
+//             //   loadDataSet();
+//              //  clearFields();
+//
+//                JOptionPane.showMessageDialog(
+//                        this,
+//                        "User Added Successfully"
+//                );
+//
+//            } else {
+//
+//                JOptionPane.showMessageDialog(
+//                        this,
+//                        "Username already exists."
+//                );
+//            }
         
-        String limitText = crLimitTxt.getText();
-        BigDecimal creditLimit = new BigDecimal(limitText);
-        customerDTO.setCreditLimit(creditLimit);
-        
-        status = (String)statusCombo.getSelectedItem();
-        customerDTO.setStatus(status);
-        
-        CustomerDAO customerDAO = new CustomerDAO();
-        customerDAO.addCustomerDAO(customerDTO);
-        
-        
-        
+        // 💡 တန်ဖိုးတွေ မထည့်ဘဲ အလွတ်ကြီး နှိပ်ရင် ဆက်မသွားအောင် တားဆီးခြင်း
+    if (cusCodeTxt.getText().trim().isEmpty() || cusNameTxt.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "ကျေးဇူးပြု၍ Customer Code နှင့် နာမည်ကို ရိုက်ထည့်ပေးပါဗျာ။");
+        return; 
+    }
+
+    CustomerDTO customerDTO = new CustomerDTO();
+    customerDTO.setCustomer_code(cusCodeTxt.getText().trim());
+    customerDTO.setCustomer_name(cusNameTxt.getText().trim());
+    customerDTO.setPhone(phoneTxt.getText().trim());
+    customerDTO.setAddress(addressTxt.getText().trim());
+    customerDTO.setTownship(townshipTxt.getText().trim());
+    customerDTO.setCity(cityTxt.getText().trim());
+    customerDTO.setEmail(emailTxt.getText()); // 💡 လောလောဆယ် UI မှာ မရှိသေးလို့ Error မတက်အောင် စာသားအလွတ် ထည့်ပေးထားခြင်း
+
+    // Credit Limit ကို အန္တရာယ်ကင်းကင်း ပြောင်းလဲခြင်း
+    BigDecimal creditLimit = BigDecimal.ZERO;
+    try {
+        String limitText = crLimitTxt.getText().trim();
+        if (!limitText.isEmpty()) {
+            creditLimit = new BigDecimal(limitText);
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Credit Limit နေရာတွင် ဂဏန်းများသာ ရိုက်ထည့်ပါဗျာ။");
+        return;
+    }
+    customerDTO.setCreditLimit(creditLimit);
+    
+    String status = (String) statusCombo.getSelectedItem();
+    customerDTO.setStatus(status);
+    
+    CustomerDAO customerDAO = new CustomerDAO();
+    boolean success = customerDAO.addCustomerDAO(customerDTO);
+    
+    if (success) {
+        // loadDataSet();
+        // clearFields();
+        JOptionPane.showMessageDialog(this, "Customer အသစ်ကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီဗျာ။");
+    } else {
+        // 💡 ခေါင်းစဉ်ကို ပြောင်းလိုက်ပါပြီ (ဒါမှ ဒေတာဘေ့စ်ဆာဗာ ဒေါင်းနေရင်လည်း သိနိုင်မှာပါ)
+        JOptionPane.showMessageDialog(this, "သိမ်းဆည်းမှု မအောင်မြင်ပါ။ (Customer Code ရှိပြီးသား ဖြစ်နိုင်သည် သို့မဟုတ် Database စနစ်ချို့ယွင်းနေပါသည်)");
+    }
         
     }//GEN-LAST:event_addBtnActionPerformed
 

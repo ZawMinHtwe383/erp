@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 //to CRUD
 public class UserDAO {
 
+    //sql connection
     private Connection conn = null;
 
     public UserDAO() {
