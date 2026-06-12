@@ -3,21 +3,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.erp;
-
+import java.sql.Connection;
 import com.erp.DTO.UserDTO;
-
+import com.erp.Database.ConnectionFactory;
+import java.sql.*;
 /**
  *
  * @author Zaw Min Htwe
  */
 public class ERP extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ERP
-     */
+  //sql connection
+    private Connection conn = null;
+    
+    
+    
     public ERP() {
         initComponents();
     }
+    
+    
+    
+    
+    
+    
 
     // Dashboard.java ရဲ့ အထဲမှာ ဤမက်သဒ်ကို ထည့်ရေးပါ
 public void showPanel(javax.swing.JPanel panel) {
@@ -44,6 +53,7 @@ public void showPanel(javax.swing.JPanel panel) {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         mainContentPanel = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -85,15 +95,28 @@ public void showPanel(javax.swing.JPanel panel) {
 
         mainContentPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainContentPanelLayout = new javax.swing.GroupLayout(mainContentPanel);
         mainContentPanel.setLayout(mainContentPanelLayout);
         mainContentPanelLayout.setHorizontalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 863, Short.MAX_VALUE)
+            .addGroup(mainContentPanelLayout.createSequentialGroup()
+                .addGap(123, 123, 123)
+                .addComponent(jButton2)
+                .addContainerGap(665, Short.MAX_VALUE))
         );
         mainContentPanelLayout.setVerticalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 477, Short.MAX_VALUE)
+            .addGroup(mainContentPanelLayout.createSequentialGroup()
+                .addGap(94, 94, 94)
+                .addComponent(jButton2)
+                .addContainerGap(360, Short.MAX_VALUE))
         );
 
         getContentPane().add(mainContentPanel, java.awt.BorderLayout.CENTER);
@@ -156,6 +179,36 @@ public void showPanel(javax.swing.JPanel panel) {
         showPanel(new UsersPage());
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+//        conn = new ConnectionFactory().getConn();
+//        
+//        try {
+//              
+//         Statement stmt = conn.createStatement();
+//            ResultSet rs = stmt.executeQuery("Select * from users");  
+//  
+//            while (rs.next()) {  
+//                System.out.println(rs.getInt(1) + " " + rs.getString(2));  
+//            }  
+//  
+//            conn.close();  
+//        } catch (Exception e) {
+//        }
+ 
+//       // ၁။ PreparedStatement နဲ့ Query ပုံစံခွက် ဆောက်တယ် (လုံခြုံရေး စာပို့သမား)
+//PreparedStatement ps = conn.prepareStatement("SELECT * FROM customers WHERE township = ?");
+//ps.setString(1, "Kamayut"); // ? နေရာမှာ တန်ဖိုး ဖြည့်သွင်းတယ်
+//
+//// ၂။ SQL ကို မောင်းလိုက်တဲ့အခါ Database က ဒေတာတွေကို ResultSet (ဒေတာသေတ္တာ) နဲ့ ပြန်ပေးတယ်
+//ResultSet rs = ps.executeQuery();
+//
+//// ၃။ ResultSet သေတ္တာထဲက ဒေတာတွေကို တစ်လိုင်းချင်းစီ ပတ်ဖတ်တယ်
+//while (rs.next()) {
+//    String name = rs.getString("customer_name");
+//    System.out.println(name);
+//}
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     
     
     
@@ -208,6 +261,7 @@ public void showPanel(javax.swing.JPanel panel) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

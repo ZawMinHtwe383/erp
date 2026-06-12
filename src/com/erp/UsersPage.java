@@ -49,7 +49,7 @@ public class UsersPage extends javax.swing.JPanel {
         statusCombo = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         addBtn = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         clearBtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -79,10 +79,10 @@ public class UsersPage extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("Delete");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                deleteBtnActionPerformed(evt);
             }
         });
 
@@ -108,7 +108,7 @@ public class UsersPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -121,7 +121,7 @@ public class UsersPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addBtn)
-                    .addComponent(jButton2)
+                    .addComponent(deleteBtn)
                     .addComponent(clearBtn)
                     .addComponent(jButton1))
                 .addContainerGap(112, Short.MAX_VALUE))
@@ -334,9 +334,9 @@ public class UsersPage extends javax.swing.JPanel {
        clearFields();
     }//GEN-LAST:event_clearBtnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         int row = userTable.getSelectedRow();
-        System.out.println(row);
+       // System.out.println(row);
         
         // not selected row -1
         if (row == -1) { 
@@ -373,7 +373,7 @@ public class UsersPage extends javax.swing.JPanel {
         }
 
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_deleteBtnActionPerformed
     private int selectedUserId = 0;
     private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
         int row = userTable.getSelectedRow();
@@ -403,9 +403,9 @@ public class UsersPage extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JButton clearBtn;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JTextField fullNameTxt;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

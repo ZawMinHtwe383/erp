@@ -9,6 +9,12 @@ import com.erp.Database.ConnectionFactory;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Locale;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Zaw Min Htwe
@@ -65,8 +71,56 @@ public class CustomerDAO {
         return false;
     }
     }
+  
     
     
-    
+    public DefaultTableModel getCustomerTableModel(){
+        String query = "Select * from customers";
+         try (Statement statement = conn.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+            return buildTableModel(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new DefaultTableModel();
+        }
+    }
+     // Method to display data set in tabular form
+    public DefaultTableModel buildTableModel(ResultSet resultSet) throws SQLException {
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        Vector<String> columnNames = new Vector<String>();
+        int colCount = metaData.getColumnCount();
+
+        for (int col = 1; col <= colCount; col++) {
+            columnNames.add(metaData.getColumnName(col).toUpperCase(Locale.ROOT));
+        }
+
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        while (resultSet.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int col = 1; col <= colCount; col++) {
+                vector.add(resultSet.getObject(col));
+            }
+            data.add(vector);
+        }
+        return new DefaultTableModel(data, columnNames);
+    }
+
+    public boolean deleteCustomerDAO(int cusId) {
+      // System.out.println(cusId);
+      String sql = "DELETE FROM customers WHERE id = ?";
+        // ✅ prepareCall အစား prepareStatement သို့ ပြောင်းလဲပြင်ဆင်ထားပါသည်။
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cusId);
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+      
+      
+      
+      
+       
+    }
     
 }

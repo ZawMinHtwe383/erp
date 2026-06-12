@@ -20,6 +20,16 @@ public class CustomerPage extends javax.swing.JPanel {
      */
     public CustomerPage() {
         initComponents();
+        loadDataSet();
+    }
+    
+    
+    public void loadDataSet(){
+        try {
+            CustomerDAO customerDAO = new CustomerDAO();
+            cusTable.setModel(customerDAO.getCustomerTableModel());
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -194,6 +204,11 @@ public class CustomerPage extends javax.swing.JPanel {
         updateBtn.setText("Update");
 
         deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
 
         clearBtn.setText("Clear");
 
@@ -234,6 +249,7 @@ public class CustomerPage extends javax.swing.JPanel {
 
         add(jPanel5, java.awt.BorderLayout.PAGE_END);
 
+        cusTable.setAutoCreateRowSorter(true);
         cusTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null},
@@ -273,42 +289,7 @@ public class CustomerPage extends javax.swing.JPanel {
 
     String status;
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-//        CustomerDTO customerDTO = new CustomerDTO();
-//        customerDTO.setCustomer_code(cusCodeTxt.getText());
-//        customerDTO.setCustomer_name(cusNameTxt.getText());
-//        customerDTO.setPhone(phoneTxt.getText());
-//        customerDTO.setEmail(emailTxt.getText());
-//        customerDTO.setAddress(addressTxt.getText());
-//        customerDTO.setTownship(townshipTxt.getText());
-//        customerDTO.setCity(cityTxt.getText());
-//        
-//        String limitText = crLimitTxt.getText();
-//        BigDecimal creditLimit = new BigDecimal(limitText);
-//        customerDTO.setCreditLimit(creditLimit);
-//        
-//        status = (String)statusCombo.getSelectedItem();
-//        customerDTO.setStatus(status);
-//        
-//        CustomerDAO customerDAO = new CustomerDAO();
-//        boolean success = customerDAO.addCustomerDAO(customerDTO);
-//        
-//        if (success) {
-//
-//             //   loadDataSet();
-//              //  clearFields();
-//
-//                JOptionPane.showMessageDialog(
-//                        this,
-//                        "User Added Successfully"
-//                );
-//
-//            } else {
-//
-//                JOptionPane.showMessageDialog(
-//                        this,
-//                        "Username already exists."
-//                );
-//            }
+
         
         // 💡 တန်ဖိုးတွေ မထည့်ဘဲ အလွတ်ကြီး နှိပ်ရင် ဆက်မသွားအောင် တားဆီးခြင်း
     if (cusCodeTxt.getText().trim().isEmpty() || cusNameTxt.getText().trim().isEmpty()) {
@@ -345,7 +326,7 @@ public class CustomerPage extends javax.swing.JPanel {
     boolean success = customerDAO.addCustomerDAO(customerDTO);
     
     if (success) {
-        // loadDataSet();
+          loadDataSet();
         // clearFields();
         JOptionPane.showMessageDialog(this, "Customer အသစ်ကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီဗျာ။");
     } else {
@@ -354,6 +335,49 @@ public class CustomerPage extends javax.swing.JPanel {
     }
         
     }//GEN-LAST:event_addBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+            int row = cusTable.getSelectedRow();
+            
+            if(row ==-1){
+                JOptionPane.showMessageDialog(this, "Please select a customer");
+            }
+            
+            int cusId = Integer.parseInt(cusTable.getValueAt(row, 0).toString());
+            
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you delete","Confirm",JOptionPane.YES_NO_OPTION);
+            if(confirm == JOptionPane.YES_OPTION){
+                CustomerDAO customerDAO = new CustomerDAO();
+               boolean success = customerDAO.deleteCustomerDAO(cusId);
+                
+                if (success) {
+
+                loadDataSet();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "User Deleted Successfully"
+                );
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Delete Failed"
+                );
+            }
+                
+                
+                
+                
+            }
+            
+            
+            
+            
+            
+            
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

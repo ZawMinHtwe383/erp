@@ -278,6 +278,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="clearBtn">
           <Properties>
@@ -330,6 +333,7 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="cusTable">
               <Properties>
+                <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="10" rowCount="4">
                     <Column editable="true" title="ID" type="java.lang.Object"/>
