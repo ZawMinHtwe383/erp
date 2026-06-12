@@ -122,5 +122,31 @@ public class CustomerDAO {
       
        
     }
+
+    public boolean updateUserDAO(CustomerDTO customerDTO) {
+       String sql = "Update customers set customer_code=?, customer_name=?, phone=?, email=?, address=?, township=?, city=?, credit_limit=?, status=? WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            
+            //ps (1 , is match sql ?
+            ps.setString(1, customerDTO.getCustomer_code());
+            ps.setString(2, customerDTO.getCustomer_name());
+            ps.setString(3, customerDTO.getPhone());
+            ps.setString(4, customerDTO.getEmail()); // UI က လှမ်းပေးလိုက်တဲ့ စာသားအလွတ် ဝင်သွားမည်
+            ps.setString(5, customerDTO.getAddress());
+            ps.setString(6, customerDTO.getTownship());
+            ps.setString(7, customerDTO.getCity());
+            ps.setBigDecimal(8, customerDTO.getCreditLimit());
+            ps.setString(9, customerDTO.getStatus());
+            ps.setInt(10, customerDTO.getId());
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+             e.printStackTrace();
+            return false;
+        }
+    
+    
+    
+    }
     
 }

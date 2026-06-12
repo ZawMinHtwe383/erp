@@ -242,7 +242,9 @@ public class UsersPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         if(selectedUserId == 0){
+        //update data
+        
+        if(selectedUserId == 0){
 
         JOptionPane.showMessageDialog(
                 this,
@@ -288,8 +290,8 @@ public class UsersPage extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    String userType;
-    String status;
+   private String userType;
+   private String status;
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         UserDTO userDTO = new UserDTO();
         
@@ -374,6 +376,8 @@ public class UsersPage extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_deleteBtnActionPerformed
+   
+    
     private int selectedUserId = 0;
     private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
         int row = userTable.getSelectedRow();

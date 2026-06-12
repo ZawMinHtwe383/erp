@@ -202,6 +202,11 @@ public class CustomerPage extends javax.swing.JPanel {
         });
 
         updateBtn.setText("Update");
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBtnActionPerformed(evt);
+            }
+        });
 
         deleteBtn.setText("Delete");
         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -211,6 +216,11 @@ public class CustomerPage extends javax.swing.JPanel {
         });
 
         clearBtn.setText("Clear");
+        clearBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearBtnActionPerformed(evt);
+            }
+        });
 
         searchNameBtn.setText("Search With Name");
 
@@ -261,6 +271,11 @@ public class CustomerPage extends javax.swing.JPanel {
                 "ID", "Customer Code", "Customer Name", "Phone", "Email", "Address", "Township", "City", "Credit Limit", "Status"
             }
         ));
+        cusTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cusTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(cusTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -379,6 +394,89 @@ public class CustomerPage extends javax.swing.JPanel {
             
     }//GEN-LAST:event_deleteBtnActionPerformed
 
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
+        //update data
+        if(selectedCusId == 0){
+            JOptionPane.showMessageDialog(this,"Please select a customer");
+            return;
+        }
+        CustomerDTO customerDTO = new CustomerDTO();
+        
+        customerDTO.setId(selectedCusId);
+        customerDTO.setCustomer_code(cusCodeTxt.getText());
+        customerDTO.setCustomer_name(cusNameTxt.getText());
+        customerDTO.setPhone(phoneTxt.getText());
+        customerDTO.setEmail(emailTxt.getText());
+        customerDTO.setAddress(addressTxt.getText());
+        customerDTO.setTownship(townshipTxt.getText());
+        customerDTO.setCity(cityTxt.getText());
+        
+        // Credit Limit ကို အန္တရာယ်ကင်းကင်း ပြောင်းလဲခြင်း
+        BigDecimal creditLimit = BigDecimal.ZERO;
+        try {
+            String limitText = crLimitTxt.getText().trim();
+            if (!limitText.isEmpty()) {
+                creditLimit = new BigDecimal(limitText);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Credit Limit နေရာတွင် ဂဏန်းများသာ ရိုက်ထည့်ပါဗျာ။");
+            return;
+        }
+        customerDTO.setCreditLimit(creditLimit);
+        
+        customerDTO.setStatus(statusCombo.getSelectedItem().toString());  
+        
+      CustomerDAO customerDAO = new CustomerDAO();
+       boolean success = customerDAO.updateUserDAO(customerDTO);
+         if(success){
+
+        loadDataSet();
+        clearFields();
+
+        selectedCusId = 0;
+
+        JOptionPane.showMessageDialog(
+                this,
+                "User Updated Successfully"
+        );
+
+    }else{
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update Failed"
+        );
+    }
+    }//GEN-LAST:event_updateBtnActionPerformed
+
+    private int selectedCusId;
+    private void cusTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cusTableMouseClicked
+        int row = cusTable.getSelectedRow();
+        
+        selectedCusId = Integer.parseInt(cusTable.getValueAt(row, 0).toString());
+        cusCodeTxt.setText(cusTable.getValueAt(row, 1).toString());
+        cusNameTxt.setText(cusTable.getValueAt(row, 2).toString());
+        phoneTxt.setText(cusTable.getValueAt(row, 3).toString());
+        emailTxt.setText(cusTable.getValueAt(row, 4).toString());
+        addressTxt.setText(cusTable.getValueAt(row, 5).toString());
+        townshipTxt.setText(cusTable.getValueAt(row, 6).toString());
+        cityTxt.setText(cusTable.getValueAt(row, 7).toString());
+        crLimitTxt.setText(cusTable.getValueAt(row, 8).toString());
+        statusCombo.setSelectedItem(cusTable.getValueAt(row, 9).toString());
+       
+       
+       
+    }//GEN-LAST:event_cusTableMouseClicked
+
+    private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
+        clearFields();
+    }//GEN-LAST:event_clearBtnActionPerformed
+
+    
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
@@ -411,4 +509,16 @@ public class CustomerPage extends javax.swing.JPanel {
     private javax.swing.JTextField townshipTxt;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
+
+    private void clearFields() {
+        cusCodeTxt.setText("");
+        cusNameTxt.setText("");
+        phoneTxt.setText("");
+        emailTxt.setText("");
+        addressTxt.setText("");
+        townshipTxt.setText("");
+        cityTxt.setText("");
+        crLimitTxt.setText("");
+        statusCombo.setSelectedItem("");
+    }
 }

@@ -125,22 +125,4 @@ public class UserDAO {
         }
     }
 
-//   public boolean checkLogin(String username, String password, String userType) {
-//        String query = "SELECT * FROM users WHERE username=? AND password=? AND usertype=? LIMIT 1";
-//        try (PreparedStatement ps = conn.prepareStatement(query)) {
-//            
-//            ps.setString(1, username);
-//            ps.setString(2, password);
-//            ps.setString(3, userType);
-//            
-//            try (ResultSet resultSet = ps.executeQuery()) {
-//                if (resultSet.next()) {
-//                    return true; // အကောင့်ကိုက်ညီမှုရှိပါက True ပြန်မည်
-//                }
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return false;
-//    }
 }
