@@ -511,7 +511,8 @@ public class CustomerPage extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void clearFields() {
-        cusCodeTxt.setText("");
+        
+        cusCodeTxt.setEditable(true);
         cusNameTxt.setText("");
         phoneTxt.setText("");
         emailTxt.setText("");
@@ -519,6 +520,6 @@ public class CustomerPage extends javax.swing.JPanel {
         townshipTxt.setText("");
         cityTxt.setText("");
         crLimitTxt.setText("");
-        statusCombo.setSelectedItem("");
+        statusCombo.setSelectedIndex(0);
     }
 }
