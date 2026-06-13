@@ -381,16 +381,8 @@ public class CustomerPage extends javax.swing.JPanel {
                         "Delete Failed"
                 );
             }
-                
-                
-                
-                
+
             }
-            
-            
-            
-            
-            
             
     }//GEN-LAST:event_deleteBtnActionPerformed
 

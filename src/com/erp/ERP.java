@@ -128,6 +128,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Maintain Data");
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
 
         jMenuItem2.setText("User Page");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -154,6 +159,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu3.add(jMenuItem3);
 
         jMenuItem4.setText("Products");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem4);
 
         jMenuBar1.add(jMenu3);
@@ -208,6 +218,14 @@ public void showPanel(javax.swing.JPanel panel) {
 //    System.out.println(name);
 //}
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
+        showPanel(new CategoryPage());
+    }//GEN-LAST:event_jMenu3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+       showPanel(new CategoryPage());
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     
     
