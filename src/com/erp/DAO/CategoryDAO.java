@@ -162,6 +162,39 @@ public class CategoryDAO {
         }
         return list; // ဒေတာစာရင်း (List) ကိုပဲ UI ဘက်သို့ ပြန်ပေးလိုက်ပါမည်
     }
+    
+    
+     public List<CategoryDTO> getAllCategoryNames() {
+        List<CategoryDTO> list = new ArrayList<>();
+        String sql = "SELECT category_id,category_name FROM categories ORDER BY category_id ASC";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                CategoryDTO cat = new CategoryDTO();
+                cat.setCategoryId(rs.getInt("category_id"));     // ID ထည့်သည်
+                cat.setCategoryName(rs.getString("category_name")); // နာမည်ထည့်သည်
+                list.add(cat); // Object လိုက် List ထဲထည့်သည်
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
     
     

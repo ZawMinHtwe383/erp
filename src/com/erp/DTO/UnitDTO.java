@@ -10,7 +10,9 @@ package com.erp.DTO;
  */
 public class UnitDTO {
     private int unit_id;
-
+    private String 	unit_code,	unit_name,	description,	is_active;
+    
+    
     public int getUnit_id() {
         return unit_id;
     }
@@ -50,5 +52,11 @@ public class UnitDTO {
     public void setIs_active(String is_active) {
         this.is_active = is_active;
     }
-    private String 	unit_code,	unit_name,	description,	is_active;
+   
+    
+    // UnitDTO.java ထဲတွင် အောက်ဆုံး၌ ထည့်ရန်
+@Override
+public String toString() {
+    return this.unit_name; // Combo Box ထဲမှာ "ဖာ" ၊ "ဒါဇင်" စတဲ့ နာမည်ပဲ ပြပေးမည့် ကုဒ်
+}
 }

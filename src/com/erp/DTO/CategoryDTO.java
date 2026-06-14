@@ -64,4 +64,10 @@ public class CategoryDTO {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
+    
+    // CategoryDTO.java ထဲတွင် အောက်ဆုံး၌ ထည့်ရန်
+@Override
+public String toString() {
+    return this.categoryName; // Combo Box ထဲမှာ အမျိုးအစားနာမည်ပဲ ပြပေးမည့် ကုဒ်
+}
 }
