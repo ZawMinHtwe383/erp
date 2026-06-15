@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
@@ -157,6 +159,23 @@ public boolean deleteSupplierDAO(String supplierCode) {
             e.printStackTrace();
             return new DefaultTableModel();
         }
+    }
+
+    public List<SupplierDTO> getAllSupplierNames() {
+       List<SupplierDTO> list = new ArrayList<>();
+       String sql = "select id, supplier_name from suppliers ORDER by supplier_name asc";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                SupplierDTO sup = new SupplierDTO();
+                sup.setId(rs.getInt("id"));     // ID ထည့်သည်
+                sup.setSupplier_name(rs.getString("supplier_name")); // နာမည်ထည့်သည်
+                list.add(sup); // Object လိုက် List ထဲထည့်သည်
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
     
     

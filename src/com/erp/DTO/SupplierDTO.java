@@ -83,5 +83,65 @@ public class SupplierDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+        // SupplierDTO.java ထဲတွင် အောက်ဆုံး၌ ထည့်ရန်
+@Override
+public String toString() {
+    return this.supplier_name; // Combo Box ထဲမှာ အမျိုးအစားနာမည်ပဲ ပြပေးမည့် ကုဒ်
+}
+    
+    
    
 }
+    /*
+    to show dataase data to combo box
+    1// SupplierDTO.java ထဲတွင် အောက်ဆုံး၌ ထည့်ရန်
+    @Override
+    public String toString() {
+        return this.supplier_name; // Combo Box ထဲမှာ အမျိုးအစားနာမည်ပဲ ပြပေးမည့် ကုဒ်
+    }
+
+
+    2// form load to call construction method loadSupplierToCombo
+            private SupplierDAO supplierDAO = new SupplierDAO();
+
+        private void loadSupplierToCombo() {
+            List<SupplierDTO> supplierName = supplierDAO.getAllSupplierNames();
+            supplierCmb.removeAllItems();
+            for (SupplierDTO cat : supplierName) {
+                supplierCmb.addItem(cat.toString());
+            }
+
+
+    3//DAO
+     public List<SupplierDTO> getAllSupplierNames() {
+           List<SupplierDTO> list = new ArrayList<>();
+           String sql = "select id, supplier_name from suppliers ORDER by id asc";
+            try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SupplierDTO cat = new SupplierDTO();
+                    cat.setId(rs.getInt("id"));     // ID ထည့်သည်
+                    cat.setSupplier_name(rs.getString("supplier_name")); // နာမည်ထည့်သည်
+                    list.add(cat); // Object လိုက် List ထဲထည့်သည်
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+
+
+to get id from combo in DAO insert method
+      SupplierDTO selectedCat = null;
+            Object catItem = supplierCmb.getSelectedItem();
+            if (catItem instanceof CategoryDTO) {
+                selectedCat = (SupplierDTO) catItem;
+            }
+ SupplierDTO dto = new SupplierDTO();
+           
+            dto.setId(selectedCat.getSupplierId());
+
+
+
+
+*/

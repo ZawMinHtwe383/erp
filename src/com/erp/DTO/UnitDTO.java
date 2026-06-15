@@ -10,8 +10,9 @@ package com.erp.DTO;
  */
 public class UnitDTO {
     private int unit_id;
-    private String 	unit_code,	unit_name,	description,	is_active;
+    private String 	unit_name,	description;
     
+
     
     public int getUnit_id() {
         return unit_id;
@@ -21,14 +22,7 @@ public class UnitDTO {
         this.unit_id = unit_id;
     }
 
-    public String getUnit_code() {
-        return unit_code;
-    }
-
-    public void setUnit_code(String unit_code) {
-        this.unit_code = unit_code;
-    }
-
+   
     public String getUnit_name() {
         return unit_name;
     }
@@ -45,14 +39,7 @@ public class UnitDTO {
         this.description = description;
     }
 
-    public String getIs_active() {
-        return is_active;
-    }
-
-    public void setIs_active(String is_active) {
-        this.is_active = is_active;
-    }
-   
+    
     
     // UnitDTO.java ထဲတွင် အောက်ဆုံး၌ ထည့်ရန်
 @Override

@@ -52,8 +52,9 @@ public void showPanel(javax.swing.JPanel panel) {
 
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        mainContentPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        mainContentPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -75,13 +76,30 @@ public void showPanel(javax.swing.JPanel panel) {
             }
         });
 
+        jButton2.setText("Unit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Purchase ");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -89,35 +107,26 @@ public void showPanel(javax.swing.JPanel panel) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jButton1)
-                .addContainerGap(439, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addContainerGap(375, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
 
         mainContentPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout mainContentPanelLayout = new javax.swing.GroupLayout(mainContentPanel);
         mainContentPanel.setLayout(mainContentPanelLayout);
         mainContentPanelLayout.setHorizontalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainContentPanelLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(jButton2)
-                .addContainerGap(665, Short.MAX_VALUE))
+            .addGap(0, 863, Short.MAX_VALUE)
         );
         mainContentPanelLayout.setVerticalGroup(
             mainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainContentPanelLayout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(jButton2)
-                .addContainerGap(360, Short.MAX_VALUE))
+            .addGap(0, 477, Short.MAX_VALUE)
         );
 
         getContentPane().add(mainContentPanel, java.awt.BorderLayout.CENTER);
@@ -199,33 +208,8 @@ public void showPanel(javax.swing.JPanel panel) {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-//        conn = new ConnectionFactory().getConn();
-//        
-//        try {
-//              
-//         Statement stmt = conn.createStatement();
-//            ResultSet rs = stmt.executeQuery("Select * from users");  
-//  
-//            while (rs.next()) {  
-//                System.out.println(rs.getInt(1) + " " + rs.getString(2));  
-//            }  
-//  
-//            conn.close();  
-//        } catch (Exception e) {
-//        }
- 
-//       // ၁။ PreparedStatement နဲ့ Query ပုံစံခွက် ဆောက်တယ် (လုံခြုံရေး စာပို့သမား)
-//PreparedStatement ps = conn.prepareStatement("SELECT * FROM customers WHERE township = ?");
-//ps.setString(1, "Kamayut"); // ? နေရာမှာ တန်ဖိုး ဖြည့်သွင်းတယ်
-//
-//// ၂။ SQL ကို မောင်းလိုက်တဲ့အခါ Database က ဒေတာတွေကို ResultSet (ဒေတာသေတ္တာ) နဲ့ ပြန်ပေးတယ်
-//ResultSet rs = ps.executeQuery();
-//
-//// ၃။ ResultSet သေတ္တာထဲက ဒေတာတွေကို တစ်လိုင်းချင်းစီ ပတ်ဖတ်တယ်
-//while (rs.next()) {
-//    String name = rs.getString("customer_name");
-//    System.out.println(name);
-//}
+        UnitPage up = new UnitPage();
+        up.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
@@ -239,6 +223,10 @@ public void showPanel(javax.swing.JPanel panel) {
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         showPanel(new ProductPage());
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        showPanel(new PurchasePage());
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     
     
@@ -293,6 +281,7 @@ public void showPanel(javax.swing.JPanel panel) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

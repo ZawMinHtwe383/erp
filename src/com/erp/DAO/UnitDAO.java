@@ -29,6 +29,7 @@ public class UnitDAO {
         }
     }
 
+    //to show combo units
     public List<UnitDTO> getAllUnitNames() {
         List<UnitDTO> list = new ArrayList<>();
         String sql = "SELECT unit_id, unit_name FROM units ORDER BY unit_id ASC";
@@ -44,5 +45,33 @@ public class UnitDAO {
         }
         return list;
     }
+
+    public boolean insertUnitDAO(UnitDTO unitDTO) {
+        String checkSql = "Select unit_name from units where unit_name = ?";
+        String insertSql = "Insert into units(unit_name,Description) values (?,?)";
+        try(PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setString(1, unitDTO.getUnit_name());
+            
+            try(ResultSet rs = checkStmt.executeQuery()) {
+                if(rs.next()){
+                    return false;
+                }
+            } 
+            try(PreparedStatement ps = conn.prepareStatement(insertSql)) {
+                ps.setString(1, unitDTO.getUnit_name());
+                ps.setString(2, unitDTO.getDescription());
+                
+                ps.executeUpdate();
+                return true;
+            } 
+            
+        } catch (Exception e) {
+            System.out.println("--- Unit Database Error Log ---");
+        e.printStackTrace(); 
+        return false;
+        }
+      
+       
+    }   
 
 }

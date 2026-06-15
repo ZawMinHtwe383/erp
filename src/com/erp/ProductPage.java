@@ -411,6 +411,7 @@ public class ProductPage extends javax.swing.JPanel {
             dto.setProductCode(prodCode);
             dto.setBarcode(barCode);
             dto.setProductName(prodName);
+            
             dto.setCategoryId(selectedCat.getCategoryId());
 
             dto.setUnitLevel1Id(u1.getUnit_id());
@@ -431,12 +432,7 @@ public class ProductPage extends javax.swing.JPanel {
                 dto.setUnitId(1); // တကယ်လို့ u1 က null ဖြစ်နေရင်တောင် DB ထဲမှာ တကယ်ရှိတဲ့ Unit ID တစ်ခုခုကို Default ပေးထားလိုက်ပါ
             }
             
-            
-            
-            
-            
-            
-            
+                 
             dto.setStockQty(totalPcs); // မြှောက်လို့ရလာတဲ့ စုစုပေါင်း "ခု" အရေအတွက်ကို သိမ်းမည်
             dto.setPurchasePrice(purchasePrice);
             dto.setSalePrice(salePrice);
