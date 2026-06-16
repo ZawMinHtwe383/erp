@@ -32,18 +32,22 @@ public class UnitDAO {
     //to show combo units
     public List<UnitDTO> getAllUnitNames() {
         List<UnitDTO> list = new ArrayList<>();
-        String sql = "SELECT unit_id, unit_name FROM units ORDER BY unit_id ASC";
-        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT unit_id, unit_name FROM units ORDER BY unit_name ASC";
+        try (PreparedStatement ps = conn.prepareStatement(sql); 
+                ResultSet rs = ps.executeQuery()) {
+           
             while (rs.next()) {
             UnitDTO cat = new UnitDTO();
-            cat.setUnit_id(rs.getInt("unit_id"));     // ID ထည့်သည်
+             cat.setUnit_id(rs.getInt("unit_id"));     // ID ထည့်သည်
             cat.setUnit_name(rs.getString("unit_name")); // နာမည်ထည့်သည်
             list.add(cat); // Object လိုက် List ထဲထည့်သည်
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(list);
         return list;
+        
     }
 
     public boolean insertUnitDAO(UnitDTO unitDTO) {

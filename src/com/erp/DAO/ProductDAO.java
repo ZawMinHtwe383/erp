@@ -7,8 +7,11 @@ package com.erp.DAO;
 import com.erp.DTO.ProductDTO;
 import com.erp.Database.ConnectionFactory;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -27,6 +30,25 @@ public class ProductDAO {
         }
     }
 
+    
+    public List<ProductDTO> getAllProductsName(){
+        List<ProductDTO> list = new ArrayList<>();
+        String sql = "SELECT product_id ,product_name FROM PRODUCTS ORDER BY product_name ASC";
+        try(PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ProductDTO pro =new ProductDTO();
+                pro.setProductId(rs.getInt("product_id"));
+                pro.setProductName(rs.getString("product_name"));
+                list.add(pro);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
     public boolean insertProductDAO(ProductDTO dto) throws SQLException {
         // ၄ ဆင့်ခွဲ ယူနစ် ID များနှင့် အချိုးအစားများအပြင် အသေးဆုံးဝယ်ဈေး၊ ရောင်းဈေးများကို သိမ်းပါမည်
         String sql = "INSERT INTO products (product_code,barcode,product_name,category_id,unit_level1_id,unit_level2_id,unit_level3_id,unit_level4_id,factor_1_to_2,factor_2_to_3,factor_3_to_4,unit_id,purchase_price,	sale_price,stock_qty,reorder_level,is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";

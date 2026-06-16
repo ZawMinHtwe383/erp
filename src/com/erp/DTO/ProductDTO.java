@@ -244,5 +244,10 @@ public class ProductDTO {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
+    @Override
+    public String toString() {
+    return this.productName; // Combo Box ထဲမှာ "ဖာ" ၊ "ဒါဇင်" စတဲ့ နာမည်ပဲ ပြပေးမည့် ကုဒ်
+}
+    
     
 }

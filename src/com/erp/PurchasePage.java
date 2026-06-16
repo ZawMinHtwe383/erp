@@ -4,11 +4,15 @@
  */
 package com.erp;
 
+import com.erp.DAO.ProductDAO;
 import com.erp.DAO.PurchaseVoucherDAO;
 import com.erp.DAO.SupplierDAO;
+import com.erp.DAO.UnitDAO;
+import com.erp.DTO.ProductDTO;
 import com.erp.DTO.PurchaseDetailDTO;
 import com.erp.DTO.PurchaseVoucherDTO;
 import com.erp.DTO.SupplierDTO;
+import com.erp.DTO.UnitDTO;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +30,8 @@ public class PurchasePage extends javax.swing.JPanel {
         initComponents();
         autoGenerateVoucherNo();
         loadSupplierToCombo();
+        loadUnitsToCombo();
+        loadProductToCombo();
     }
 
   private void autoGenerateVoucherNo() {
@@ -46,7 +52,7 @@ public class PurchasePage extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         dateTxt = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
-        supplierCmb = new javax.swing.JComboBox();
+        supplierCmb = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         voucherNoTxt = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -78,7 +84,7 @@ public class PurchasePage extends javax.swing.JPanel {
 
         jLabel4.setText("Supplier");
 
-        supplierCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        supplierCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         supplierCmb.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 supplierCmbItemStateChanged(evt);
@@ -210,7 +216,7 @@ public class PurchasePage extends javax.swing.JPanel {
 
             },
             new String [] {
-                "No", "Product Code", "Product Name", "Unit", "Qty", "FOC", "Price", "Discount", "Amount"
+                "No", "Product Code", "Product Name", "Product ID", "Unit", "Unit ID", "Qty", "FOC", "Price", "Discount", "Amount"
             }
         ));
         jScrollPane1.setViewportView(purchaseTable);
@@ -342,9 +348,38 @@ public class PurchasePage extends javax.swing.JPanel {
             return;
         }
 
-        // ဒေတာများ ဆွဲယူခြင်း
-        String prodName = productNameCmb.getSelectedItem().toString();
+        
+                //to get id from comboBox
+        ProductDTO selectedPro = null;
+        Object productId = productNameCmb.getSelectedItem();
+        if (productId instanceof ProductDTO) {
+                selectedPro = (ProductDTO) productId;
+            }
+         String prodName = productNameCmb.getSelectedItem().toString();
+          int prodId = selectedPro.getProductId();
+        if(selectedPro != null){
+            
+       
+         //  System.out.println(prodId);
+        }
+       
+
+        
+        UnitDTO selectedUnit = null;
+        Object unitID = unitCmb.getSelectedItem();
+        if(unitID instanceof UnitDTO){
+            selectedUnit =(UnitDTO) unitID;
+        }           
         String unitName = unitCmb.getSelectedItem().toString();
+         int unitId = selectedUnit.getUnit_id();
+        if(selectedUnit != null){
+             
+        
+        //   System.out.println(unitId);
+        }
+        
+        
+       
         
         int qty = Integer.parseInt(qtyTxt.getText().trim());
         int foc = focTxt.getText().trim().isEmpty() ? 0 : Integer.parseInt(focTxt.getText().trim());
@@ -357,12 +392,15 @@ public class PurchasePage extends javax.swing.JPanel {
         // JTable Model ထဲသို့ Row အသစ် လှမ်းထည့်ခြင်း
         DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel(); // purchaseTable နေရာတွင် မိမိ JTable နာမည် အစားထိုးပါ
         int rowCount = model.getRowCount() + 1;
+  
         
         model.addRow(new Object[]{
             rowCount,       // No
             "Code",         // Product Code (လိုအပ်ပါက ဖြည့်စွက်ရန်)
             prodName,       // Product Name
+            prodId,
             unitName,       // Unit
+            unitId,
             qty,            // Qty
             foc,            // FOC
             price,          // Price
@@ -370,6 +408,11 @@ public class PurchasePage extends javax.swing.JPanel {
             amount          // Amount
         });
 
+        
+        
+        
+        
+        
         // အောက်ခြေက Footer စုစုပေါင်း金額တွေကို တွက်ခိုင်းခြင်း
         calculateTotals();
         
@@ -422,6 +465,7 @@ public class PurchasePage extends javax.swing.JPanel {
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
                                    
     DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel(); // မိမိ JTable နာမည်
+ 
     
     // ၁။ ဇယားထဲမှာ ပစ္စည်းရှိမရှိ အရင်စစ်မယ်
     if(model.getRowCount() == 0) {
@@ -435,19 +479,15 @@ public class PurchasePage extends javax.swing.JPanel {
         voucherDTO.setVoucherNo(voucherNoTxt.getText().trim());
         
  
+        
+        //to get id from comboBox
         SupplierDTO selectedSup = null;
         Object catItem = supplierCmb.getSelectedItem();
         if (catItem instanceof SupplierDTO) {
                 selectedSup = (SupplierDTO) catItem;
             }
-        
-        //id and name from combo
-//        int supId = selectedSup.getId();
-//        String supName = selectedSup.getSupplier_name().toString();
-//        
-//        System.out.println(supId + supName);
-        
         voucherDTO.setSupplierId(selectedSup.getId()); // (မိမိတို့ Supplier ID Map ပြန်လုပ်ရန်)
+  
         voucherDTO.setPurchaseDate(dateTxt.getDate()); // JDateChooser သုံးထားပါက
         voucherDTO.setSubTotal(Double.parseDouble(subTotalTxt.getText()));
         
@@ -459,14 +499,13 @@ public class PurchasePage extends javax.swing.JPanel {
         for (int i = 0; i < model.getRowCount(); i++) {
             PurchaseDetailDTO itemDTO = new PurchaseDetailDTO();
             
-            // UI ကပြနေတဲ့ Name တွေကနေ DB က ID တွေပြောင်းယူသည့်ပုံစံ (အစ်ကိုကြီးရဲ့ Helper Method သုံးရန်)
-            //int productId = getProductIdByName(model.getValueAt(i, 2).toString()); // Index 2 = Product Name
-            int productId = 3; // Index 2 = Product Name
-            //int unitId = getUnitIdByName(model.getValueAt(i, 3).toString());       // Index 3 = Unit
-            int unitId = 2;       // Index 3 = Unit
-            
+           
+            int productId = Integer.parseInt(model.getValueAt(i, 2).toString());
             itemDTO.setProductId(productId);
+           
+            int unitId = Integer.parseInt(model.getValueAt(i, 3).toString());
             itemDTO.setUnitId(unitId);
+            
             itemDTO.setQty(Integer.parseInt(model.getValueAt(i, 4).toString()));       // Index 4 = Qty
             itemDTO.setFoc(Integer.parseInt(model.getValueAt(i, 5).toString()));       // Index 5 = FOC
             itemDTO.setPrice(Double.parseDouble(model.getValueAt(i, 6).toString()));    // Index 6 = Price
@@ -511,7 +550,7 @@ private void calculateTotals() {
 
     // ဇယားထဲရှိ အတန်းအားလုံးကို ပတ်ပြီး Amount ကော်လံ (နောက်ဆုံးကော်လံ Index 8) ကို ပေါင်းခြင်း
     for (int i = 0; i < model.getRowCount(); i++) {
-        subTotal += (double) model.getValueAt(i, 8);
+        subTotal += (double) model.getValueAt(i, 10);
     }
 
     subTotalTxt.setText(String.valueOf(subTotal));
@@ -537,6 +576,30 @@ private void calculateTotals() {
     double grandTotal = subTotal - voucherDiscount;
     grandTxt.setText(String.valueOf(grandTotal));
 }
+
+    private void loadUnitsToCombo(){
+        unitCmb.removeAllItems();
+        UnitDAO unitDAO = new UnitDAO();
+        List<UnitDTO> units = unitDAO.getAllUnitNames();
+       
+        //System.out.println(units);
+        for (UnitDTO unit : units) {
+            unitCmb.addItem(unit);
+            
+        }
+        
+    }
+    
+    private void loadProductToCombo(){
+        productNameCmb.removeAllItems();
+        ProductDAO productDAO = new ProductDAO();
+        List<ProductDTO> product = productDAO.getAllProductsName();
+        for (ProductDTO pro : product) {
+            productNameCmb.addItem(pro);
+            
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
@@ -564,12 +627,12 @@ private void calculateTotals() {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField priceTxt;
-    private javax.swing.JComboBox<String> productNameCmb;
+    private javax.swing.JComboBox<Object> productNameCmb;
     private javax.swing.JTable purchaseTable;
     private javax.swing.JTextField qtyTxt;
     private javax.swing.JTextField subTotalTxt;
-    private javax.swing.JComboBox supplierCmb;
-    private javax.swing.JComboBox<String> unitCmb;
+    private javax.swing.JComboBox<Object> supplierCmb;
+    private javax.swing.JComboBox<Object> unitCmb;
     private javax.swing.JTextField voucherNoTxt;
     // End of variables declaration//GEN-END:variables
 

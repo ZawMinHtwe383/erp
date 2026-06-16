@@ -89,5 +89,8 @@ public class PurchaseVoucherDTO {
 
     public void addPurchaseItem(PurchaseDetailDTO itemDTO) {
         System.out.println(itemDTO.getQty());
+        System.out.println(itemDTO.getProductId());
+        System.out.println(itemDTO.getUnitId());
+        
     }
 }
