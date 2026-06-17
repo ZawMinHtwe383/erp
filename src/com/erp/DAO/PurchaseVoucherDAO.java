@@ -142,7 +142,7 @@ public class PurchaseVoucherDAO {
       
         
         
-        String insertDetailSql = "INSERT INTO purchase_details (voucher_id, product_id, unit_id, qty, foc, price, line_discount, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertDetailSql = "INSERT INTO purchase_details (voucher_id,product_id,batch_no,expiry_date,unit_id, qty, foc, price, line_discount, amount) VALUES (?, ?, ?, ?,?,?, ?, ?, ?, ?)";
         
         // Connection ကို အပေါ်က မခူးဘဲ ဒီတိုင်း လက်ဆင့်ကမ်း သုံးထားသည့်အတွက် ပိတ်စရာမလိုပါ (Transaction တစ်ခုတည်းမို့လို့ပါ)
         try (PreparedStatement psDetail = conn.prepareStatement(insertDetailSql)) {
@@ -150,12 +150,15 @@ public class PurchaseVoucherDAO {
             for (PurchaseDetailDTO item : itemList) {
                 psDetail.setInt(1, voucherId); // အပေါ်ကရလာတဲ့ ပင်မ ဘောချာ ID
                 psDetail.setInt(2, item.getProductId());
-                psDetail.setInt(3, item.getUnitId());
-                psDetail.setInt(4, item.getQty());
-                psDetail.setInt(5, item.getFoc());
-                psDetail.setDouble(6, item.getPrice());
-                psDetail.setDouble(7, item.getLineDiscount());
-                psDetail.setDouble(8, item.getAmount());
+                psDetail.setString(3, item.getBatchNo());
+                psDetail.setDate(4, new java.sql.Date(item.getExpiryDate().getTime()));
+               
+                psDetail.setInt(5, item.getUnitId());
+                psDetail.setInt(6, item.getQty());
+                psDetail.setInt(7, item.getFoc());
+                psDetail.setDouble(8, item.getPrice());
+                psDetail.setDouble(9, item.getLineDiscount());
+                psDetail.setDouble(10, item.getAmount());
 
                 psDetail.addBatch(); // 🚀 Memory ပေါ်တွင် အစုလိုက် သိမ်းရန် စုထားခြင်း (အလုပ်မြန်စေသည်)
             }

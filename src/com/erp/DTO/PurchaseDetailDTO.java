@@ -5,6 +5,7 @@
 package com.erp.DTO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +22,25 @@ public class PurchaseDetailDTO {
     private double price;
     private double lineDiscount;
     private double amount;
+    private String batchNo;
 
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+    private Date expiryDate;
+    
     public int getDetailId() {
         return detailId;
     }
