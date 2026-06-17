@@ -13,7 +13,10 @@ import com.erp.DTO.PurchaseVoucherDTO;
 import com.erp.DTO.SupplierDTO;
 import com.erp.DTO.UnitDTO;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,6 +30,8 @@ public class PurchasePage extends javax.swing.JPanel {
      */
     public PurchasePage() {
         initComponents();
+        dateTxt.setDate(new java.util.Date());
+        dateTxt.setDateFormatString("dd-MM-yyyy");
         autoGenerateVoucherNo();
         loadSupplierToCombo();
         loadUnitsToCombo();
@@ -577,12 +582,12 @@ private void calculateTotals() {
         unitCmb.removeAllItems();
         UnitDAO unitDAO = new UnitDAO();
         List<UnitDTO> units = unitDAO.getAllUnitNames();
-       
+       enableAutoComplete(unitCmb, units);
         //System.out.println(units);
-        for (UnitDTO unit : units) {
-            unitCmb.addItem(unit);
-            
-        }
+//        for (UnitDTO unit : units) {
+//            unitCmb.addItem(unit);
+//            
+//        }
         
     }
     
@@ -590,12 +595,90 @@ private void calculateTotals() {
         productNameCmb.removeAllItems();
         ProductDAO productDAO = new ProductDAO();
         List<ProductDTO> product = productDAO.getAllProductsName();
-        for (ProductDTO pro : product) {
-            productNameCmb.addItem(pro);
-            
-        }
+        enableAutoComplete(productNameCmb, product);
+//        for (ProductDTO pro : product) {
+//            productNameCmb.addItem(pro);
+//            
+//        }
     }
 
+   private void enableAutoComplete(JComboBox comboBox, List<?> dataList) {
+    // 🎯 ၁။ အစပိုင်းမှာ ဒေတာအားလုံးကို ComboBox ထဲ တန်းပေါ်နေအောင် အပြည့်ထည့်ထားခြင်း (ဒီလိုင်းလိုနေခဲ့တာပါဗျာ)
+    DefaultComboBoxModel initialModel = new DefaultComboBoxModel();
+    for (Object item : dataList) {
+        initialModel.addElement(item);
+    }
+    comboBox.setModel(initialModel);
+    comboBox.setSelectedIndex(-1); // အစပိုင်းမှာ ဘာမှမရွေးရသေးပဲ အလွတ်ပြထားရန်
+
+    // ၂။ ComboBox ကို စာရိုက်လို့ရအောင် ပြုလုပ်ခြင်း
+    comboBox.setEditable(true);
+    JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+
+    // 🎯 ၃။ [UX အပိုဆောင်း] စာရိုက်ရုံတင်မက အကွက်ကို Mouse နဲ့ ကလစ်နှိပ်လိုက်ရင်လည်း Dropdown တန်းပွင့်လာစေရန်
+    textField.addFocusListener(new java.awt.event.FocusAdapter() {
+        @Override
+        public void focusGained(java.awt.event.FocusEvent e) {
+            if (textField.getText().isEmpty()) {
+                comboBox.showPopup();
+            }
+        }
+    });
+
+    // ၄။ စာရိုက်တိုင်း ဒေတာကို စစ်ထုတ်ပေးမည့် KeyListener
+    textField.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyReleased(java.awt.event.KeyEvent e) {
+            // အပေါ်၊ အောက်၊ Enter၊ Escape နှိပ်ပါက ရှာဖွေမှုကို ခေတ္တကျော်မည်
+            if (e.getKeyCode() == java.awt.event.KeyEvent.VK_UP || 
+                e.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN || 
+                e.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER ||
+                e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
+                return;
+            }
+
+            String typedText = textField.getText();
+            DefaultComboBoxModel model = new DefaultComboBoxModel();
+
+            // ရိုက်ထားသော စာသားပါဝင်သည့် ဒေတာများကို လိုက်ရှာခြင်း
+            for (Object item : dataList) {
+                if (item.toString().toLowerCase().contains(typedText.toLowerCase())) {
+                    model.addElement(item);
+                }
+            }
+
+            // စစ်ထုတ်ထားသော ဒေတာအသစ်ကို ComboBox ထဲ ထည့်ခြင်း
+            comboBox.setModel(model);
+            textField.setText(typedText); 
+            
+            if (!typedText.isEmpty()) {
+                comboBox.showPopup();
+            }
+        }
+    });
+}
+    
+    
+       private void loadSupplierToCombo() {
+         supplierCmb.removeAllItems();
+         SupplierDAO supplierDAO = new SupplierDAO();
+        List<SupplierDTO> suppliers = supplierDAO.getAllSupplierNames();
+        enableAutoComplete(supplierCmb, suppliers);
+//        for (SupplierDTO sup : suppliers) {
+//           
+//            supplierCmb.addItem(sup);
+//
+//        }
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
@@ -632,17 +715,5 @@ private void calculateTotals() {
     private javax.swing.JTextField voucherNoTxt;
     // End of variables declaration//GEN-END:variables
 
-    
-    
-    private void loadSupplierToCombo() {
-         supplierCmb.removeAllItems();
-         SupplierDAO supplierDAO = new SupplierDAO();
-        List<SupplierDTO> suppliers = supplierDAO.getAllSupplierNames();
-       
-        for (SupplierDTO sup : suppliers) {
-           
-            supplierCmb.addItem(sup);
 
-        }
-    }
 }
