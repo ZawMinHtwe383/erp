@@ -5,7 +5,6 @@
 package com.erp;
 
 import com.erp.DAO.ProductDAO;
-import com.erp.DAO.PurchaseVoucherDAO;
 import com.erp.DAO.SupplierDAO;
 import com.erp.DAO.UnitDAO;
 import com.erp.DTO.ProductDTO;
@@ -498,19 +497,16 @@ public class PurchasePage extends javax.swing.JPanel {
         // ၃။ JTable ထဲက အတန်းတွေကို ပတ်ပြီး Detail DTO ထဲထည့်ကာ Voucher DTO ထဲ စုထည့်မယ်
         for (int i = 0; i < model.getRowCount(); i++) {
             PurchaseDetailDTO itemDTO = new PurchaseDetailDTO();
-            
-           
-            int productId = Integer.parseInt(model.getValueAt(i, 2).toString());
+            int productId = Integer.parseInt(model.getValueAt(i, 3).toString());
             itemDTO.setProductId(productId);
-           
-            int unitId = Integer.parseInt(model.getValueAt(i, 3).toString());
+            int unitId = Integer.parseInt(model.getValueAt(i, 5).toString());
             itemDTO.setUnitId(unitId);
             
-            itemDTO.setQty(Integer.parseInt(model.getValueAt(i, 4).toString()));       // Index 4 = Qty
-            itemDTO.setFoc(Integer.parseInt(model.getValueAt(i, 5).toString()));       // Index 5 = FOC
-            itemDTO.setPrice(Double.parseDouble(model.getValueAt(i, 6).toString()));    // Index 6 = Price
-            itemDTO.setLineDiscount(Double.parseDouble(model.getValueAt(i, 7).toString())); // Index 7 = Discount
-            itemDTO.setAmount(Double.parseDouble(model.getValueAt(i, 8).toString()));   // Index 8 = Amount
+            itemDTO.setQty(Integer.parseInt(model.getValueAt(i, 6).toString()));       // Index 4 = Qty
+            itemDTO.setFoc(Integer.parseInt(model.getValueAt(i, 7).toString()));       // Index 5 = FOC
+            itemDTO.setPrice(Double.parseDouble(model.getValueAt(i, 8).toString()));    // Index 6 = Price
+            itemDTO.setLineDiscount(Double.parseDouble(model.getValueAt(i, 9).toString())); // Index 7 = Discount
+            itemDTO.setAmount(Double.parseDouble(model.getValueAt(i, 10).toString()));   // Index 8 = Amount
 
             // Main DTO ကြီးထဲသို့ လှမ်းထည့်ပစ်ခြင်း
             voucherDTO.addPurchaseItem(itemDTO);
@@ -644,6 +640,7 @@ private void calculateTotals() {
         List<SupplierDTO> suppliers = supplierDAO.getAllSupplierNames();
        
         for (SupplierDTO sup : suppliers) {
+           
             supplierCmb.addItem(sup);
 
         }

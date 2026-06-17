@@ -76,7 +76,8 @@ public class PurchaseVoucherDTO {
     public void setGrandTotal(double grandTotal) {
         this.grandTotal = grandTotal;
     }
-
+    
+     private List<PurchaseDetailDTO> purchaseItems = new ArrayList<>();
     public List<PurchaseDetailDTO> getPurchaseItems() {
         return purchaseItems;
     }
@@ -85,12 +86,11 @@ public class PurchaseVoucherDTO {
     public void setPurchaseItems(List<PurchaseDetailDTO> purchaseItems) {
         this.purchaseItems = purchaseItems;
     }
-    private List<PurchaseDetailDTO> purchaseItems = new ArrayList<>();
+     
+  
 
     public void addPurchaseItem(PurchaseDetailDTO itemDTO) {
-        System.out.println(itemDTO.getQty());
-        System.out.println(itemDTO.getProductId());
-        System.out.println(itemDTO.getUnitId());
-        
+       
+        this.purchaseItems.add(itemDTO);
     }
 }

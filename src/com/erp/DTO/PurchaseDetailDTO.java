@@ -4,6 +4,9 @@
  */
 package com.erp.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Zaw Min Htwe
@@ -90,4 +93,6 @@ public class PurchaseDetailDTO {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+    
+   
 }
