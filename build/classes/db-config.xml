@@ -9,5 +9,5 @@
     
     <entry key="db.password"></entry>
     
-    <entry key="db.driver">com.mysql.cj.jdbc.Driver</entry>
+    <entry key="db.driver">com.mysql.jdbc.Driver</entry>
 </properties>

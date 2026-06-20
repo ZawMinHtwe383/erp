@@ -13,8 +13,15 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 /**
  *
  * @author Zaw Min Htwe
@@ -145,9 +152,54 @@ public class CustomerDAO {
              e.printStackTrace();
             return false;
         }
-    
-    
-    
+    }
+    public void generateCustomerReports (){
+         try {
+        // ၁။ src/reports ထဲက .jasper ဖိုင်လမ်းကြောင်းကို သတ်မှတ်ခြင်း
+        String reportPath = "src/com/reports/customers.jasper";
+        
+        // ၂။ .jasper ဖိုင်ကို Java က ဖတ်နိုင်အောင် Load လုပ်ခြင်း
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportPath);
+        
+        
+        // ၁။ Parameter မရှိလျှင် Map နေရာ၌ null ပေးလိုက်ရုံပါပဲ
+        Map<String, Object> parameters = null; 
+
+        // ၂။ .jasper ဖိုင်ကို Load လုပ်ပြီး Connection တစ်ခုတည်း လွှဲပေးလိုက်ခြင်း ဖြစ်ပါတယ်
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+        
+        
+        
+        // ၃။ Jaspersoft Studio ထဲတွင် ဆောက်ခဲ့သော Parameter အမည်အတိုင်း ဒေတာထည့်ခြင်း
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("VoucherNoParam", voucherNo); // 💡 "VoucherNoParam" သည် Studio ထဲက Parameter အမည်အတိုင်း ဖြစ်ရမည်။
+//
+//        
+//        // ၄။ Connection ကော၊ Parameter ပါ ပေါင်းစပ်ပြီး Report ဒေတာ ဖြည့်သွင်းခြင်း
+//        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
+        
+        // ၅။ Voucher ပရင့်ထုတ်ရန် Preview ဝင်းဒိုးကို လှှမ်းဖွင့်ပြခြင်း
+        JasperViewer viewer = new JasperViewer(jasperPrint, false); // false သည် မိခင် Form ကြီးပါ အတူပိတ်မသွားစေရန် ဖြစ်သည်
+        viewer.setTitle("Purchase Voucher Print Preview");
+        viewer.setVisible(true);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Report Open Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }
     
-}
+    }
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+

@@ -7,7 +7,16 @@ package com.erp;
 import com.erp.DAO.CustomerDAO;
 import com.erp.DTO.CustomerDTO;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -67,6 +76,7 @@ public class CustomerPage extends javax.swing.JPanel {
         clearBtn = new javax.swing.JButton();
         searchNameBtn = new javax.swing.JButton();
         searchNameTxt = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cusTable = new javax.swing.JTable();
@@ -223,6 +233,18 @@ public class CustomerPage extends javax.swing.JPanel {
         });
 
         searchNameBtn.setText("Search With Name");
+        searchNameBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchNameBtnActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Reports");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -241,7 +263,9 @@ public class CustomerPage extends javax.swing.JPanel {
                 .addComponent(searchNameBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +277,8 @@ public class CustomerPage extends javax.swing.JPanel {
                     .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchNameBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -271,6 +296,7 @@ public class CustomerPage extends javax.swing.JPanel {
                 "ID", "Customer Code", "Customer Name", "Phone", "Email", "Address", "Township", "City", "Credit Limit", "Status"
             }
         ));
+        cusTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         cusTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cusTableMouseClicked(evt);
@@ -464,7 +490,35 @@ public class CustomerPage extends javax.swing.JPanel {
         clearFields();
     }//GEN-LAST:event_clearBtnActionPerformed
 
+    private void searchNameBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNameBtnActionPerformed
+        printTableData(cusTable,"Customer List");
+    }//GEN-LAST:event_searchNameBtnActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       CustomerDAO customerDAO = new CustomerDAO();
+       customerDAO.generateCustomerReports();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
+    //to print built in default table and 
+    public void printTableData(JTable myTable, String reportTitle) {
+    try {
+        // ၁။ စာရွက်ရဲ့ ထိပ်စီး (Header) နှင့် အောက်ခြေ (Footer) စာသား သတ်မှတ်ခြင်း
+        MessageFormat header = new MessageFormat(reportTitle);
+        MessageFormat footer = new MessageFormat("Page {0}"); // စာမျက်နှာ နံပါတ် အော်တိုတက်မည်
+        
+        // ၂။ JTable ၏ Built-in Print စနစ်ကို စာရွက်အကျယ်အဝန်းနှင့် ကွက်တိ (FIT_WIDTH) ခေါ်ခြင်း
+        boolean printingComplete = myTable.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+        
+        if (printingComplete) {
+            JOptionPane.showMessageDialog(null, "Print ထုတ်ခြင်း အောင်မြင်ပါသည်။", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Print ထုတ်ခြင်းကို ဖျက်သိမ်းလိုက်ပါသည်။", "Cancelled", JOptionPane.WARNING_MESSAGE);
+        }
+    } catch (java.awt.print.PrinterException e) {
+        JOptionPane.showMessageDialog(null, "Printer Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     
     
     
@@ -481,6 +535,7 @@ public class CustomerPage extends javax.swing.JPanel {
     private javax.swing.JTable cusTable;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JTextField emailTxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
