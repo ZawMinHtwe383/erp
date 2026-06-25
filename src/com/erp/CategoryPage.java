@@ -9,6 +9,7 @@ import com.erp.DTO.CategoryDTO;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+
 /**
  *
  * @author Zaw Min Htwe
@@ -22,19 +23,15 @@ public class CategoryPage extends javax.swing.JPanel {
         initComponents();
         loadDataSet();
     }
-    
-    
-    
+
     // ဇယားထဲ ဒေတာအကုန်တင်ရန်
-public void loadDataSet(){
+    public void loadDataSet() {
         try {
             CategoryDAO categoryDAO = new CategoryDAO();
             jTable1.setModel(categoryDAO.getCustomerTableModel());
         } catch (Exception e) {
         }
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -257,20 +254,20 @@ public void loadDataSet(){
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-            int row = jTable1.getSelectedRow();
-            
-            if(row ==-1){
-                JOptionPane.showMessageDialog(this, "Please select a Category");
-            }
-            
-            int categoryId = Integer.parseInt(jTable1.getValueAt(row, 0).toString());
-            
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you delete","Confirm",JOptionPane.YES_NO_OPTION);
-            if(confirm == JOptionPane.YES_OPTION){
-             CategoryDAO categoryDAO = new CategoryDAO();
-               boolean success = categoryDAO.deleteCategoryDAO(categoryId);
-                
-                if (success) {
+        int row = jTable1.getSelectedRow();
+
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a Category");
+        }
+
+        int categoryId = Integer.parseInt(jTable1.getValueAt(row, 0).toString());
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you delete", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            CategoryDAO categoryDAO = new CategoryDAO();
+            boolean success = categoryDAO.deleteCategoryDAO(categoryId);
+
+            if (success) {
 
                 loadDataSet();
 
@@ -287,93 +284,92 @@ public void loadDataSet(){
                 );
             }
 
-            }
+        }
 
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-       if (catCodeTxt.getText().trim().isEmpty() || catNameTxt.getText().trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Category Code နှင့် နာမည် ထည့်ပေးပါဗျာ။");
-        return;
-    }
-    CategoryDTO dto = new CategoryDTO();
-    dto.setCategoryCode(catCodeTxt.getText().trim());
-    dto.setCategoryName(catNameTxt.getText().trim());
-    dto.setDescription(descTxt.getText().trim());
-    dto.setIsActive(activeCombo.getSelectedItem().toString().equals("Active"));
+        if (catCodeTxt.getText().trim().isEmpty() || catNameTxt.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Category Code နှင့် နာမည် ထည့်ပေးပါဗျာ။");
+            return;
+        }
+        CategoryDTO dto = new CategoryDTO();
+        dto.setCategoryCode(catCodeTxt.getText().trim());
+        dto.setCategoryName(catNameTxt.getText().trim());
+        dto.setDescription(descTxt.getText().trim());
+        dto.setIsActive(activeCombo.getSelectedItem().toString().equals("Active"));
 
-    if (new CategoryDAO().addCategoryDAO(dto)) {
-        loadDataSet(); 
-        clearFields();
-        JOptionPane.showMessageDialog(this, "အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။");
-    } else {
-        JOptionPane.showMessageDialog(this, "ကုဒ်ရှိပြီးသား ဖြစ်နိုင်ပါသည် သို့မဟုတ် စနစ်ချို့ယွင်းနေပါသည်။");
-    }
+        if (new CategoryDAO().addCategoryDAO(dto)) {
+            loadDataSet();
+            clearFields();
+            JOptionPane.showMessageDialog(this, "အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။");
+        } else {
+            JOptionPane.showMessageDialog(this, "ကုဒ်ရှိပြီးသား ဖြစ်နိုင်ပါသည် သို့မဟုတ် စနစ်ချို့ယွင်းနေပါသည်။");
+        }
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-          if(selectedCategoryId == 0){
-            JOptionPane.showMessageDialog(this,"Please select a Category");
+        if (selectedCategoryId == 0) {
+            JOptionPane.showMessageDialog(this, "Please select a Category");
             return;
         }
-    CategoryDTO dto = new CategoryDTO();
-    dto.setCategoryId(selectedCategoryId); // 🌟 ဒါလေး ထည့်ပေးဖို့ လိုပါလိမ့်မယ် အစ်ကိုကြီး
-    dto.setCategoryCode(catCodeTxt.getText().trim());
-    dto.setCategoryName(catNameTxt.getText().trim());
-    dto.setDescription(descTxt.getText().trim());
-    dto.setIsActive(activeCombo.getSelectedItem().toString().equals("Active"));
+        CategoryDTO dto = new CategoryDTO();
+        dto.setCategoryId(selectedCategoryId); // 🌟 ဒါလေး ထည့်ပေးဖို့ လိုပါလိမ့်မယ် အစ်ကိုကြီး
+        dto.setCategoryCode(catCodeTxt.getText().trim());
+        dto.setCategoryName(catNameTxt.getText().trim());
+        dto.setDescription(descTxt.getText().trim());
+        dto.setIsActive(activeCombo.getSelectedItem().toString().equals("Active"));
 
-    if (new CategoryDAO().updateCategoryDAO(dto)) {
-        loadDataSet(); 
-        clearFields();
-        JOptionPane.showMessageDialog(this, "ပြင်ဆင်မှု အောင်မြင်ပါသည်။");
-    } else {
-        JOptionPane.showMessageDialog(this, "ပြင်ဆင်မှု မအောင်မြင်ပါ။");
-    }
+        if (new CategoryDAO().updateCategoryDAO(dto)) {
+            loadDataSet();
+            clearFields();
+            JOptionPane.showMessageDialog(this, "ပြင်ဆင်မှု အောင်မြင်ပါသည်။");
+        } else {
+            JOptionPane.showMessageDialog(this, "ပြင်ဆင်မှု မအောင်မြင်ပါ။");
+        }
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       
-    loadSearchData(searchTxt.getText().trim());
+
+        loadSearchData(searchTxt.getText().trim());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void loadTable(List<CategoryDTO> list) {
 
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    model.setRowCount(0); // ဇယားဟောင်းကို အရင်ရှင်းသည်
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // ဇယားဟောင်းကို အရင်ရှင်းသည်
 
-    for (CategoryDTO dto : list) {
-        model.addRow(new Object[]{
-            dto.getCategoryId(),
-            dto.getCategoryCode(),
-            dto.getCategoryName(),
-            dto.getDescription(),
-            dto.isIsActive() ? "Active" : "Inactive",
-            dto.getCreatedAt()
-        });
+        for (CategoryDTO dto : list) {
+            model.addRow(new Object[]{
+                dto.getCategoryId(),
+                dto.getCategoryCode(),
+                dto.getCategoryName(),
+                dto.getDescription(),
+                dto.isIsActive() ? "Active" : "Inactive",
+                dto.getCreatedAt()
+            });
+        }
     }
-}
-    
+
     // 💡 ရှာဖွေတွေ့ရှိသည့် ဒေတာများကို JTable ထဲသို့ ထည့်ပေးမည့် မက်သဒ်
-public void loadSearchData(String searchText) {
-   CategoryDAO dao = new CategoryDAO();
-    List<CategoryDTO> categoryList = (List<CategoryDTO>) dao.searchCategoryByNameDAO(searchText);
-    loadTable(categoryList); // ကုဒ်ထပ်မရေးတော့ဘဲ loadTable ကိုပဲ လှမ်းခေါ်လိုက်သည်
-}
-    
-   
+    public void loadSearchData(String searchText) {
+        CategoryDAO dao = new CategoryDAO();
+        List<CategoryDTO> categoryList = (List<CategoryDTO>) dao.searchCategoryByNameDAO(searchText);
+        loadTable(categoryList); // ကုဒ်ထပ်မရေးတော့ဘဲ loadTable ကိုပဲ လှမ်းခေါ်လိုက်သည်
+    }
+
     private int selectedCategoryId;
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-      int row = jTable1.getSelectedRow();
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    
-    selectedCategoryId = Integer.parseInt(model.getValueAt(row, 0).toString());
-    catCodeTxt.setText(model.getValueAt(row, 1).toString());
-    catNameTxt.setText(model.getValueAt(row, 2).toString());
-    descTxt.setText(model.getValueAt(row, 3).toString());
-    activeCombo.setSelectedItem(model.getValueAt(row, 4).toString());
-    
-   catCodeTxt.setEditable(false); // ပြင်ဆင်ချိန်တွင် Code ကို ပေးမပြင်ပါ
+        int row = jTable1.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        selectedCategoryId = Integer.parseInt(model.getValueAt(row, 0).toString());
+        catCodeTxt.setText(model.getValueAt(row, 1).toString());
+        catNameTxt.setText(model.getValueAt(row, 2).toString());
+        descTxt.setText(model.getValueAt(row, 3).toString());
+        activeCombo.setSelectedItem(model.getValueAt(row, 4).toString());
+
+        catCodeTxt.setEditable(false); // ပြင်ဆင်ချိန်တွင် Code ကို ပေးမပြင်ပါ
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -381,16 +377,17 @@ public void loadSearchData(String searchText) {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void searchTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTxtKeyReleased
-       loadSearchData(searchTxt.getText().trim());
+        loadSearchData(searchTxt.getText().trim());
     }//GEN-LAST:event_searchTxtKeyReleased
 // Clear Fields Method
-private void clearFields() {
-    catCodeTxt.setText("");
-    catNameTxt.setText("");
-    descTxt.setText("");
-    activeCombo.setSelectedIndex(0);
-    catCodeTxt.setEditable(true);
-}
+
+    private void clearFields() {
+        catCodeTxt.setText("");
+        catNameTxt.setText("");
+        descTxt.setText("");
+        activeCombo.setSelectedIndex(0);
+        catCodeTxt.setEditable(true);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> activeCombo;

@@ -6,6 +6,8 @@
 package com.erp;
 import com.erp.DTO.UserDTO;
 import com.erp.Database.ConnectionFactory;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.intellijthemes.FlatLightFlatIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContrastIJTheme;
 import java.awt.Image;
 import java.util.logging.Level;
@@ -159,7 +161,7 @@ UserDTO userDTO;
     public static void main(String args[]) {
          // setting UI theme and LookAndFeel of the application
         try {
-            javax.swing.UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
+            javax.swing.UIManager.setLookAndFeel(new FlatLightFlatIJTheme());
             } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } 

@@ -4,6 +4,7 @@
  */
 package com.erp.DAO;
 
+import com.erp.DTO.ComboIdName;
 import com.erp.DTO.SupplierDTO;
 import com.erp.Database.ConnectionFactory;
 import java.sql.Connection;
@@ -178,7 +179,41 @@ public boolean deleteSupplierDAO(String supplierCode) {
         return list;
     }
     
+   public List<ComboIdName> getSuppliersNamesFromDB() {
+//    java.util.List<String> supplierList = new java.util.ArrayList<>();
+//    
+//    // to use active account filter in SQL database
+//    String sql = "SELECT supplier_name FROM suppliers WHERE status = 'Active'";
+//    
+//    try (PreparedStatement ps = conn.prepareStatement(sql);
+//         ResultSet rs = ps.executeQuery()) {
+//         
+//        while (rs.next()) {
+//            supplierList.add(rs.getString("supplier_name")); // List ထဲလှမ်းထည့်မယ်
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    }
+//    
+//    // Java Swing ရဲ့ Dialog မှာ သုံးနိုင်အောင် List ကို String Array [] ပုံစံ ပြောင်းလဲပေးလိုက်ခြင်း
+//    return supplierList.toArray(new String[0]);
+//}
     
+   List<ComboIdName> list = new ArrayList<>();
+    String sql =  "SELECT id,supplier_name FROM suppliers WHERE status = 'Active'";
     
+    try (PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        while (rs.next()) {
+            // ID ရော နာမည်ရောကို တွဲပြီး Object ဆောက်ကာ List ထဲထည့်ခြင်း
+            list.add(new ComboIdName(rs.getInt("id"), rs.getString("supplier_name")));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+    
+   }
     
 }
