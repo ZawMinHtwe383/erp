@@ -11,6 +11,7 @@ import com.erp.DTO.CashBookDetailsDTO;
 import com.erp.DTO.ComboIdName;
 import java.awt.Component;
 import java.util.List;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -25,9 +26,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CashBookDetailsPage extends javax.swing.JPanel {
 
+    private JComboBox<ComboIdName> accuontNameComboBox;
     private JComboBox<ComboIdName> customerComboBox;
     private JComboBox<ComboIdName> supplierComboBox;
 
+    private CashBookDetailsDAO cbdDAO = new CashBookDetailsDAO();
     private CustomerDAO customerDAO = new CustomerDAO();
     private SupplierDAO supplierDAO = new SupplierDAO();
 
@@ -35,22 +38,21 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         initComponents();
 
         //to show cashbook table dropdownlist from database account name
-        CashBookDetailsDAO cashBookDAO = new CashBookDetailsDAO();
-        // မိမိပြောင်းလဲချင်သော Column နေရာကို ညွှန်းပေးရပါမယ် (Particular Column က နံပါတ် ၂ နေရာမို့လို့ ၂ လို့ ထည့်ထားတာပါ)
+        // မိမိပြောင်းလဲချင်သော Column နေရာကို ညွှန်းပေးရပါမယ် (Particular Column က နံပါတ် 1 နေရာမို့လို့ 1 လို့ ထည့်ထားတာပါ)
         javax.swing.table.TableColumn accountName = cashTable.getColumnModel().getColumn(1);
 
-        // DB ကရလာတဲ့ အကောင့်တွေကို ComboBox ထဲ ထည့်လိုက်ပါတယ်
-        javax.swing.JComboBox<String> comboBox = new javax.swing.JComboBox<>(cashBookDAO.getAccountNamesFromDB());
+        // 💡 ၁။ ComboBox ကို String အစား ComboItem အမျိုးအစား ပြောင်းလဲကြေညာပါမည်
+        javax.swing.JComboBox<ComboIdName> comboBox = new javax.swing.JComboBox<>();
 
-        // 🚀 ၎င်း ComboBox ကို JTable ရဲ့ အကွက်ထဲမှာ တိုက်ရိုက် Editor အဖြစ် သတ်မှတ်လိုက်ခြင်း ဖြစ်ပါတယ်
+        // 💡 ၂။ DB ကနေ id ကော name ကော ပါလာတဲ့ List ကို လှမ်းယူပြီး loop ပတ်ထည့်ပါမည်
+        // (မှတ်ချက် - cbdDAO.getAccountNamesFromDB() သည် List<ComboItem> ပြန်ပေးသည်ဟု ယူဆပါသည်)
+        List<ComboIdName> accountList = cbdDAO.getAccountNamesFromDB();
+        for (ComboIdName item : accountList) {
+            comboBox.addItem(item); // Object အလိုက် ထည့်သော်လည်း toString() ကြောင့် နာမည်ပဲ ပေါ်နေပါမည်
+        }
+
+        // 🚀 ၃။ ၎င်း ComboBox ကို JTable ၏ Editor အဖြစ် သတ်မှတ်လိုက်ခြင်း
         accountName.setCellEditor(new javax.swing.DefaultCellEditor(comboBox));
-//
-//        
-//        
-//        
-//        javax.swing.table.TableColumn customerName = cashTable.getColumnModel().getColumn(2);
-//        javax.swing.JComboBox<String> comboBox1 = new javax.swing.JComboBox<>(customerDAO.getCustomersNamesFromDB());
-//        customerName.setCellEditor(new javax.swing.DefaultCellEditor(comboBox1));
 
         setupDynamicDropdowns();
 
@@ -201,7 +203,15 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             new String [] {
                 "Date", "Account Name", "Customer / Sypplier", "Voucher No", "Description", "Debit", "Credit", "Balance", "AccountID", "CustomerID", "SupplierID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, true, true, true, false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         cashTable.setRowHeight(30);
         cashTable.setShowGrid(true);
         cashTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -215,6 +225,14 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(cashTable);
+        if (cashTable.getColumnModel().getColumnCount() > 0) {
+            cashTable.getColumnModel().getColumn(8).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(8).setMaxWidth(0);
+            cashTable.getColumnModel().getColumn(9).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(9).setMaxWidth(0);
+            cashTable.getColumnModel().getColumn(10).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(10).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -242,7 +260,11 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     }//GEN-LAST:event_cashTableMouseClicked
 
     private void btnAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRowActionPerformed
+        newRow();
 
+    }//GEN-LAST:event_btnAddRowActionPerformed
+
+    private void newRow() {
         DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
 
         // ၁။ ကွန်ပျူတာရဲ့ ယနေ့ရက်စွဲကို "2026-06-22" ပုံစံ စာသားအဖြစ် အော်တိုပြောင်းယူမယ်
@@ -250,10 +272,11 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
         // ၂။ ရက်စွဲနေရာမှာ ယနေ့ရက်စွဲကို တစ်ခါတည်းထည့်ပြီး ဇယားထဲ လိုင်းအသစ်တစ်လိုင်း တိုးပေးလိုက်မယ်
         // [ Date | Voucher | Particular | Debit | Credit ] အစီအစဉ်အတိုင်း ဖြစ်ပါတယ်
-        model.addRow(new Object[]{todayDate, "", "", "", "", 0.0, 0.0});
+        model.addRow(new Object[]{todayDate, "", "", "", "", 0, 0});
         updateRunningBalance();
         debitCreditTotal();
-    }//GEN-LAST:event_btnAddRowActionPerformed
+    }
+
 
     private void btnDeleteRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRowActionPerformed
         int selectedRow = cashTable.getSelectedRow();
@@ -268,34 +291,96 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDeleteRowActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-            DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
-            int rowCount = model.getRowCount();
+       DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+    int rowCount = model.getRowCount();
+
+    // cash book no data for return
+    if (rowCount == 0) {
+        JOptionPane.showMessageDialog(this, "There have no data in cash book", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // 💡 သိမ်းမလားလို့ အရင်မေးပါမည်
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Confirm", JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        CashBookDetailsDAO cashBookDetailsDAO = new CashBookDetailsDAO();
+        int successCount = 0; // အောင်မြင်စွာ သိမ်းနိုင်ခဲ့တဲ့ အရေအတွက်ကို မှတ်ထားရန်
+
+        // 💡 Loop စတင်ပါပြီ
+        for (int i = 0; i < rowCount; i++) {
             
-            //cash book no data for return
-            if(rowCount == 0 ){
-                JOptionPane.showMessageDialog(this,"There have no data in cash book","Waring", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            CashBookDetailsDAO cbdDAO = new CashBookDetailsDAO();
-            int successCount = 0;
-            
-            for (int i = 0; i < rowCount; i++) {
-            CashBookDetailsDTO cbdDTO = new CashBookDetailsDTO();
-                try {
-                    Object dateObj = model.getValueAt(i, 0);
-                    if (dateObj != null) {
-                        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
-                        java.util.Date utilDate = format.parse(dateObj.toString().trim());
-                        cbdDTO.setEntryDate(new java.sql.Date(utilDate.getTime()));
-                        System.out.println(cbdDTO.getEntryDate());
-                        
-                    }
-                } catch (Exception e) {
+            // 🚀 ပြင်ဆင်ချက် ၁: DTO Object ကို Loop ထဲမှာ ဆောက်မှသာ Row တစ်ကြောင်းအတွက် DTO အသစ်တစ်ခု ရပါမည်
+            CashBookDetailsDTO cbdDTO = new CashBookDetailsDTO(); 
+
+            try {
+                Object dateObj = model.getValueAt(i, 0);
+                if (dateObj != null) {
+                    java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+                    java.util.Date utilDate = format.parse(dateObj.toString().trim());
+                    cbdDTO.setEntryDate(new java.sql.Date(utilDate.getTime()));
                 }
-            
+            } catch (Exception e) {}
+
+            Object accObj = model.getValueAt(i, 1);
+            String accountName = accObj != null ? accObj.toString().trim() : "";
+            if (accObj instanceof ComboIdName) {
+                ComboIdName selectedAccount = (ComboIdName) accObj;
+                int accountId = selectedAccount.getId();
+                cashTable.setValueAt(accountId, i, 8);
+                cbdDTO.setAccountId(accountId);
+            } else if (accObj != null) {
+                String accName = accObj.toString().trim();
+            }
+
+            Object cellValue = cashTable.getValueAt(i, 2);
+            if (cellValue != null) {
+                if (cellValue instanceof ComboIdName) {
+                    if (accountName.equalsIgnoreCase("Receivable")) {
+                        ComboIdName selectedCustomer = (ComboIdName) cellValue;
+                        int customerId = selectedCustomer.getId();
+                        cashTable.setValueAt(customerId, i, 9);
+                        cbdDTO.setCustomerId(customerId); // 🚀 မှတ်ချက်- ဤနေရာတွင် DTO သို့ ထည့်ရန် ကျန်နေခဲ့၍ ဖြည့်ပေးထားပါသည်
+                    } else if (accountName.equalsIgnoreCase("Payable")) {
+                        ComboIdName selectedSupplier = (ComboIdName) cellValue;
+                        int supplierId = selectedSupplier.getId();
+                        cashTable.setValueAt(supplierId, i, 10);
+                        cbdDTO.setSupplierId(supplierId); // 🚀 မှတ်ချက်- ဤနေရာတွင် DTO သို့ ထည့်ရန် ကျန်နေခဲ့၍ ဖြည့်ပေးထားပါသည်
+                    }
+                }
+            }
+
+            Object voucherObj = model.getValueAt(i, 3);
+            cbdDTO.setVoucherNo(voucherObj != null ? voucherObj.toString().trim() : "");
+
+            Object descObj = model.getValueAt(i, 4);
+            cbdDTO.setDescription(descObj != null ? descObj.toString().trim() : "");
+
+            Object debitObj = model.getValueAt(i, 5);
+            cbdDTO.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
+
+            Object creditObj = model.getValueAt(i, 6);
+            cbdDTO.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
+
+            Object balObj = model.getValueAt(i, 7);
+            cbdDTO.setBalance(balObj != null && !balObj.toString().isEmpty() ? Double.parseDouble(balObj.toString().trim()) : 0.0);
+
+            // 🚀 ပြင်ဆင်ချက် ၂: Row တစ်ကြောင်းစီရဲ့ Data အစုံ ဖမ်းမိတာနဲ့ Database ထဲကို ချက်ချင်း လှမ်းသိမ်းပါမည်
+            boolean success = cashBookDetailsDAO.insertCashBookDetailsDAO(cbdDTO);
+            if (success) {
+                successCount++; // သိမ်းတာ အောင်မြင်ရင် ၁ တိုးမည်
+            }
+        } 
+        // --- Loop ပြီးဆုံးပါပြီ ---
+
+        // Loop အားလုံး ပြီးသွားတဲ့အခါ Message ပြပါမည်
+        if (successCount > 0) {
+            // loadDataSet();
+            JOptionPane.showMessageDialog(this, "Successfully Saved (" + successCount + ") records.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Save Failed", "Error", JOptionPane.ERROR_MESSAGE);
         }
-            
+    }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cashTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cashTablePropertyChange

@@ -191,7 +191,7 @@ public class CustomerDAO {
         }
     }
 
-     public List<ComboIdName> getCustomersNamesFromDB() {
+    public List<ComboIdName> getCustomersNamesFromDB() {
 //    java.util.List<String> customerList = new java.util.ArrayList<>();
 //    
 //    // to use active account filter in SQL database
@@ -210,24 +210,20 @@ public class CustomerDAO {
 //    // Java Swing ရဲ့ Dialog မှာ သုံးနိုင်အောင် List ကို String Array [] ပုံစံ ပြောင်းလဲပေးလိုက်ခြင်း
 //    return customerList.toArray(new String[0]);
 
+        List<ComboIdName> list = new ArrayList<>();
+        String sql = "SELECT id,customer_name FROM customers WHERE status = 'Active'";
 
-   List<ComboIdName> list = new ArrayList<>();
-    String sql =  "SELECT id,customer_name FROM customers WHERE status = 'Active'";
-    
-    try (PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        
-        while (rs.next()) {
-            // ID ရော နာမည်ရောကို တွဲပြီး Object ဆောက်ကာ List ထဲထည့်ခြင်း
-            list.add(new ComboIdName(rs.getInt("id"), rs.getString("customer_name")));
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                // ID ရော နာမည်ရောကို တွဲပြီး Object ဆောက်ကာ List ထဲထည့်ခြင်း
+                list.add(new ComboIdName(rs.getInt("id"), rs.getString("customer_name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return list;
-    
-   }
+        return list;
 
+    }
 
 }
-

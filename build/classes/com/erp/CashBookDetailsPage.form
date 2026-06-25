@@ -216,7 +216,7 @@
                     <Column editable="true" title="Description" type="java.lang.Object"/>
                     <Column editable="true" title="Debit" type="java.lang.Object"/>
                     <Column editable="true" title="Credit" type="java.lang.Object"/>
-                    <Column editable="true" title="Balance" type="java.lang.Object"/>
+                    <Column editable="false" title="Balance" type="java.lang.Object"/>
                     <Column editable="true" title="AccountID" type="java.lang.Object"/>
                     <Column editable="true" title="CustomerID" type="java.lang.Object"/>
                     <Column editable="true" title="SupplierID" type="java.lang.Object"/>
@@ -264,17 +264,17 @@
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                    <Column maxWidth="0" minWidth="0" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                    <Column maxWidth="0" minWidth="0" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                    <Column maxWidth="0" minWidth="0" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>

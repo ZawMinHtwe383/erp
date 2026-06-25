@@ -6,6 +6,7 @@ package com.erp.DTO;
  * @author Zaw Min Htwe
  */
 public class ComboIdName {
+
     private int id;
     private String name;
 
@@ -14,12 +15,17 @@ public class ComboIdName {
         this.name = name;
     }
 
-    public int getId() { return id; }
-    public String getName() { return name; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     // to show name for combo
     @Override
     public String toString() {
-        return name; 
+        return name;
     }
 }

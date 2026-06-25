@@ -3,10 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.erp.DAO;
+
+import com.erp.DTO.CashBookDetailsDTO;
+import com.erp.DTO.ComboIdName;
 import com.erp.Database.ConnectionFactory;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Types;
 
 //CREATE TABLE cash_book_details (
 //    id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,35 +45,78 @@ import java.sql.ResultSet;
 //    CONSTRAINT fk_cash_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL,
 //    CONSTRAINT fk_cash_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL
 //);
-
-
 public class CashBookDetailsDAO {
-     private Connection conn;
-    
-    
+
+    private Connection conn;
+
     public CashBookDetailsDAO() {
         // သင့်၏ ConnectionFactory မှတစ်ဆင့် Connection ယူရန်
-        conn = new ConnectionFactory().getConn(); 
+        conn = new ConnectionFactory().getConn();
     }
-    
-    public String[] getAccountNamesFromDB() {
-    java.util.List<String> accountList = new java.util.ArrayList<>();
-    
-    // to use active account filter in SQL database
-    String sql = "SELECT account_name FROM chart_of_accounts WHERE is_active = TRUE";
-    
-    try (PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-         
-        while (rs.next()) {
-            accountList.add(rs.getString("account_name")); // List ထဲလှမ်းထည့်မယ်
+
+    public List<ComboIdName> getAccountNamesFromDB() {
+//    java.util.List<String> accountList = new java.util.ArrayList<>();
+//    
+//    // to use active account filter in SQL database
+//    String sql = "SELECT account_name FROM chart_of_accounts WHERE is_active = TRUE";
+//    
+//    try (PreparedStatement ps = conn.prepareStatement(sql);
+//         ResultSet rs = ps.executeQuery()) {
+//         
+//        while (rs.next()) {
+//            accountList.add(rs.getString("account_name")); // List ထဲလှမ်းထည့်မယ်
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    }
+//    
+//    // Java Swing ရဲ့ Dialog မှာ သုံးနိုင်အောင် List ကို String Array [] ပုံစံ ပြောင်းလဲပေးလိုက်ခြင်း
+//    return accountList.toArray(new String[0]);
+//}
+
+        List<ComboIdName> list = new ArrayList<>();
+        String sql = "SELECT account_id , account_name FROM chart_of_accounts WHERE is_active = TRUE";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                // ID ရော နာမည်ရောကို တွဲပြီး Object ဆောက်ကာ List ထဲထည့်ခြင်း
+                list.add(new ComboIdName(rs.getInt("account_id"), rs.getString("account_name")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
+
     }
-    
-    // Java Swing ရဲ့ Dialog မှာ သုံးနိုင်အောင် List ကို String Array [] ပုံစံ ပြောင်းလဲပေးလိုက်ခြင်း
-    return accountList.toArray(new String[0]);
-}
-    
+
+    public boolean insertCashBookDetailsDAO(CashBookDetailsDTO cbdDTO) {
+        String sql = "INSERT INTO cash_book_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setDate(1, (Date) cbdDTO.getEntryDate());
+            stmt.setInt(2, cbdDTO.getAccountId());
+            
+            // Null စစ်ဆေးပြီး ထည့်ခြင်း
+            if (cbdDTO.getCustomerId() != null) stmt.setInt(3, cbdDTO.getCustomerId());
+            else stmt.setNull(3, Types.INTEGER);
+            
+            if (cbdDTO.getSupplierId() != null) stmt.setInt(4, cbdDTO.getSupplierId());
+            else stmt.setNull(4, Types.INTEGER);
+            
+            stmt.setString(5, cbdDTO.getVoucherNo());
+            stmt.setString(6, cbdDTO.getDescription());
+            stmt.setDouble(7, cbdDTO.getDebit());
+            stmt.setDouble(8, cbdDTO.getCredit());
+            stmt.setDouble(9, cbdDTO.getBalance());
+        
+            
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }
