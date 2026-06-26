@@ -11,7 +11,6 @@ import com.erp.DTO.CashBookDetailsDTO;
 import com.erp.DTO.ComboIdName;
 import java.awt.Component;
 import java.util.List;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -77,10 +76,10 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         txtFromDate = new com.toedter.calendar.JDateChooser();
-        txtFromDate1 = new com.toedter.calendar.JDateChooser();
+        txtToDate = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        searchBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnAddRow = new javax.swing.JButton();
         btnDeleteRow = new javax.swing.JButton();
@@ -98,7 +97,12 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
         jLabel2.setText("To Date");
 
-        jButton1.setText("Search");
+        searchBtn.setText("Search");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -112,9 +116,9 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
-                .addComponent(txtFromDate1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(searchBtn)
                 .addContainerGap(440, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -130,8 +134,8 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                             .addGap(11, 11, 11)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtFromDate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton1)))))
+                                .addComponent(txtToDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(searchBtn)))))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -261,7 +265,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
     private void btnAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRowActionPerformed
         newRow();
-
     }//GEN-LAST:event_btnAddRowActionPerformed
 
     private void newRow() {
@@ -377,7 +380,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         if (successCount > 0) {
             // loadDataSet();
             JOptionPane.showMessageDialog(this, "Successfully Saved (" + successCount + ") records.", "Success", JOptionPane.INFORMATION_MESSAGE);
-        } else {
+        }else {
             JOptionPane.showMessageDialog(this, "Save Failed", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -386,6 +389,87 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     private void cashTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cashTablePropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_cashTablePropertyChange
+
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+     DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+    
+    // Fetch dates directly from JDateChooser
+    java.util.Date parsedFrom = txtFromDate.getDate();
+    java.util.Date parsedTo = txtToDate.getDate();
+    
+    // Check if dates are selected; if not, show a warning and return
+    if (parsedFrom == null || parsedTo == null) {
+        JOptionPane.showMessageDialog(this, "Please select both From Date and To Date.", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        // Convert util.Date directly to sql.Date
+        java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
+        java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+        
+        CashBookDetailsDAO dao = new CashBookDetailsDAO();
+        List<CashBookDetailsDTO> searchResult = dao.searchByDateRange(fromDate, toDate);
+        
+        // Clear existing table data
+        model.setRowCount(0);
+        
+        if (searchResult.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No records found for the selected dates.", "No Data", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        // Format the date for displaying on the table
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+        
+        // Populate the table with search results
+//        for (CashBookDetailsDTO dto : searchResult) {
+//            String displayDate = format.format(dto.getEntryDate());
+//            
+//            model.addRow(new Object[]{
+//                displayDate,                  
+//                dto.getAccountId(),           
+//                dto.getCustomerId() != null ? dto.getCustomerId() : dto.getSupplierId(), 
+//                dto.getVoucherNo(),           
+//                dto.getDescription(),         
+//                dto.getDebit(),               
+//                dto.getCredit(),              
+//                dto.getBalance()              
+//            });
+//        }
+
+
+        // Populate the table with search results
+        for (CashBookDetailsDTO dto : searchResult) {
+            String displayDate = format.format(dto.getEntryDate());
+
+            // Create ComboIdName objects for ComboBox columns
+            ComboIdName accountCombo = new ComboIdName(dto.getAccountId(), dto.getAccountName());
+
+            // Check whether it is a customer or supplier to create the correct ComboIdName
+            ComboIdName custOrSupCombo = null;
+            if (dto.getCustomerId() != null) {
+                custOrSupCombo = new ComboIdName(dto.getCustomerId(), dto.getCustomerName());
+            } else if (dto.getSupplierId() != null) {
+                custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
+            }
+    
+    model.addRow(new Object[]{
+        displayDate,                  
+        accountCombo,                 // Now displays Account Name instead of ID
+        custOrSupCombo,               // Now displays Customer/Supplier Name instead of ID
+        dto.getVoucherNo(),           
+        dto.getDescription(),         
+        dto.getDebit(),               
+        dto.getCredit(),              
+        dto.getBalance()              
+    });
+}
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_searchBtnActionPerformed
 
     private JTextField customTextField = new JTextField();
 
@@ -508,7 +592,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     private javax.swing.JTable cashTable;
     private javax.swing.JTextField creditTotalTxt;
     private javax.swing.JTextField debitTotalTxt;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -516,8 +599,9 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton searchBtn;
     private com.toedter.calendar.JDateChooser txtFromDate;
-    private com.toedter.calendar.JDateChooser txtFromDate1;
+    private com.toedter.calendar.JDateChooser txtToDate;
     // End of variables declaration//GEN-END:variables
 
     private boolean isUpdating;

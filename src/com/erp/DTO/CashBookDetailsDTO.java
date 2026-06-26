@@ -23,7 +23,21 @@ public class CashBookDetailsDTO {
     private double debit;
     private double credit;
     private double balance;
+    private String accountName;
 
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+  
+    
+    
+    
+    
+    
     public String getCustomerName() {
         return customerName;
     }

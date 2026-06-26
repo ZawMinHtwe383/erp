@@ -34,9 +34,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" pref="49" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Component id="txtFromDate1" min="-2" pref="168" max="-2" attributes="0"/>
+                  <Component id="txtToDate" min="-2" pref="168" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <Component id="searchBtn" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="440" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -55,8 +55,8 @@
                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel2" min="-2" pref="22" max="-2" attributes="0"/>
-                                  <Component id="txtFromDate1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButton1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtToDate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="searchBtn" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -69,7 +69,7 @@
       <SubComponents>
         <Component class="com.toedter.calendar.JDateChooser" name="txtFromDate">
         </Component>
-        <Component class="com.toedter.calendar.JDateChooser" name="txtFromDate1">
+        <Component class="com.toedter.calendar.JDateChooser" name="txtToDate">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -81,10 +81,13 @@
             <Property name="text" type="java.lang.String" value="To Date"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="searchBtn">
           <Properties>
             <Property name="text" type="java.lang.String" value="Search"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchBtnActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
