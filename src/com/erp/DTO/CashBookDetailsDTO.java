@@ -32,12 +32,7 @@ public class CashBookDetailsDTO {
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
-  
-    
-    
-    
-    
-    
+
     public String getCustomerName() {
         return customerName;
     }
@@ -53,6 +48,7 @@ public class CashBookDetailsDTO {
     public void setSuppplierName(String suppplierName) {
         this.suppplierName = suppplierName;
     }
+    
     public int getId() {
         return id;
     }

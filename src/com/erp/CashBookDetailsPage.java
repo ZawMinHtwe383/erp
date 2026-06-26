@@ -80,13 +80,14 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         searchBtn = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        btnAddRow = new javax.swing.JButton();
         btnDeleteRow = new javax.swing.JButton();
+        btnAddRow = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         debitTotalTxt = new javax.swing.JTextField();
         creditTotalTxt = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        deleteBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cashTable = new javax.swing.JTable();
@@ -101,6 +102,20 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBtnActionPerformed(evt);
+            }
+        });
+
+        btnDeleteRow.setText("Delete Row");
+        btnDeleteRow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteRowActionPerformed(evt);
+            }
+        });
+
+        btnAddRow.setText("New Row");
+        btnAddRow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddRowActionPerformed(evt);
             }
         });
 
@@ -119,7 +134,11 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 .addComponent(txtToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchBtn)
-                .addContainerGap(440, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDeleteRow)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAddRow)
+                .addContainerGap(252, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,25 +154,14 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtToDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(searchBtn)))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(searchBtn)
+                                    .addComponent(btnDeleteRow)
+                                    .addComponent(btnAddRow))))))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
-
-        btnAddRow.setText("New Row");
-        btnAddRow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddRowActionPerformed(evt);
-            }
-        });
-
-        btnDeleteRow.setText("Delete Row");
-        btnDeleteRow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteRowActionPerformed(evt);
-            }
-        });
 
         btnSave.setText("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -164,18 +172,23 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
         jLabel3.setText("Total");
 
+        deleteBtn.setText("Delete Data Row");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnAddRow)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDeleteRow)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 251, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deleteBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(debitTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,11 +203,10 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnAddRow)
-                        .addComponent(btnDeleteRow)
                         .addComponent(btnSave)
                         .addComponent(debitTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(creditTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(creditTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deleteBtn)))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
 
@@ -423,23 +435,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
         
         // Populate the table with search results
-//        for (CashBookDetailsDTO dto : searchResult) {
-//            String displayDate = format.format(dto.getEntryDate());
-//            
-//            model.addRow(new Object[]{
-//                displayDate,                  
-//                dto.getAccountId(),           
-//                dto.getCustomerId() != null ? dto.getCustomerId() : dto.getSupplierId(), 
-//                dto.getVoucherNo(),           
-//                dto.getDescription(),         
-//                dto.getDebit(),               
-//                dto.getCredit(),              
-//                dto.getBalance()              
-//            });
-//        }
-
-
-        // Populate the table with search results
         for (CashBookDetailsDTO dto : searchResult) {
             String displayDate = format.format(dto.getEntryDate());
 
@@ -462,14 +457,52 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         dto.getDescription(),         
         dto.getDebit(),               
         dto.getCredit(),              
-        dto.getBalance()              
+        dto.getBalance(),
+        dto.getId()
+            
     });
+            System.out.println(dto.getId());
 }
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
     }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        int selectedRow = cashTable.getSelectedRow();
+    
+    // Check if a row is selected
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a row to delete.", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Confirm deletion
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
+        
+        try {
+            // Retrieve the ID from the hidden 8th column (index 8)
+            int recordId = (int) cashTable.getValueAt(selectedRow, 8);
+            
+            CashBookDetailsDAO dao = new CashBookDetailsDAO();
+            boolean isDeleted = dao.deleteRecord(recordId);
+            
+            if (isDeleted) {
+                JOptionPane.showMessageDialog(this, "Record deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                // Remove the row from the JTable visually
+                ((DefaultTableModel) cashTable.getModel()).removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete the record.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred during deletion.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
     private JTextField customTextField = new JTextField();
 
@@ -592,6 +625,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     private javax.swing.JTable cashTable;
     private javax.swing.JTextField creditTotalTxt;
     private javax.swing.JTextField debitTotalTxt;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

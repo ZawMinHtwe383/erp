@@ -147,6 +147,9 @@ public class CashBookDetailsDAO {
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 CashBookDetailsDTO dto = new CashBookDetailsDTO();
+                //to get id
+                dto.setId(rs.getInt("id"));
+                
                 
                 dto.setEntryDate(rs.getDate("entry_date"));
                // dto.setAccountId(rs.getInt("account_id"));
@@ -180,6 +183,23 @@ public class CashBookDetailsDAO {
         e.printStackTrace();
     }
     return list;
+    }
+
+    public boolean deleteRecord(int recordId) {
+   String sql = "DELETE FROM cash_book_details WHERE id = ?";
+    
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setInt(1, recordId);
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+        
+        
     }
 
 }
