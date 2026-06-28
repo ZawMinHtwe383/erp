@@ -84,7 +84,8 @@ public class CustomerDAO {
 
     public DefaultTableModel getCustomerTableModel() {
         String query = "Select * from customers";
-        try (Statement statement = conn.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+        try (Statement statement = conn.createStatement(); 
+                ResultSet resultSet = statement.executeQuery(query)) {
             return buildTableModel(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();

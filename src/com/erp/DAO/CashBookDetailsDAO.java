@@ -75,7 +75,7 @@ public class CashBookDetailsDAO {
 //}
 
         List<ComboIdName> list = new ArrayList<>();
-        String sql = "SELECT account_id , account_name FROM chart_of_accounts WHERE is_active = TRUE";
+        String sql = "SELECT account_id , account_name FROM chart_of_accounts WHERE is_active = 'Active'";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
@@ -89,6 +89,55 @@ public class CashBookDetailsDAO {
         return list;
 
     }
+    
+    //to update for account_id 
+    public int getAccountIdByName(String accountName) {
+    String sql = "SELECT account_id FROM chart_of_accounts WHERE account_name = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, accountName);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("account_id"); // ID ရှာတွေ့ရင် ပြန်ပေးမယ်
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return -1; // ရှာမတွေ့ရင် -1 ပြန်ပေးမယ်
+}
+    
+    public double  openingBalance(){
+        String sql = "SELECT entry_date,voucher_no, debit, credit, SUM(debit - credit) OVER (ORDER BY entry_date, id) AS balance FROM cash_book_details";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("balance"); // ID ရှာတွေ့ရင် ပြန်ပေးမယ်
+            }
+        }
+        } catch (Exception e) {
+             e.printStackTrace();
+        }
+        return -1; 
+        }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public boolean insertCashBookDetailsDAO(CashBookDetailsDTO cbdDTO) {
         String sql = "INSERT INTO cash_book_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -202,4 +251,45 @@ public class CashBookDetailsDAO {
         
     }
 
+    public boolean updateRecord(CashBookDetailsDTO dto) {
+    String sql = "UPDATE cash_book_details SET entry_date = ?, account_id = ?, customer_id = ?, " +
+                 "supplier_id = ?, voucher_no = ?, description = ?, debit = ?, credit = ?, balance = ? " +
+                 "WHERE id = ?";
+                 
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setDate(1, new java.sql.Date(dto.getEntryDate().getTime()));
+        stmt.setInt(2, dto.getAccountId());
+        
+        // Handle Integer objects that might be null (Customer or Supplier)
+        if (dto.getCustomerId() != null) {
+            stmt.setInt(3, dto.getCustomerId());
+        } else {
+            stmt.setNull(3, java.sql.Types.INTEGER);
+        }
+        
+        if (dto.getSupplierId() != null) {
+            stmt.setInt(4, dto.getSupplierId());
+        } else {
+            stmt.setNull(4, java.sql.Types.INTEGER);
+        }
+        
+        stmt.setString(5, dto.getVoucherNo());
+        stmt.setString(6, dto.getDescription());
+        stmt.setDouble(7, dto.getDebit());
+        stmt.setDouble(8, dto.getCredit());
+        stmt.setDouble(9, dto.getBalance());
+        
+        // Use the ID to specify which row to update
+        stmt.setInt(10, dto.getId()); 
+    
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    
 }

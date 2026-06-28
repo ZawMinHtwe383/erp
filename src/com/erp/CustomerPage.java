@@ -8,15 +8,9 @@ import com.erp.DAO.CustomerDAO;
 import com.erp.DTO.CustomerDTO;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
+
 
 /**
  *
