@@ -74,6 +74,14 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem18 = new javax.swing.JMenuItem();
+        jMenuItem19 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,7 +264,32 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenuItem10.setText("Adjustment");
         jMenu4.add(jMenuItem10);
 
+        jMenuItem18.setText("Cash Book");
+        jMenu4.add(jMenuItem18);
+
+        jMenuItem19.setText("Journal");
+        jMenu4.add(jMenuItem19);
+
         jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Reports");
+
+        jMenuItem13.setText("Sales Report");
+        jMenu5.add(jMenuItem13);
+
+        jMenuItem14.setText("Purchase Report");
+        jMenu5.add(jMenuItem14);
+
+        jMenuItem16.setText("General Ledger");
+        jMenu5.add(jMenuItem16);
+
+        jMenuItem15.setText("Income Statement");
+        jMenu5.add(jMenuItem15);
+
+        jMenuItem17.setText("Finalcial Statement");
+        jMenu5.add(jMenuItem17);
+
+        jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
 
@@ -382,11 +415,19 @@ public void showPanel(javax.swing.JPanel panel) {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
+    private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

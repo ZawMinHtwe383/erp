@@ -10,6 +10,7 @@ import com.erp.Database.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -139,33 +140,108 @@ public class CashBookDetailsDAO {
     
     
 
-    public boolean insertCashBookDetailsDAO(CashBookDetailsDTO cbdDTO) {
+    public boolean insertCashBookDetailsDAO(CashBookDetailsDTO cbdDTO,int cashAccountId) {
         String sql = "INSERT INTO cash_book_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String insertLedgerSQL = "INSERT INTO general_ledger (cash_book_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+//            
+//            stmt.setDate(1, (Date) cbdDTO.getEntryDate());
+//            stmt.setInt(2, cbdDTO.getAccountId());
+//            
+//            // Null စစ်ဆေးပြီး ထည့်ခြင်း
+//            if (cbdDTO.getCustomerId() != null) stmt.setInt(3, cbdDTO.getCustomerId());
+//            else stmt.setNull(3, Types.INTEGER);
+//            
+//            if (cbdDTO.getSupplierId() != null) stmt.setInt(4, cbdDTO.getSupplierId());
+//            else stmt.setNull(4, Types.INTEGER);
+//            
+//            stmt.setString(5, cbdDTO.getVoucherNo());
+//            stmt.setString(6, cbdDTO.getDescription());
+//            stmt.setDouble(7, cbdDTO.getDebit());
+//            stmt.setDouble(8, cbdDTO.getCredit());
+//            stmt.setDouble(9, cbdDTO.getBalance());
+//            return stmt.executeUpdate() > 0;
+//            //gl to save ---->  gl_id	cash_book_detail_id	entry_date	account_id	voucher_no	description	debit	credit	
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+try {conn.setAutoCommit(false); // 🚀 Transaction ကို ပိတ်ပြီး အကုန်လုံးအောင်မြင်မှ Commit လုပ်မည့်စနစ် စတင်ခြင်း
+
+        // -------------------------------------------------------------------------
+        // အဆင့် (၁) - Cash Book ထဲသို့ အရင်သွင်းပြီး Auto Generated Key (ID) ကို ယူခြင်း
+        // -------------------------------------------------------------------------
+        int generatedCashBookId = -1;
+        try (PreparedStatement stmt1 = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt1.setDate(1, new java.sql.Date(cbdDTO.getEntryDate().getTime()));
+            stmt1.setInt(2, cbdDTO.getAccountId());
+            if (cbdDTO.getCustomerId() != null) stmt1.setInt(3, cbdDTO.getCustomerId()); else stmt1.setNull(3, java.sql.Types.INTEGER);
+            if (cbdDTO.getSupplierId() != null) stmt1.setInt(4, cbdDTO.getSupplierId()); else stmt1.setNull(4, java.sql.Types.INTEGER);
+            stmt1.setString(5, cbdDTO.getVoucherNo());
+            stmt1.setString(6, cbdDTO.getDescription());
+            stmt1.setDouble(7, cbdDTO.getDebit());
+            stmt1.setDouble(8, cbdDTO.getCredit());
+            stmt1.setDouble(9, cbdDTO.getBalance());
             
-            stmt.setDate(1, (Date) cbdDTO.getEntryDate());
-            stmt.setInt(2, cbdDTO.getAccountId());
+            stmt1.executeUpdate();
             
-            // Null စစ်ဆေးပြီး ထည့်ခြင်း
-            if (cbdDTO.getCustomerId() != null) stmt.setInt(3, cbdDTO.getCustomerId());
-            else stmt.setNull(3, Types.INTEGER);
-            
-            if (cbdDTO.getSupplierId() != null) stmt.setInt(4, cbdDTO.getSupplierId());
-            else stmt.setNull(4, Types.INTEGER);
-            
-            stmt.setString(5, cbdDTO.getVoucherNo());
-            stmt.setString(6, cbdDTO.getDescription());
-            stmt.setDouble(7, cbdDTO.getDebit());
-            stmt.setDouble(8, cbdDTO.getCredit());
-            stmt.setDouble(9, cbdDTO.getBalance());
-        
-            
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            // သတ်မှတ်လိုက်သော ID အား လှမ်းယူခြင်း
+            try (ResultSet rs = stmt1.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedCashBookId = rs.getInt(1);
+                }
+            }
         }
 
+        // -------------------------------------------------------------------------
+        // အဆင့် (၂) - General Ledger ထဲသို့ (၂) ကြောင်း ခွဲသွင်းခြင်း
+        // -------------------------------------------------------------------------
+        try (PreparedStatement stmt2 = conn.prepareStatement(insertLedgerSQL)) {
+            
+            // 🔹 ပထမစာကြောင်း (User ရွေးချယ်လိုက်သော Account အတွက်)
+            stmt2.setInt(1, generatedCashBookId);
+            stmt2.setDate(2, new java.sql.Date(cbdDTO.getEntryDate().getTime()));
+            stmt2.setInt(3, cbdDTO.getAccountId()); // 👈 User ရွေးလိုက်တဲ့အကောင့် (ဥပမာ - Receivable)
+            stmt2.setString(4, cbdDTO.getVoucherNo());
+            stmt2.setString(5, cbdDTO.getDescription());
+            stmt2.setDouble(6, cbdDTO.getDebit());
+            stmt2.setDouble(7, cbdDTO.getCredit());
+            stmt2.addBatch(); // Batch ထဲသို့ ထည့်ခြင်း
+
+            // 🔹 ဒုတိယစာကြောင်း (ငွေသားအဝင်အထွက်ဖြစ်၍ "Cash Account" သို့ စာရင်းပြန်လှည့်ခြင်း)
+            stmt2.setInt(1, generatedCashBookId);
+            stmt2.setDate(2, new java.sql.Date(cbdDTO.getEntryDate().getTime()));
+            stmt2.setInt(3, cashAccountId); // 👈 ဤနေရာတွင် Cash In Hand သို့မဟုတ် Bank ID အမြဲဝင်မည်
+            stmt2.setString(4, cbdDTO.getVoucherNo());
+            stmt2.setString(5, cbdDTO.getDescription());
+            
+            // 🧮 Double Entry သဘောတရားအရ Debit နှင့် Credit နေရာ ပြောင်းပြန်လှန်ပေးရပါမည်
+            stmt2.setDouble(6, cbdDTO.getCredit()); // Cash Account အတွက် Debit နေရာ၌ Cash Book ၏ Credit အား ထည့်ခြင်း
+            stmt2.setDouble(7, cbdDTO.getDebit());  // Cash Account အတွက် Credit နေရာ၌ Cash Book ၏ Debit အား ထည့်ခြင်း
+            stmt2.addBatch();
+
+            // Ledger ထဲသို့ နှစ်ကြောင်းလုံး ပြိုင်တူ သွင်းလိုက်ခြင်း
+            stmt2.executeBatch();
+        }
+
+        conn.commit(); // 🚀 အကုန်လုံး အဆင်ပြေမှ Database ထဲသို့ အပြီးသတ် သိမ်းဆည်းခြင်း
+        return true;
+
+    } catch (SQLException e) {
+        try {
+            conn.rollback(); // ❌ တစ်နေရာရာမှာ Error တက်လျှင် သွင်းခဲ့သမျှ ဒေတာအားလုံးကို ပြန်ဖျက်ခြင်း (Rollback)
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        e.printStackTrace();
+        return false;
+    } finally {
+        try {
+            conn.setAutoCommit(true); // မူလအတိုင်း AutoCommit ပြန်ဖွင့်ပေးခြင်း
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     }
 
     public List<CashBookDetailsDTO> searchByDateRange(Date fromDate, Date toDate) {

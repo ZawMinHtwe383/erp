@@ -385,7 +385,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 cbdDTO.setBalance(balObj != null && !balObj.toString().isEmpty() ? Double.parseDouble(balObj.toString().trim()) : 0.0);
 
                 // 🚀 ပြင်ဆင်ချက် ၂: Row တစ်ကြောင်းစီရဲ့ Data အစုံ ဖမ်းမိတာနဲ့ Database ထဲကို ချက်ချင်း လှမ်းသိမ်းပါမည်
-                boolean success = cashBookDetailsDAO.insertCashBookDetailsDAO(cbdDTO);
+                boolean success = cashBookDetailsDAO.insertCashBookDetailsDAO(cbdDTO,1);
                 if (success) {
                     successCount++; // သိမ်းတာ အောင်မြင်ရင် ၁ တိုးမည်
                 }
