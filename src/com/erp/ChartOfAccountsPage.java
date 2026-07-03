@@ -48,7 +48,7 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         saveBtn = new javax.swing.JButton();
         deleteBtn = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        updateBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         coaTable = new javax.swing.JTable();
@@ -138,10 +138,10 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("Update");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        updateBtn.setText("Update");
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                updateBtnActionPerformed(evt);
             }
         });
 
@@ -155,7 +155,7 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(427, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -165,7 +165,7 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveBtn)
                     .addComponent(deleteBtn)
-                    .addComponent(jButton3))
+                    .addComponent(updateBtn))
                 .addContainerGap())
         );
 
@@ -255,8 +255,10 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
         }
     }
     }//GEN-LAST:event_deleteBtnActionPerformed
+   
+    
     private int coaId;
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         
         if (coaId == 0) {
             JOptionPane.showMessageDialog(this, "Please select for Update Account");
@@ -285,7 +287,7 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Update Failed");
         }
         }   
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_updateBtnActionPerformed
 
     private void coaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_coaTableMouseClicked
         int row = coaTable.getSelectedRow();
@@ -369,8 +371,8 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
 
         public void loadDataSet() {
         try {
-            ChartOfAccountsDAO categoryDAO = new ChartOfAccountsDAO();
-            coaTable.setModel(categoryDAO.getCOATableModel());
+            ChartOfAccountsDAO coaDAO = new ChartOfAccountsDAO();
+            coaTable.setModel(coaDAO.getCOATableModel());
         } catch (Exception e) {
         }
     }
@@ -390,7 +392,6 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
     private javax.swing.JTable coaTable;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton exportExcelBtn;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -400,5 +401,6 @@ public class ChartOfAccountsPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton saveBtn;
+    private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 }

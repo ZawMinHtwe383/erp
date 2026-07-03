@@ -22,11 +22,7 @@ public class ERP extends javax.swing.JFrame {
         initComponents();
     }
     
-    
-    
-    
-    
-    
+
 
     // Dashboard.java ရဲ့ အထဲမှာ ဤမက်သဒ်ကို ထည့်ရေးပါ
 public void showPanel(javax.swing.JPanel panel) {
@@ -268,6 +264,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu4.add(jMenuItem18);
 
         jMenuItem19.setText("Journal");
+        jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem19ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem19);
 
         jMenuBar1.add(jMenu4);
@@ -354,6 +355,10 @@ public void showPanel(javax.swing.JPanel panel) {
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
         showPanel(new ChartOfAccountsPage());
     }//GEN-LAST:event_jMenuItem12ActionPerformed
+
+    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
+        showPanel(new JournalPage());
+    }//GEN-LAST:event_jMenuItem19ActionPerformed
 
     
     

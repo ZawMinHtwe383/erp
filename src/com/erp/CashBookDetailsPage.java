@@ -452,16 +452,17 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 } else if (dto.getSupplierId() != null) {
                     custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
                 }
-
+                
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
                 model.addRow(new Object[]{
                     displayDate,
                     accountCombo, // Now displays Account Name instead of ID
                     custOrSupCombo, // Now displays Customer/Supplier Name instead of ID
                     dto.getVoucherNo(),
                     dto.getDescription(),
-                    dto.getDebit(),
-                    dto.getCredit(),
-                    dto.getBalance(),
+                    df.format(dto.getDebit()),
+                    df.format(dto.getCredit()),
+                    df.format(dto.getBalance()),
                     dto.getId() // to search for id index 8
                 });
                 //System.out.println(dto.getId());
@@ -541,10 +542,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             Object accObj = model.getValueAt(selectedRow, 1);
             if (accObj instanceof ComboIdName) {
                 cbdDTO.setAccountId(((ComboIdName) accObj).getId());
-
-//                ComboIdName selectedAccount = (ComboIdName) accObj;
-//                int accountId = selectedAccount.getId();
-//                 cbdDTO.setAccountId(accountId);
             } else if (accObj != null) {
                 // ၂။ User က စာသားအသစ် ရိုက်ပြင်လိုက်ရင်
                 String accName = accObj.toString().trim();
@@ -600,7 +597,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             // 8. Call DAO to update the database row
             CashBookDetailsDAO dao = new CashBookDetailsDAO();
 
-            boolean isUpdated = dao.updateRecord(cbdDTO);
+            boolean isUpdated = dao.updateRecord(cbdDTO,1);
 
             if (isUpdated) {
                 JOptionPane.showMessageDialog(this, "Row updated successfully in database.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -656,15 +653,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                             supplierComboBox.addItem(name);
 
                         }
-//  to get id save for database
-//                    int selectedRow = cashTable.getSelectedRow();
-//                      Object cellValue = cashTable.getValueAt(selectedRow, 2);
-//                    if (cellValue instanceof ComboIdName) {
-//                    ComboIdName selectedCustomer = (ComboIdName) cellValue;
-//    
-//                    int customerId = selectedCustomer.getId();
-//                        cashTable.setValueAt(customerId, 1, 10);
-//                    }
 
                         // 💡 Supplier ComboBox ကို ဤနေရာတွင် တိုက်ရိုက် လဲလှယ်ပြသရန်
                         if (value != null) {

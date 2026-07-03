@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.erp.DAO;
+
 import com.erp.DTO.ChartOfAccountsDTO;
 import com.erp.DTO.ComboIdName;
 import com.erp.Database.ConnectionFactory;
@@ -13,16 +14,17 @@ import java.util.Locale;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
 /**
  *
  * @author Zaw Min Htwe
  */
 public class ChartOfAccountsDAO {
-    
-private Connection conn; 
+
+    private Connection conn;
 
     public ChartOfAccountsDAO() {
-        conn = new ConnectionFactory().getConn(); 
+        conn = new ConnectionFactory().getConn();
     }
 
     // 🚀 ၁။ CREATE (Insert Record)
@@ -44,23 +46,22 @@ private Connection conn;
     public List<ChartOfAccountsDTO> getAllAccounts() {
         List<ChartOfAccountsDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM chart_of_accounts";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 ChartOfAccountsDTO dto = new ChartOfAccountsDTO();
-                    rs.getInt("account_id");
-                    rs.getString("account_code");
-                    rs.getString("account_name");
-                    rs.getString("account_type");
-                    rs.getString("is_active");
-                    list.add(dto);
-                      
+                rs.getInt("account_id");
+                rs.getString("account_code");
+                rs.getString("account_name");
+                rs.getString("account_type");
+                rs.getString("is_active");
+                list.add(dto);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
-       
+
     }
 
 //    // 🚀 ၃။ UPDATE (Update Record)
@@ -72,7 +73,7 @@ private Connection conn;
             stmt.setString(3, dto.getAccount_type());
             stmt.setString(4, dto.getIs_active());
             stmt.setInt(5, dto.getAccount_id());
-            System.out.println(dto.hashCode());
+           // System.out.println(dto.hashCode());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,6 +82,7 @@ private Connection conn;
     }
 //
 //    // 🚀 ၄။ DELETE (Delete Record)
+
     public boolean delete(int accountId) {
         String sql = "DELETE FROM chart_of_accounts WHERE account_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -93,21 +95,18 @@ private Connection conn;
     }
 
     public TableModel getCOATableModel() {
-   
-     String query = "Select * from chart_of_accounts";
-         try (Statement statement = conn.createStatement(); 
-                 ResultSet resultSet = statement.executeQuery(query)) {
+
+        String query = "Select * from chart_of_accounts";
+        try (Statement statement = conn.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             return buildTableModel(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return new DefaultTableModel();
         }
-    
-    
-    
+
     }
 
-     public DefaultTableModel buildTableModel(ResultSet resultSet) throws SQLException {
+    public DefaultTableModel buildTableModel(ResultSet resultSet) throws SQLException {
         ResultSetMetaData metaData = resultSet.getMetaData();
         Vector<String> columnNames = new Vector<String>();
         int colCount = metaData.getColumnCount();
@@ -125,13 +124,6 @@ private Connection conn;
             data.add(vector);
         }
         return new DefaultTableModel(data, columnNames);
-    } 
-
- 
-        
-        
-        
     }
 
-
-
+}
