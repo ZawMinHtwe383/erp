@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,11 +63,13 @@ private Connection conn;
     
       public boolean insertJournalDetails(JournalDTO journalDTO) {
         String sql = "INSERT INTO journal_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+       String insertLedgerSQL = "INSERT INTO general_ledger ( cash_book_detail_id,journal_detail_id,entry_date, account_id, voucher_no, description, debit, credit) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+        
         try {
             conn.setAutoCommit(false);
             int generatedJournalId = -1;
             
-            try(PreparedStatement stmt1 = conn.prepareStatement(sql)) {
+            try(PreparedStatement stmt1 = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
                 stmt1.setDate(1, new java.sql.Date(journalDTO.getEntryDate().getTime()));
                 stmt1.setInt(2, journalDTO.getAccountId());
                 if (journalDTO.getCustomerId() != null) {
@@ -83,19 +86,63 @@ private Connection conn;
                 stmt1.setString(6, journalDTO.getDescription());
                 stmt1.setDouble(7, journalDTO.getDebit());
                 stmt1.setDouble(8, journalDTO.getCredit());
-              
-
                 stmt1.executeUpdate();
+                
+                try (ResultSet rs = stmt1.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        generatedJournalId = rs.getInt(1);
+                    }
+                }
+                
+                
+                
+                
+                
+            } 
+            
+            try (PreparedStatement stmt = conn.prepareStatement(insertLedgerSQL)) {
+            
+            stmt.setInt(1, generatedJournalId);
+            stmt.setDate(2, new java.sql.Date(journalDTO.getEntryDate().getTime()));
+            stmt.setInt(3, journalDTO.getAccountId()); // Debit အကောင့် ID
+            stmt.setString(4, journalDTO.getVoucherNo());
+            stmt.setString(5, journalDTO.getDescription());
+            stmt.setDouble(6, journalDTO.getDebit());  // Debit Amount
+            stmt.setDouble(7, 0.00);                 // Credit နေရာတွင် 0.00 ထားမည်
+            stmt.addBatch(); // Batch ထဲသို့ ပထမစာကြောင်း ထည့်ခြင်း
+
+            stmt.setInt(1, generatedJournalId);
+            stmt.setDate(2, new java.sql.Date(journalDTO.getEntryDate().getTime()));
+            stmt.setInt(3, journalDTO.getAccountId()); // Credit အကောင့် ID
+            stmt.setString(4, journalDTO.getVoucherNo());
+            stmt.setString(5, journalDTO.getDescription());
+            stmt.setDouble(6, 0.00);                 // Debit နေရာတွင် 0.00 ထားမည်
+            stmt.setDouble(7, journalDTO.getCredit()); // Credit Amount
+            stmt.addBatch(); // Batch ထဲသို့ ဒုတိယစာကြောင်း ထည့်ခြင်း
+
+            // 🚀 စာကြောင်း နှစ်ကြောင်းလုံးအား ဂျာနယ် သဘောတရားအတိုင်း ပြိုင်တူ မောင်းသွင်းလိုက်ခြင်း
+            stmt.executeBatch();
+        }
+     
                 conn.commit();
                 return true;
-            } 
-        } catch (Exception e) {
-        } finally {
+            
+        } catch (SQLException e) {
+                try {
+                    conn.rollback(); 
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                e.printStackTrace();
+                return false;
+    } finally {
+        try {
+            conn.setAutoCommit(true); 
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    
-    return true;
     }
     
-    
+      }
     
 }
