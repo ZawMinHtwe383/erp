@@ -396,6 +396,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             if (successCount > 0) {
                 // loadDataSet();
                 JOptionPane.showMessageDialog(this, "Successfully Saved (" + successCount + ") records.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                model.setRowCount(0);
             } else {
                 JOptionPane.showMessageDialog(this, "Save Failed", "Error", JOptionPane.ERROR_MESSAGE);
             }

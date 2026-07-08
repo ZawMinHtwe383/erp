@@ -25,31 +25,28 @@ import javax.swing.table.DefaultTableModel;
  */
 public class JournalPage extends javax.swing.JPanel {
 
-   
-  private JournalDAO jDAO = new JournalDAO();
-  private CustomerDAO customerDAO = new CustomerDAO();
-  private SupplierDAO supplierDAO = new SupplierDAO();
+    private JournalDAO jDAO = new JournalDAO();
+    private CustomerDAO customerDAO = new CustomerDAO();
+    private SupplierDAO supplierDAO = new SupplierDAO();
     private JComboBox<ComboIdName> customerComboBox;
     private JComboBox<ComboIdName> supplierComboBox;
-  
-  
+
     public JournalPage() {
         initComponents();
-        
-        
+
         //to show database data for combobox
         javax.swing.table.TableColumn accountName = journalTable.getColumnModel().getColumn(1);
         javax.swing.JComboBox<ComboIdName> comboBox = new javax.swing.JComboBox<>();
         List<ComboIdName> accountList = jDAO.getAccountNamesFromDB();
         for (ComboIdName item : accountList) {
             comboBox.addItem(item);
-            
+
         }
-         accountName.setCellEditor(new javax.swing.DefaultCellEditor(comboBox));
+        accountName.setCellEditor(new javax.swing.DefaultCellEditor(comboBox));
         setupDynamicDropdowns();
         debitOrCreditClose();
-         
-          }
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,6 +80,11 @@ public class JournalPage extends javax.swing.JPanel {
         jLabel2.setText("From Date");
 
         jButton4.setText("Search");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         deleteRowBtn.setText("Delete Row");
         deleteRowBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -207,120 +209,137 @@ public class JournalPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newRowBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRowBtnActionPerformed
-       newRow();    
+        newRow();
     }//GEN-LAST:event_newRowBtnActionPerformed
 
     private void deleteRowBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRowBtnActionPerformed
-       int selectedRow = journalTable.getSelectedRow();
-       if(selectedRow >=0){
-           DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
-           model.removeRow(selectedRow);
-       }
+        int selectedRow = journalTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
+            model.removeRow(selectedRow);
+        }
     }//GEN-LAST:event_deleteRowBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+      
         DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
         int rowCount = model.getRowCount();
-        
-        if(rowCount == 0 ){
-            JOptionPane.showMessageDialog(this, "There have no data in Journal","Waring",JOptionPane.WARNING_MESSAGE);
-            return;
-
-        }
-        
-         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Confirm", JOptionPane.YES_NO_OPTION);
-
-        if(confirm == JOptionPane.YES_OPTION){
-            JournalDAO journalDAO = new JournalDAO();
-            int successCount = 0;
-            
-            for(int i = 0; i < rowCount ; i ++){
-                JournalDTO journalDTO = new JournalDTO();
-                
-                try {
-                    Object dateObj = model.getValueAt(i, 0);
-                    if(dateObj != null){
-                        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
-                        java.util.Date utilDate = format.parse(dateObj.toString().trim());
-                        journalDTO.setEntryDate(new java.sql.Date(utilDate.getTime()));
-                    }  
-                } catch (Exception e) {
-                }
-                
-                Object accObj = model.getValueAt(i, 1);
-                String accountName = accObj != null ? accObj.toString().trim() : "";
-                if (accObj instanceof ComboIdName) {
-                    ComboIdName selectedAccount = (ComboIdName) accObj;
-                    int accountId = selectedAccount.getId();
-                    //journalTable.setValueAt(accountId, i, 1);
-                    journalDTO.setAccountId(accountId);
-                } else if (accObj != null) {
-                    String accName = accObj.toString().trim();
-                }
-                
-                Object cellValue = journalTable.getValueAt(i, 2);
-                if (cellValue != null) {
-                    if (cellValue instanceof ComboIdName) {
-                        if (accountName.equalsIgnoreCase("Receivable")) {
-                            ComboIdName selectedCustomer = (ComboIdName) cellValue;
-                            int customerId = selectedCustomer.getId();
-                           // journalTable.setValueAt(customerId, i, 2);
-                            journalDTO.setCustomerId(customerId); // 🚀 မှတ်ချက်- ဤနေရာတွင် DTO သို့ ထည့်ရန် ကျန်နေခဲ့၍ ဖြည့်ပေးထားပါသည်
-                        } else if (accountName.equalsIgnoreCase("Payable")) {
-                            ComboIdName selectedSupplier = (ComboIdName) cellValue;
-                            int supplierId = selectedSupplier.getId();
-                          //  journalTable.setValueAt(supplierId, i, 2);
-                            journalDTO.setSupplierId(supplierId); // 🚀 မှတ်ချက်- ဤနေရာတွင် DTO သို့ ထည့်ရန် ကျန်နေခဲ့၍ ဖြည့်ပေးထားပါသည်
-                        }
-                    }
-                }
-                
-                Object voucherObj = model.getValueAt(i, 3);
-                journalDTO.setVoucherNo(voucherObj != null ? voucherObj.toString().trim() : "");
-
-                Object descObj = model.getValueAt(i, 4);
-                journalDTO.setDescription(descObj != null ? descObj.toString().trim() : "");
-
-                Object debitObj = model.getValueAt(i, 5);
-                journalDTO.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
-
-                Object creditObj = model.getValueAt(i, 6);
-                journalDTO.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
-
-                
-                boolean success = journalDAO.insertJournalDetails(journalDTO);                
-                if (success) {
-                    successCount++; // သိမ်းတာ အောင်မြင်ရင် ၁ တိုးမည်
-                }
-               
-                System.out.println(journalDTO.getEntryDate());
-                System.out.println(journalDTO.getAccountId());
-                System.out.println(journalDTO.getCustomerId());
-                System.out.println(journalDTO.getSupplierId());
-                System.out.println(journalDTO.getVoucherNo());
-                System.out.println(journalDTO.getDescription());
-                System.out.println(journalDTO.getDebit());
-                System.out.println(journalDTO.getCredit());
-
-            }
-             if (successCount > 0) {
-                // loadDataSet();
-                JOptionPane.showMessageDialog(this, "Successfully Saved (" + successCount + ") records.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Save Failed", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            
-        }
- 
-    }//GEN-LAST:event_saveBtnActionPerformed
-    public void newRow(){
-        DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
-        
-        String todayDate = new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
-        model.addRow(new Object[]{todayDate,"","","","",0,0});
-
+    
+    // 💡 စာရင်းကိုင်သဘောအရ ဂျာနယ်မှာ (၂) ကြောင်းပဲ ရှိရမှာမို့လို့ စစ်ဆေးချက် ထည့်ထားပါတယ်
+    if(rowCount != 2) { 
+        JOptionPane.showMessageDialog(this, "Journal Entry must have exactly 2 rows (1 Debit & 1 Credit)!", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
     }
     
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to save?", "Confirm", JOptionPane.YES_NO_OPTION);
+    if(confirm == JOptionPane.YES_OPTION){
+        
+        // 🚀 အစ်ကိုဖြစ်ချင်သလို Row နှစ်ကြောင်းကို DTO (၂) ခုတည်းနဲ့ သီးသန့် ကွက်တိဖမ်းယူခြင်း
+        JournalDTO row1DTO = getJournalDTOFromRow(model, 0); // Index 0 (ပထမစာကြောင်း)
+        JournalDTO row2DTO = getJournalDTOFromRow(model, 1); // Index 1 (ဒုတိယစာကြောင်း)
+        
+        // DAO ထံသို့ DTO (၂) ခုလုံး တိုက်ရိုက်ပို့၍ သိမ်းခိုင်းခြင်း
+        JournalDAO journalDAO = new JournalDAO();
+        boolean success = journalDAO.insertJournalDetails(row1DTO, row2DTO); 
+        
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Successfully Saved.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            model.setRowCount(0); // ဇယား ရှင်းထုတ်ရန်
+        } else {
+            JOptionPane.showMessageDialog(this, "Save Failed", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+ 
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+       
+    }//GEN-LAST:event_jButton4ActionPerformed
+     private JournalDTO getJournalDTOFromRow(DefaultTableModel model, int rowIndex) {
+    JournalDTO dto = new JournalDTO();
+    
+ 
+//    try {
+//        Object dateObj = model.getValueAt(rowIndex, 0);
+//        if (dateObj != null && !dateObj.toString().trim().isEmpty()) {
+//            String dateStr = dateObj.toString().trim();
+//            
+//            // JCalendar / JDateChooser သုံးထားရင် java.util.Date Object အဖြစ် တိုက်ရိုက်ဝင်နေတတ်သည်
+//            if (dateObj instanceof java.util.Date) {
+//                dto.setEntryDate(new java.sql.Date(((java.util.Date) dateObj).getTime()));
+//                
+//            } else {
+//                // စာသား (String) အနေနဲ့ ရှိနေရင် Parse လုပ်မည်
+//                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+//                java.util.Date utilDate = format.parse(dateStr);
+//                dto.setEntryDate(new java.sql.Date(utilDate.getTime()));
+//                
+//            }
+//        } else {
+//            // တကယ်လို့ Table ထဲမှာ ရက်စွဲမပါခဲ့ရင် ယနေ့ရက်စွဲကို Default ထည့်ပေးမည်
+//            dto.setEntryDate(new java.sql.Date(System.currentTimeMillis()));
+//        }
+//    } catch (Exception e) {
+//        System.err.println("🔴 ရက်စွဲ Parse လုပ်ရာတွင် Error တက်သဖြင့် ယနေ့ရက်စွဲ အစားထိုးပါသည်: " + e.getMessage());
+//        dto.setEntryDate(new java.sql.Date(System.currentTimeMillis())); // Error တက်ရင်လည်း '0' မဖြစ်အောင် ကာကွယ်ခြင်း
+//    }
+
+            try {
+                    Object dateObj = model.getValueAt(rowIndex, 0);
+                    if (dateObj != null) {
+                        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+                        java.util.Date utilDate = format.parse(dateObj.toString().trim());
+                        dto.setEntryDate(new java.sql.Date(utilDate.getTime()));
+               
+                        System.out.println(dto.getEntryDate());
+                        }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+    Object accObj = model.getValueAt(rowIndex, 1);
+    String accountName = "";
+    if (accObj != null) {
+        accountName = accObj.toString().trim();
+        if (accObj instanceof ComboIdName) {
+            dto.setAccountId(((ComboIdName) accObj).getId());
+        } else {
+            // တကယ်လို့ Object မဟုတ်ဘဲ String ဖြစ်နေရင်လည်း မမှားအောင် အစ်ကို့ရဲ့ လက်ရှိ Logic အတိုင်း စစ်နိုင်သည်
+            dto.setAccountId(1); // သို့မဟုတ် သင့်တော်ရာ ID default ပေးရန်
+        }
+    }
+
+    // Customer / Supplier ID ဖတ်ခြင်း
+    Object cellValue = model.getValueAt(rowIndex, 2);
+    if (cellValue != null && cellValue instanceof ComboIdName) {
+        if (accountName.equalsIgnoreCase("Receivable")) {
+            dto.setCustomerId(((ComboIdName) cellValue).getId());
+        } else if (accountName.equalsIgnoreCase("Payable")) {
+            dto.setSupplierId(((ComboIdName) cellValue).getId());
+        }
+    }
+
+    Object voucherObj = model.getValueAt(rowIndex, 3);
+    dto.setVoucherNo(voucherObj != null ? voucherObj.toString().trim() : "");
+    Object descObj = model.getValueAt(rowIndex, 4);
+    dto.setDescription(descObj != null ? descObj.toString().trim() : "");
+
+    // Debit / Credit ဖတ်ခြင်း
+    Object debitObj = model.getValueAt(rowIndex, 5);
+    dto.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
+    Object creditObj = model.getValueAt(rowIndex, 6);
+    dto.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
+
+    return dto;
+}
+    
+    public void newRow() {
+        DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
+
+        String todayDate = new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+        model.addRow(new Object[]{todayDate, "", "", "", "", 0, 0});
+
+    }
+
     private JTextField customTextField = new JTextField();
 
     public void setupDynamicDropdowns() {
@@ -389,65 +408,62 @@ public class JournalPage extends javax.swing.JPanel {
             }
         });
 
-        
-        
     }
-    
-    public void debitOrCreditClose(){
+
+    public void debitOrCreditClose() {
         // Table ထဲက ဒေတာ အပြောင်းအလဲဖြစ်တိုင်း လှမ်းတွက်မည့် Listener
-journalTable.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
-    private boolean isUpdating = false; // Infinite Loop မဖြစ်စေရန် တားဆီးသည့် Flag
+        journalTable.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
+            private boolean isUpdating = false; // Infinite Loop မဖြစ်စေရန် တားဆီးသည့် Flag
 
-    @Override
-    public void tableChanged(javax.swing.event.TableModelEvent e) {
-        if (isUpdating) return; // ကုဒ်ကနေ ပြန်ပြင်နေချိန်ဆိုလျှင် ကျော်မည်
-        
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        
-        // Debit (Index 5) သို့မဟုတ် Credit (Index 6) ကို ပြင်မိမှသာ တွက်ချက်မည်
-        if (column == 5 || column == 6) {
-            isUpdating = true;
-            try {
-                DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
-                
-                // ဒေတာများကို ရယူခြင်း
-                double debit = 0.0;
-                double credit = 0.0;
-                
-                Object debitVal = model.getValueAt(row, 5);
-                Object creditVal = model.getValueAt(row, 6);
-                
-                if (debitVal != null && !debitVal.toString().trim().isEmpty()) {
-                    debit = Double.parseDouble(debitVal.toString().trim());
+            @Override
+            public void tableChanged(javax.swing.event.TableModelEvent e) {
+                if (isUpdating) {
+                    return; // ကုဒ်ကနေ ပြန်ပြင်နေချိန်ဆိုလျှင် ကျော်မည်
                 }
-                if (creditVal != null && !creditVal.toString().trim().isEmpty()) {
-                    credit = Double.parseDouble(creditVal.toString().trim());
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+
+                // Debit (Index 5) သို့မဟုတ် Credit (Index 6) ကို ပြင်မိမှသာ တွက်ချက်မည်
+                if (column == 5 || column == 6) {
+                    isUpdating = true;
+                    try {
+                        DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
+
+                        // ဒေတာများကို ရယူခြင်း
+                        double debit = 0.0;
+                        double credit = 0.0;
+
+                        Object debitVal = model.getValueAt(row, 5);
+                        Object creditVal = model.getValueAt(row, 6);
+
+                        if (debitVal != null && !debitVal.toString().trim().isEmpty()) {
+                            debit = Double.parseDouble(debitVal.toString().trim());
+                        }
+                        if (creditVal != null && !creditVal.toString().trim().isEmpty()) {
+                            credit = Double.parseDouble(creditVal.toString().trim());
+                        }
+
+                        // 🚀 Logic ၁။ Debit ရိုက်လျှင် Credit ကို ဝိုင်ပစ်၊ Credit ရိုက်လျှင် Debit ကို ဝိုင်ပစ်
+                        if (column == 5 && debit > 0) {
+                            model.setValueAt(0.0, row, 6); // Credit ကို 0.0 ပြန်ပြောင်း
+                            credit = 0.0;
+                        } else if (column == 6 && credit > 0) {
+                            model.setValueAt(0.0, row, 5); // Debit ကို 0.0 ပြန်ပြောင်း
+                            debit = 0.0;
+                        }
+
+                        // 🚀 Logic ၂။ Balance ကို Row အားလုံးအတွက် Cumulative Carry Forward ပြန်တွက်ခြင်း
+                        //  updateRunningBalance();
+                    } catch (NumberFormatException ex) {
+                        // ဂဏန်းမဟုတ်တာ ရိုက်ထည့်မိပါက လက်ခံမည်မဟုတ်ကြောင်း ပြသရန်
+                    } finally {
+                        isUpdating = false;
+                    }
                 }
-
-                // 🚀 Logic ၁။ Debit ရိုက်လျှင် Credit ကို ဝိုင်ပစ်၊ Credit ရိုက်လျှင် Debit ကို ဝိုင်ပစ်
-                if (column == 5 && debit > 0) {
-                    model.setValueAt(0.0, row, 6); // Credit ကို 0.0 ပြန်ပြောင်း
-                    credit = 0.0;
-                } else if (column == 6 && credit > 0) {
-                    model.setValueAt(0.0, row, 5); // Debit ကို 0.0 ပြန်ပြောင်း
-                    debit = 0.0;
-                }
-
-                // 🚀 Logic ၂။ Balance ကို Row အားလုံးအတွက် Cumulative Carry Forward ပြန်တွက်ခြင်း
-              //  updateRunningBalance();
-
-            } catch (NumberFormatException ex) {
-                // ဂဏန်းမဟုတ်တာ ရိုက်ထည့်မိပါက လက်ခံမည်မဟုတ်ကြောင်း ပြသရန်
-            } finally {
-                isUpdating = false;
             }
-        }
+        });
     }
-});
-    }
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteBtn;
@@ -466,4 +482,6 @@ journalTable.getModel().addTableModelListener(new javax.swing.event.TableModelLi
     private javax.swing.JButton saveBtn;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
+
+   
 }

@@ -21,18 +21,17 @@ import java.util.List;
  */
 public class JournalDAO {
 
-  
-private Connection conn;
+    private Connection conn;
+
     public JournalDAO() {
-         conn = new ConnectionFactory().getConn();
+        conn = new ConnectionFactory().getConn();
     }
 
     public List<ComboIdName> getAccountNamesFromDB() {
         List<ComboIdName> list = new ArrayList<>();
-         String sql = "SELECT account_id , account_name FROM chart_of_accounts WHERE is_active = 'Active'";
+        String sql = "SELECT account_id , account_name FROM chart_of_accounts WHERE is_active = 'Active'";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql); 
-                ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 // ID ရော နာမည်ရောကို တွဲပြီး Object ဆောက်ကာ List ထဲထည့်ခြင်း
@@ -42,107 +41,131 @@ private Connection conn;
             e.printStackTrace();
         }
         return list;
-    
-    
+
     }
-        //to update for account_id 
+    //to update for account_id 
+
     public int getAccountIdByName(String accountName) {
-    String sql = "SELECT account_id FROM chart_of_accounts WHERE account_name = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, accountName);
-        try (ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("account_id"); // ID ရှာတွေ့ရင် ပြန်ပေးမယ်
+        String sql = "SELECT account_id FROM chart_of_accounts WHERE account_name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, accountName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("account_id"); // ID ရှာတွေ့ရင် ပြန်ပေးမယ်
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return -1; // ရှာမတွေ့ရင် -1 ပြန်ပေးမယ်
     }
-    return -1; // ရှာမတွေ့ရင် -1 ပြန်ပေးမယ်
-}
+
+  
+
+    public boolean insertJournalDetails(JournalDTO row1DTO, JournalDTO row2DTO) {
     
-      public boolean insertJournalDetails(JournalDTO journalDTO) {
-        String sql = "INSERT INTO journal_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-       String insertLedgerSQL = "INSERT INTO general_ledger ( cash_book_detail_id,journal_detail_id,entry_date, account_id, voucher_no, description, debit, credit) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
-        
-        try {
-            conn.setAutoCommit(false);
-            int generatedJournalId = -1;
-            
-            try(PreparedStatement stmt1 = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
-                stmt1.setDate(1, new java.sql.Date(journalDTO.getEntryDate().getTime()));
-                stmt1.setInt(2, journalDTO.getAccountId());
-                if (journalDTO.getCustomerId() != null) {
-                    stmt1.setInt(3, journalDTO.getCustomerId());
+    String sql = "INSERT INTO journal_details (entry_date, account_id, customer_id, supplier_id, voucher_no, description, debit, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String insertLedgerSQL = "INSERT INTO general_ledger (cash_book_detail_id, journal_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+
+
+    try {
+        if (conn == null || conn.isClosed()) {
+            return false;
+        }
+        conn.setAutoCommit(false); // 🚀 Transaction ကို သေချာ စတင်လိုက်ပါပြီ
+        int generatedJournalId = -1;
+            try (PreparedStatement stmt1 = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt1.setDate(1, new java.sql.Date(row1DTO.getEntryDate().getTime()));
+                stmt1.setInt(2, row1DTO.getAccountId());
+                 if (row1DTO.getCustomerId() != null) {
+                    stmt1.setInt(3, row1DTO.getCustomerId());
                 } else {
                     stmt1.setNull(3, java.sql.Types.INTEGER);
                 }
-                if (journalDTO.getSupplierId() != null) {
-                    stmt1.setInt(4, journalDTO.getSupplierId());
+                if (row1DTO.getSupplierId() != null) {
+                    stmt1.setInt(4, row1DTO.getSupplierId());
                 } else {
                     stmt1.setNull(4, java.sql.Types.INTEGER);
                 }
-                stmt1.setString(5, journalDTO.getVoucherNo());
-                stmt1.setString(6, journalDTO.getDescription());
-                stmt1.setDouble(7, journalDTO.getDebit());
-                stmt1.setDouble(8, journalDTO.getCredit());
+                stmt1.setString(5, row1DTO.getVoucherNo());
+                stmt1.setString(6, row1DTO.getDescription());
+                stmt1.setDouble(7, row1DTO.getDebit());
+                stmt1.setDouble(8, row1DTO.getCredit());
                 stmt1.executeUpdate();
                 
+                
+                stmt1.setDate(1, new java.sql.Date(row2DTO.getEntryDate().getTime()));
+                stmt1.setInt(2, row2DTO.getAccountId());
+                 if (row2DTO.getCustomerId() != null) {
+                    stmt1.setInt(3, row2DTO.getCustomerId());
+                } else {
+                    stmt1.setNull(3, java.sql.Types.INTEGER);
+                }
+                if (row2DTO.getSupplierId() != null) {
+                    stmt1.setInt(4, row2DTO.getSupplierId());
+                } else {
+                    stmt1.setNull(4, java.sql.Types.INTEGER);
+                }
+                stmt1.setString(5, row2DTO.getVoucherNo());
+                stmt1.setString(6, row2DTO.getDescription());
+                stmt1.setDouble(7, row2DTO.getDebit());
+                stmt1.setDouble(8, row2DTO.getCredit());
+                stmt1.executeUpdate();
+   
+
+                // သတ်မှတ်လိုက်သော ID အား လှမ်းယူခြင်း
                 try (ResultSet rs = stmt1.getGeneratedKeys()) {
                     if (rs.next()) {
                         generatedJournalId = rs.getInt(1);
                     }
                 }
-                
-                
-                
-                
-                
-            } 
+            }
             
-            try (PreparedStatement stmt = conn.prepareStatement(insertLedgerSQL)) {
-            
-            stmt.setInt(1, generatedJournalId);
-            stmt.setDate(2, new java.sql.Date(journalDTO.getEntryDate().getTime()));
-            stmt.setInt(3, journalDTO.getAccountId()); // Debit အကောင့် ID
-            stmt.setString(4, journalDTO.getVoucherNo());
-            stmt.setString(5, journalDTO.getDescription());
-            stmt.setDouble(6, journalDTO.getDebit());  // Debit Amount
-            stmt.setDouble(7, 0.00);                 // Credit နေရာတွင် 0.00 ထားမည်
-            stmt.addBatch(); // Batch ထဲသို့ ပထမစာကြောင်း ထည့်ခြင်း
+        try (PreparedStatement stmt2 = conn.prepareStatement(insertLedgerSQL)) {
 
-            stmt.setInt(1, generatedJournalId);
-            stmt.setDate(2, new java.sql.Date(journalDTO.getEntryDate().getTime()));
-            stmt.setInt(3, journalDTO.getAccountId()); // Credit အကောင့် ID
-            stmt.setString(4, journalDTO.getVoucherNo());
-            stmt.setString(5, journalDTO.getDescription());
-            stmt.setDouble(6, 0.00);                 // Debit နေရာတွင် 0.00 ထားမည်
-            stmt.setDouble(7, journalDTO.getCredit()); // Credit Amount
-            stmt.addBatch(); // Batch ထဲသို့ ဒုတိယစာကြောင်း ထည့်ခြင်း
+                // 🔹 ပထမစာကြောင်း (User ရွေးချယ်လိုက်သော Account အတွက်)
+                stmt2.setInt(1, generatedJournalId);
+                stmt2.setDate(2, new java.sql.Date(row1DTO.getEntryDate().getTime()));
+                stmt2.setInt(3, row1DTO.getAccountId()); // 👈 User ရွေးလိုက်တဲ့အကောင့် (ဥပမာ - Receivable)
+                stmt2.setString(4, row1DTO.getVoucherNo());
+                stmt2.setString(5, row1DTO.getDescription());
+                stmt2.setDouble(6, row1DTO.getDebit()); // Cash Account အတွက် Debit နေရာ၌ Cash Book ၏ Credit အား ထည့်ခြင်း
+                stmt2.setDouble(7, row1DTO.getCredit());
 
-            // 🚀 စာကြောင်း နှစ်ကြောင်းလုံးအား ဂျာနယ် သဘောတရားအတိုင်း ပြိုင်တူ မောင်းသွင်းလိုက်ခြင်း
-            stmt.executeBatch();
-        }
-     
-                conn.commit();
-                return true;
-            
-        } catch (SQLException e) {
-                try {
-                    conn.rollback(); 
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-                e.printStackTrace();
-                return false;
+                stmt2.addBatch(); // Batch ထဲသို့ ထည့်ခြင်း
+
+                // 🔹 ဒုတိယစာကြောင်း (ငွေသားအဝင်အထွက်ဖြစ်၍ "Cash Account" သို့ စာရင်းပြန်လှည့်ခြင်း)
+                stmt2.setInt(1, generatedJournalId);
+                stmt2.setDate(2, new java.sql.Date(row2DTO.getEntryDate().getTime()));
+                stmt2.setInt(3, row2DTO.getAccountId()); // 👈 ဤနေရာတွင် Cash In Hand သို့မဟုတ် Bank ID အမြဲဝင်မည်
+                stmt2.setString(4, row2DTO.getVoucherNo());
+                stmt2.setString(5, row2DTO.getDescription());
+
+                // 🧮 Double Entry သဘောတရားအရ Debit နှင့် Credit နေရာ ပြောင်းပြန်လှန်ပေးရပါမည်
+                // Cash Account အတွက် Credit နေရာ၌ Cash Book ၏ Debit အား ထည့်ခြင်း
+                stmt2.setDouble(6, row2DTO.getDebit());
+                stmt2.setDouble(7, row2DTO.getCredit());
+                stmt2.addBatch();
+
+                // Ledger ထဲသို့ နှစ်ကြောင်းလုံး ပြိုင်တူ သွင်းလိုက်ခြင်း
+                stmt2.executeBatch();
+            }
+        conn.commit(); // 🚀 အကုန်လုံး အဆင်ပြေမှ Database ထဲ တစ်ပြိုင်တည်း အပြီးသတ် သိမ်းခိုင်းလိုက်ခြင်း!
+        return true; 
+
+    } catch (SQLException e) {
+        try { 
+            conn.rollback(); // ဘာမှမဝင်အောင် ပြန်ဖျက်ချခြင်း
+        } catch (SQLException ex) { ex.printStackTrace(); }
+        
+        javax.swing.JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "SQL Error Details", javax.swing.JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace(); 
+        return false;
     } finally {
-        try {
-            conn.setAutoCommit(true); 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        try { conn.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
     }
+}
     
-      }
+    
     
 }
