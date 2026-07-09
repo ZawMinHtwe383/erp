@@ -1,0 +1,1 @@
+SELECT gl.account_id, a.account_name, SUM(gl.debit) AS total_debit, SUM(gl.credit) AS total_credit, SUM(gl.debit) - SUM(gl.credit) AS net_balance FROM general_ledger gl INNER JOIN chart_of_accounts a ON gl.account_id = a.account_id WHERE gl.entry_date BETWEEN '2026-07-08' AND '2026-07-08' GROUP BY gl.account_id, a.account_name ORDER BY gl.account_id;

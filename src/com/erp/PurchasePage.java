@@ -501,16 +501,16 @@ public class PurchasePage extends javax.swing.JPanel {
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         
-        DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel(); // မိမိ JTable နာမည်
+        DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel(); // Name of your JTable
 
-        // ၁။ ဇယားထဲမှာ ပစ္စည်းရှိမရှိ အရင်စစ်မယ်
+       //First check if the item exists in the table.
         if (model.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "ဘောချာထဲတွင် မည်သည့်ပစ္စည်းမှ မရှိသေးပါ!", "သတိပေးချက်", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         try {
-            // ၂။ ပင်မ Voucher DTO ဆောက်ပြီး Header ဒေတာများ ထည့်မယ်
+            // Create the main Voucher DTO and add header data
             PurchaseVoucherDTO voucherDTO = new PurchaseVoucherDTO();
             voucherDTO.setVoucherNo(voucherNoTxt.getText().trim());
 
@@ -559,6 +559,7 @@ public class PurchasePage extends javax.swing.JPanel {
             if (isSuccess) {
                 JOptionPane.showMessageDialog(this, "အဝယ်ဘောချာ သိမ်းဆည်းခြင်း အောင်မြင်ပါသည်!", "အောင်မြင်မှု", JOptionPane.INFORMATION_MESSAGE);
                 clearBtnActionPerformed(null); // Form ကို Reset ပြန်ချမယ်
+                 autoGenerateVoucherNo();
             } else {
                 JOptionPane.showMessageDialog(this, "ဒေတာဘေ့စ် သိမ်းဆည်းမှု လွဲချော်ခဲ့ပါသည်။", "အမှားအယွင်း", JOptionPane.ERROR_MESSAGE);
             }
@@ -700,11 +701,6 @@ public class PurchasePage extends javax.swing.JPanel {
         SupplierDAO supplierDAO = new SupplierDAO();
         List<SupplierDTO> suppliers = supplierDAO.getAllSupplierNames();
         enableAutoComplete(supplierCmb, suppliers);
-//        for (SupplierDTO sup : suppliers) {
-//           
-//            supplierCmb.addItem(sup);
-//
-//        }
     }
 
 

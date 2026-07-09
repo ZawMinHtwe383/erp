@@ -282,6 +282,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu5.add(jMenuItem14);
 
         jMenuItem16.setText("General Ledger");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
         jMenu5.add(jMenuItem16);
 
         jMenuItem15.setText("Income Statement");
@@ -359,6 +364,10 @@ public void showPanel(javax.swing.JPanel panel) {
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
         showPanel(new JournalPage());
     }//GEN-LAST:event_jMenuItem19ActionPerformed
+
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        showPanel(new GLReportsPage());
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     
     

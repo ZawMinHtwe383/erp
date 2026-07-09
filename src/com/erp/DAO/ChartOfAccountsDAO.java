@@ -126,4 +126,23 @@ public class ChartOfAccountsDAO {
         return new DefaultTableModel(data, columnNames);
     }
 
+      
+     public List<ChartOfAccountsDTO> getAllCOANames() {
+        List<ChartOfAccountsDTO> list = new ArrayList<>();
+        String sql = "SELECT account_id,account_name FROM chart_of_accounts ORDER BY account_id ASC";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ChartOfAccountsDTO coa = new ChartOfAccountsDTO();
+                coa.setAccount_id(rs.getInt("account_id"));     // ID ထည့်သည်
+                coa.setAccount_name(rs.getString("account_name")); // နာမည်ထည့်သည်
+                list.add(coa); // Object လိုက် List ထဲထည့်သည်
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
+    
 }

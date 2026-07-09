@@ -14,12 +14,22 @@ import java.util.List;
  */
 public class PurchaseVoucherDTO {
     private int voucherId;
+    private int purchaseId =16;
+    private int purchaseDiscountId =17;
     private String voucherNo;
     private int supplierId;
     private Date purchaseDate;
     private double subTotal;
     private double voucherDiscount;
     private double grandTotal;
+
+    public int getPurchaseDiscountId() {
+        return purchaseDiscountId;
+    }
+
+    public void setPurchaseDiscountId(int purchaseDiscountId) {
+        this.purchaseDiscountId = purchaseDiscountId;
+    }
     
     public int getVoucherId() {
         return voucherId;
@@ -28,7 +38,14 @@ public class PurchaseVoucherDTO {
     public void setVoucherId(int voucherId) {
         this.voucherId = voucherId;
     }
+      public int getPurchaseId() {
+        return purchaseId;
+    }
 
+    public void setPurchaseId(int purchaseId) {
+        this.purchaseId = purchaseId;
+    }
+    
     public String getVoucherNo() {
         return voucherNo;
     }

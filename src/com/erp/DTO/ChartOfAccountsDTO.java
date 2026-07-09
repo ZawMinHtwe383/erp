@@ -10,12 +10,11 @@ package com.erp.DTO;
  */
 public class ChartOfAccountsDTO {
 
-  
     private int account_id;
-private String account_code;
-private String account_name;
-private String account_type;
-private String is_active;
+    private String account_code;
+    private String account_name;
+    private String account_type;
+    private String is_active;
 
     public String getIs_active() {
         return is_active;
@@ -57,5 +56,13 @@ private String is_active;
         this.account_type = account_type;
     }
 
+    
+    @Override
+    public String toString() {
   
+    return this.account_name; 
+}
+    
+    
+    
 }

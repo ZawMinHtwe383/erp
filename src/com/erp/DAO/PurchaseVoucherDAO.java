@@ -68,10 +68,11 @@ public class PurchaseVoucherDAO {
 
     public boolean savePurchaseVoucher(PurchaseVoucherDTO voucherDTO) {
         String insertHeaderSql = "INSERT INTO purchase_vouchers (voucher_no, supplier_id, purchase_date, sub_total, voucher_discount, grand_total) VALUES (?, ?, ?, ?, ?, ?)";
-
+        String insertLedgerSQL = "INSERT INTO general_ledger (journal_detail_id,purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (Null, ?, ?, ?, ?, ?, ?, ?)";
+        
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
+        //ResultSet rs = null;
+        int insertedVoucherId = -1;
         try {
 
             // 🛡️ Transaction စတင်ခြင်း (Auto Commit ကို ပိတ်ထားပါမည်)
@@ -96,11 +97,69 @@ public class PurchaseVoucherDAO {
 
             int affectedRows = pstmt.executeUpdate();
 
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        insertedVoucherId = rs.getInt(1);
+                    }
+                }
+            
+            try (PreparedStatement stmt = conn.prepareStatement(insertLedgerSQL)) {
+           
+                //purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit
+            
+            // Purchase Account (Debit)
+            // =========================================================================
+            stmt.setInt(1, insertedVoucherId); // အဝယ်ဘောက်ချာ ID
+            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
+            stmt.setInt(3, voucherDTO.getPurchaseId()); // 👈 Purchase Account ID (ဥပမာ- 25)
+            stmt.setString(4, voucherDTO.getVoucherNo());
+            stmt.setString(5, "Gross Purchase for " + voucherDTO.getVoucherNo());
+            stmt.setDouble(6, voucherDTO.getSubTotal()); // Debit တွင် ဝယ်ယူသည့် ပမာဏထည့်ရန်
+            stmt.setDouble(7, 0.00); // Credit ကို သုညပေးရန်
+            stmt.addBatch();
+            
+            
+            
+            //purchase dicount
+           if(voucherDTO.getVoucherDiscount() > 0){
+            stmt.setInt(1, insertedVoucherId);
+            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
+            stmt.setInt(3, voucherDTO.getPurchaseDiscountId()); 
+            stmt.setString(4, voucherDTO.getVoucherNo());
+            stmt.setString(5, "Discount Received for " + voucherDTO.getVoucherNo());
+            stmt.setDouble(6, 0.00); // Debit ကို သုညပေးရန်
+            stmt.setDouble(7, voucherDTO.getVoucherDiscount()); // Credit တွင် ပမာဏထည့်ရန်
+            stmt.addBatch();
+           }
+            
+            // =========================================================================
+            // 🔹 စာကြောင်း (၂) - Accounts Payable (AP) သို့မဟုတ် Cash (Credit)
+            // =========================================================================
+            stmt.setInt(1, insertedVoucherId);
+            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
+            
+            // 💡 အကြွေးဝယ်တာဆိုလျှင် AP Account ID ကိုသွင်းပြီး၊ လက်ငင်းဆိုလျှင် Cash Account ID ကိုသွင်းမည်
+//            if (purchaseDTO.isCreditPurchase()) {
+//                stmt.setInt(3, purchaseDTO.getApAccountId()); // 👈 Accounts Payable Account ID (ဥပမာ- 12)
+//            } else {
+//                stmt.setInt(3, purchaseDTO.getCashAccountId()); // 👈 Cash In Hand / Bank ID
+//            }
+            stmt.setInt(3, voucherDTO.getSupplierId()); 
+            stmt.setString(4, voucherDTO.getVoucherNo());
+            stmt.setString(5, "Net Payable for " + voucherDTO.getVoucherNo());
+            stmt.setDouble(6, 0.00); // Debit ကို သုညပေးရန်
+            stmt.setDouble(7, voucherDTO.getGrandTotal()); // Credit တွင် ပမာဏထည့်ရန်
+            stmt.addBatch();
+             // Ledger ထဲသို့ (၂) ကြောင်းလုံး ပြိုင်တူ မောင်းသွင်းလိုက်ခြင်း
+            stmt.executeBatch();
+        }
+            
+     
+            
             // Header ဝင်သွားပြီဆိုလျှင် Auto Generate ဖြစ်လာသော Voucher ID ကို ဆွဲထုတ်မည်
             if (affectedRows > 0) {
-                rs = pstmt.getGeneratedKeys();
-                if (rs.next()) {
-                    int insertedVoucherId = rs.getInt(1); // 👈 ဒုတိယမြောက် table အတွက် သော့ချက် ID
+               
+                // 👈 ဒုတိယမြောက် table အတွက် သော့ချက် ID
             
                     // 🔄 [METHOD ၂ သို့ ချိတ်ဆက်ခြင်း] ရလာသော ID ဖြင့် Detail များကို Batch စနစ်ဖြင့် လှမ်းသိမ်းခိုင်းခြင်း
                     // (မှတ်ချက် - voucherDTO ထဲတွင် ၎င်း၏ list အား ပြန်ထုတ်ပေးမည့် getPurchaseItems() getter ရှိရပါမည်)
@@ -122,14 +181,8 @@ public class PurchaseVoucherDAO {
                         return true;
                     }
                 }
-            }
-            
-           
-            
-            
-        
-            
-            // တစ်ခုခုလွဲချော်ပါက ဒေတာများ အကုန်ပြန်ဖျက် (Rollback) လုပ်မည်
+     
+            // Rollback all data if something goes wrong
             conn.rollback();
             return false;
 
@@ -146,9 +199,7 @@ public class PurchaseVoucherDAO {
         } finally {
             // Resource များကို စနစ်တကျ ပြန်ပိတ်ခြင်း
             try {
-                if (rs != null) {
-                    rs.close();
-                }
+               
                 if (pstmt != null) {
                     pstmt.close();
                 }
