@@ -66,152 +66,132 @@ public class PurchaseVoucherDAO {
         return autoVoucherNo; // ထွက်လာတဲ့ စာသားကို ပြန်ပေးလိုက်ခြင်း
     }
 
+   
     public boolean savePurchaseVoucher(PurchaseVoucherDTO voucherDTO) {
-        String insertHeaderSql = "INSERT INTO purchase_vouchers (voucher_no, supplier_id, purchase_date, sub_total, voucher_discount, grand_total) VALUES (?, ?, ?, ?, ?, ?)";
-        String insertLedgerSQL = "INSERT INTO general_ledger (journal_detail_id,purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (Null, ?, ?, ?, ?, ?, ?, ?)";
-        
-        PreparedStatement pstmt = null;
-        //ResultSet rs = null;
-        int insertedVoucherId = -1;
-        try {
+    String insertHeaderSql = "INSERT INTO purchase_vouchers (voucher_no, supplier_id, purchase_date, sub_total, voucher_discount, grand_total) VALUES (?, ?, ?, ?, ?, ?)";
+    // 💡 VALUES ထဲတွင် Null နှင့် ? စုစုပေါင်း ၈ ခု ကွက်တိ ဖြစ်စေရန် ပြင်ဆင်ထားပါသည်
+    String insertLedgerSQL = "INSERT INTO general_ledger (journal_detail_id, purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+    
+    PreparedStatement pstmt = null;
+    int insertedVoucherId = -1;
+    
+    try {
+        // 🛡️ Transaction စတင်ခြင်း
+        conn.setAutoCommit(false);
 
-            // 🛡️ Transaction စတင်ခြင်း (Auto Commit ကို ပိတ်ထားပါမည်)
-            conn.setAutoCommit(false);
+        pstmt = conn.prepareStatement(insertHeaderSql, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setString(1, voucherDTO.getVoucherNo());
+        pstmt.setInt(2, voucherDTO.getSupplierId());
 
-            // Statement.RETURN_GENERATED_KEYS သုံးပြီး အော်တိုတိုးမည့် Voucher ID (Primary Key) ကို လှမ်းယူပါမည်
-            pstmt = conn.prepareStatement(insertHeaderSql, Statement.RETURN_GENERATED_KEYS);
+        if (voucherDTO.getPurchaseDate() != null) {
+            pstmt.setDate(3, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
+        } else {
+            pstmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+        }
 
-            pstmt.setString(1, voucherDTO.getVoucherNo());
-            pstmt.setInt(2, voucherDTO.getSupplierId());
+        pstmt.setDouble(4, voucherDTO.getSubTotal());
+        pstmt.setDouble(5, voucherDTO.getVoucherDiscount());
+        pstmt.setDouble(6, voucherDTO.getGrandTotal());
 
-            // java.util.Date မှ java.sql.Date သို့ ပြောင်းလဲထည့်သွင်းခြင်း
-            if (voucherDTO.getPurchaseDate() != null) {
-                pstmt.setDate(3, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
-            } else {
-                pstmt.setDate(3, new java.sql.Date(System.currentTimeMillis())); // null ဖြစ်ပါက ယနေ့ရက်စွဲ ထည့်မည်
+        int affectedRows = pstmt.executeUpdate();
+
+        try (ResultSet rs = pstmt.getGeneratedKeys()) {
+            if (rs.next()) {
+                insertedVoucherId = rs.getInt(1);
             }
-
-            pstmt.setDouble(4, voucherDTO.getSubTotal());
-            pstmt.setDouble(5, voucherDTO.getVoucherDiscount());
-            pstmt.setDouble(6, voucherDTO.getGrandTotal());
-
-            int affectedRows = pstmt.executeUpdate();
-
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        insertedVoucherId = rs.getInt(1);
-                    }
-                }
+        }
+        
+        // =========================================================================
+        // 🚀 General Ledger ထဲသို့ ဒေတာသွင်းခြင်း (Parameter စီစဉ်မှု အမှန်)
+        // =========================================================================
+        try (PreparedStatement stmt = conn.prepareStatement(insertLedgerSQL)) {
             
-            try (PreparedStatement stmt = conn.prepareStatement(insertLedgerSQL)) {
-           
-                //purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit
-            
-            // Purchase Account (Debit)
-            // =========================================================================
-            stmt.setInt(1, insertedVoucherId); // အဝယ်ဘောက်ချာ ID
-            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
-            stmt.setInt(3, voucherDTO.getPurchaseId()); // 👈 Purchase Account ID (ဥပမာ- 25)
-            stmt.setString(4, voucherDTO.getVoucherNo());
-            stmt.setString(5, "Gross Purchase for " + voucherDTO.getVoucherNo());
-            stmt.setDouble(6, voucherDTO.getSubTotal()); // Debit တွင် ဝယ်ယူသည့် ပမာဏထည့်ရန်
-            stmt.setDouble(7, 0.00); // Credit ကို သုညပေးရန်
+            // ၁။ Purchase Account (Debit)
+            // ---------------------------------------------------------------------
+            stmt.setInt(1, insertedVoucherId); // purchase_detail_id
+            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime())); // entry_date
+            stmt.setInt(3, voucherDTO.getPurchaseId()); // account_id (ဥပမာ- 25)
+            stmt.setString(4, voucherDTO.getVoucherNo()); // voucher_no
+            stmt.setString(5, "Gross Purchase for " + voucherDTO.getVoucherNo()); // description
+            stmt.setDouble(6, voucherDTO.getSubTotal()); // debit
+            stmt.setDouble(7, 0.00); // credit
             stmt.addBatch();
             
+            // ၂။ Purchase Discount (Credit) - ရှိမှ သွင်းမည်
+            // ---------------------------------------------------------------------
+            if (voucherDTO.getVoucherDiscount() > 0) {
+                stmt.setInt(1, insertedVoucherId);
+                stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
+                stmt.setInt(3, voucherDTO.getPurchaseDiscountId()); // account_id
+                stmt.setString(4, voucherDTO.getVoucherNo());
+                stmt.setString(5, "Discount Received for " + voucherDTO.getVoucherNo());
+                stmt.setDouble(6, 0.00); // debit
+                stmt.setDouble(7, voucherDTO.getVoucherDiscount()); // credit
+                stmt.addBatch();
+            }
             
-            
-            //purchase dicount
-           if(voucherDTO.getVoucherDiscount() > 0){
-            stmt.setInt(1, insertedVoucherId);
-            stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
-            stmt.setInt(3, voucherDTO.getPurchaseDiscountId()); 
-            stmt.setString(4, voucherDTO.getVoucherNo());
-            stmt.setString(5, "Discount Received for " + voucherDTO.getVoucherNo());
-            stmt.setDouble(6, 0.00); // Debit ကို သုညပေးရန်
-            stmt.setDouble(7, voucherDTO.getVoucherDiscount()); // Credit တွင် ပမာဏထည့်ရန်
-            stmt.addBatch();
-           }
-            
-            // =========================================================================
-            // 🔹 စာကြောင်း (၂) - Accounts Payable (AP) သို့မဟုတ် Cash (Credit)
-            // =========================================================================
+            // ၃။ Accounts Payable - AP (Credit)
+            // ---------------------------------------------------------------------
             stmt.setInt(1, insertedVoucherId);
             stmt.setDate(2, new java.sql.Date(voucherDTO.getPurchaseDate().getTime()));
             
-            // 💡 အကြွေးဝယ်တာဆိုလျှင် AP Account ID ကိုသွင်းပြီး၊ လက်ငင်းဆိုလျှင် Cash Account ID ကိုသွင်းမည်
-//            if (purchaseDTO.isCreditPurchase()) {
-//                stmt.setInt(3, purchaseDTO.getApAccountId()); // 👈 Accounts Payable Account ID (ဥပမာ- 12)
-//            } else {
-//                stmt.setInt(3, purchaseDTO.getCashAccountId()); // 👈 Cash In Hand / Bank ID
-//            }
-            stmt.setInt(3, voucherDTO.getSupplierId()); 
+            // 💡 ⚠️ အစ်ကို့ DTO ထဲတွင် AP Account ID ကို ယူသည့် getApAccountId() စသည်ဖြင့် ပြောင်းပေးရန် လိုအပ်နိုင်ပါသည်
+            // (Supplier ID သည် account table ထဲက ID မဟုတ်ပါက စာရင်းလွဲတတ်ပါသည်)
+            stmt.setInt(3, voucherDTO.getApAccountId()); // 👈 Accounts Payable Account ID အမှန်ကို သုံးရန်
+            
             stmt.setString(4, voucherDTO.getVoucherNo());
             stmt.setString(5, "Net Payable for " + voucherDTO.getVoucherNo());
-            stmt.setDouble(6, 0.00); // Debit ကို သုညပေးရန်
-            stmt.setDouble(7, voucherDTO.getGrandTotal()); // Credit တွင် ပမာဏထည့်ရန်
+            stmt.setDouble(6, 0.00); // debit
+            stmt.setDouble(7, voucherDTO.getGrandTotal()); // credit
             stmt.addBatch();
-             // Ledger ထဲသို့ (၂) ကြောင်းလုံး ပြိုင်တူ မောင်းသွင်းလိုက်ခြင်း
+            
+            // Ledger ထဲသို့ အားလုံး ပြိုင်တူ မောင်းသွင်းခြင်း
             stmt.executeBatch();
+            
+        } // 💡 ဤနေရာတွင် မူရင်းကုဒ်၌ ခတ်ခဲ့သော catch(SQLException e) အမှားကို ဖယ်ရှားပြီး အပြင်က catch သို့ စီးဆင်းစေပါသည်
+
+        // Header နှင့် Ledger အားလုံး အဆင်ပြေမှ Detail နှင့် Stock ဘက်သို့ သွားမည်
+        if (affectedRows > 0) {
+            List<PurchaseDetailDTO> itemList = voucherDTO.getPurchaseItems();
+            boolean isDetailsSaved = savePurchaseDetails(conn, insertedVoucherId, itemList);
+            
+            StockDAO stockDAO = new StockDAO();
+            try {
+                stockDAO.updateStockAndLedgerFromPurchase(conn, itemList, voucherDTO.getVoucherNo());
+            } catch (Exception ex) {
+                Logger.getLogger(PurchaseVoucherDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if (isDetailsSaved) {
+                conn.commit(); // 🎉 အားလုံး အောင်မြင်မှ သတ်မှတ်ချက်အတိုင်း တစ်ခါတည်း Commit လုပ်မည်
+                System.out.println("🎯 [Voucher Saved Successfully with ID: " + insertedVoucherId + "]");
+                return true;
+            }
         }
-            
-     
-            
-            // Header ဝင်သွားပြီဆိုလျှင် Auto Generate ဖြစ်လာသော Voucher ID ကို ဆွဲထုတ်မည်
-            if (affectedRows > 0) {
-               
-                // 👈 ဒုတိယမြောက် table အတွက် သော့ချက် ID
-            
-                    // 🔄 [METHOD ၂ သို့ ချိတ်ဆက်ခြင်း] ရလာသော ID ဖြင့် Detail များကို Batch စနစ်ဖြင့် လှမ်းသိမ်းခိုင်းခြင်း
-                    // (မှတ်ချက် - voucherDTO ထဲတွင် ၎င်း၏ list အား ပြန်ထုတ်ပေးမည့် getPurchaseItems() getter ရှိရပါမည်)
-                    List<PurchaseDetailDTO> itemList = voucherDTO.getPurchaseItems();
 
-                    boolean isDetailsSaved = savePurchaseDetails(conn, insertedVoucherId, itemList);
-                    
-                     StockDAO stockDAO = new StockDAO();
-                    try {
-                        // masterDTO ထဲမှ Voucher နံပါတ်နှင့် UI ထဲမှ ဝယ်ယူလိုက်သော ဆေးဝါး List ကို လွှဲပေးလိုက်ပါသည်
-                        stockDAO.updateStockAndLedgerFromPurchase(conn, itemList,voucherDTO.getVoucherNo() );
-                    } catch (Exception ex) {
-                        Logger.getLogger(PurchaseVoucherDAO.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                    if (isDetailsSaved) {
-                        conn.commit(); // 🎉 နှစ်ခုစလုံး အောင်မြင်မှ ဒေတာဘေ့စ်ထဲ တကယ် သိမ်းဆည်းမည်
-                        System.out.println("🎯 [Voucher Saved Successfully with ID: " + insertedVoucherId + "]");
-                        return true;
-                    }
-                }
-     
-            // Rollback all data if something goes wrong
-            conn.rollback();
-            return false;
+        conn.rollback();
+        return false;
 
+    } catch (SQLException e) {
+        e.printStackTrace();
+        if (conn != null) {
+            try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return false;
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return false;
-        } finally {
-            // Resource များကို စနစ်တကျ ပြန်ပိတ်ခြင်း
-            try {
-               
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
-
+}
+    
+    
+    
+    
+    
     private boolean savePurchaseDetails(Connection conn, int voucherId, List<PurchaseDetailDTO> itemList) throws SQLException {
 
         String insertDetailSql = "INSERT INTO purchase_details (voucher_id,product_id,batch_no,expiry_date,unit_id, qty, foc, price, line_discount, amount) VALUES (?, ?, ?, ?,?,?, ?, ?, ?, ?)";

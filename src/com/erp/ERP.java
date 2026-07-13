@@ -76,6 +76,7 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem20 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
 
@@ -289,6 +290,14 @@ public void showPanel(javax.swing.JPanel panel) {
         });
         jMenu5.add(jMenuItem16);
 
+        jMenuItem20.setText("Trial Balance");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem20ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem20);
+
         jMenuItem15.setText("Income Statement");
         jMenu5.add(jMenuItem15);
 
@@ -369,6 +378,10 @@ public void showPanel(javax.swing.JPanel panel) {
         showPanel(new GLReportsPage());
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+        showPanel(new TrialBalancePage());
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
+
     
     
     
@@ -443,6 +456,7 @@ public void showPanel(javax.swing.JPanel panel) {
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

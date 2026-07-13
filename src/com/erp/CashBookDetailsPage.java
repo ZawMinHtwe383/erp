@@ -252,6 +252,14 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(cashTable);
+        if (cashTable.getColumnModel().getColumnCount() > 0) {
+            cashTable.getColumnModel().getColumn(8).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(8).setMaxWidth(0);
+            cashTable.getColumnModel().getColumn(9).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(9).setMaxWidth(0);
+            cashTable.getColumnModel().getColumn(10).setMinWidth(0);
+            cashTable.getColumnModel().getColumn(10).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

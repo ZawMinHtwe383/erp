@@ -522,6 +522,8 @@ public class PurchasePage extends javax.swing.JPanel {
             }
             voucherDTO.setSupplierId(selectedSup.getId()); // (မိမိတို့ Supplier ID Map ပြန်လုပ်ရန်)
             
+            
+            
             voucherDTO.setPurchaseDate(dateTxt.getDate()); // JDateChooser သုံးထားပါက
             voucherDTO.setSubTotal(Double.parseDouble(subTotalTxt.getText()));
             

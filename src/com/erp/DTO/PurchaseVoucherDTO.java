@@ -16,12 +16,23 @@ public class PurchaseVoucherDTO {
     private int voucherId;
     private int purchaseId =16;
     private int purchaseDiscountId =17;
+    private int ApAccountId = 4;
     private String voucherNo;
     private int supplierId;
     private Date purchaseDate;
     private double subTotal;
     private double voucherDiscount;
     private double grandTotal;
+
+    public int getApAccountId() {
+        return ApAccountId;
+    }
+
+    public void setApAccountId(int ApAccountId) {
+        this.ApAccountId = ApAccountId;
+    }
+
+   
 
     public int getPurchaseDiscountId() {
         return purchaseDiscountId;
