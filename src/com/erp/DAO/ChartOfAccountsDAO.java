@@ -5,7 +5,6 @@
 package com.erp.DAO;
 
 import com.erp.DTO.ChartOfAccountsDTO;
-import com.erp.DTO.ComboIdName;
 import com.erp.Database.ConnectionFactory;
 import java.sql.*;
 import java.util.ArrayList;
@@ -143,6 +142,6 @@ public class ChartOfAccountsDAO {
         return list;
     }
     
-    
+ 
     
 }

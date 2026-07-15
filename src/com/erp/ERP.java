@@ -250,6 +250,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenuItem6.getAccessibleContext().setAccessibleDescription("");
 
         jMenuItem7.setText("Purchase Return");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem7);
 
         jMenuItem8.setText("Sale");
@@ -381,6 +386,10 @@ public void showPanel(javax.swing.JPanel panel) {
     private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
         showPanel(new TrialBalancePage());
     }//GEN-LAST:event_jMenuItem20ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        showPanel(new PurchaseReturnPage());
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     
     

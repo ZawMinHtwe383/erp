@@ -23,8 +23,7 @@ public class CashBookDetailsDAO {
     private Connection conn;
 
     public CashBookDetailsDAO() {
-        // သင့်၏ ConnectionFactory မှတစ်ဆင့် Connection ယူရန်
-        conn = new ConnectionFactory().getConn();
+               conn = new ConnectionFactory().getConn();
     }
 
     public List<ComboIdName> getAccountNamesFromDB() {
