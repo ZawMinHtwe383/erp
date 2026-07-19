@@ -60,7 +60,8 @@ public class CashBookDetailsDAO {
     }
 
     public double openingBalance() {
-        String sql = "SELECT entry_date,voucher_no, debit, credit, SUM(debit - credit) OVER (ORDER BY entry_date, id) AS balance FROM cash_book_details";
+
+       String sql = "SELECT entry_date,voucher_no, debit, credit, SUM(debit - credit) OVER (ORDER BY entry_date, id) AS balance FROM cash_book_details";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -331,4 +332,35 @@ public class CashBookDetailsDAO {
 
     }
 
+    
+    public double getOpeningBalance(Date fromDate, int cashAccountId) {
+        double openingBalance = 0.0;
+        
+        // 💡 ရွေးချယ်ထားသော ရက်စွဲထက် ငယ်သော ( < ? ) ဒေတာများကို ပေါင်းနုတ်ခြင်း
+        String sql = "SELECT SUM(debit) - SUM(credit) AS opening_bal " +
+                     "FROM general_ledger " +
+                     "WHERE account_id = ? AND entry_date < ?";
+                     
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, cashAccountId); // ဥပမာ - Cash Account ID
+            stmt.setDate(2, new java.sql.Date(fromDate.getTime()));
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    openingBalance = rs.getDouble("opening_bal");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return openingBalance;
+    }
 }
+    
+    
+    
+    
+    
+    
+

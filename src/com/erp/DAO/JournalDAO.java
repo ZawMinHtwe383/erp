@@ -8,6 +8,7 @@ import com.erp.DTO.ComboIdName;
 import com.erp.DTO.JournalDTO;
 import com.erp.Database.ConnectionFactory;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -165,6 +166,62 @@ public class JournalDAO {
         try { conn.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
     }
 }
+
+    public List<JournalDTO> searchByDateRange(Date fromDate, Date toDate) {
+        
+        List<JournalDTO> list = new ArrayList<>();
+
+        // 💡 ရက်စွဲအလိုက် အစဉ်လိုက် (အဟောင်းမှ အသစ်) ပြန်ဆွဲထုတ်မည့် SQL Query
+        //String sql = "SELECT * FROM cash_book_details WHERE entry_date BETWEEN ? AND ? ORDER BY entry_date ASC";
+        String sql = "SELECT c.*, a.account_name AS acc_name, cu.customer_name AS cus_name, s.supplier_name AS sup_name "
+                + "FROM journal_details c "
+                + "LEFT JOIN chart_of_accounts a ON c.account_id = a.account_id "
+                + "LEFT JOIN customers cu ON c.customer_id = cu.id "
+                + "LEFT JOIN suppliers s ON c.supplier_id = s.id "
+                + "WHERE c.entry_date BETWEEN ? AND ? ORDER BY c.entry_date ASC";
+
+        //SELECT c.*, a.account_name AS acc_name, cu.customer_name AS cus_name, s.supplier_name AS sup_name FROM cash_book_details c LEFT JOIN chart_of_accounts a ON c.account_id = a.account_id LEFT JOIN customers cu ON c.customer_id = cu.id LEFT JOIN suppliers s ON c.supplier_id = s.id WHERE c.entry_date BETWEEN '2026-06-25' AND '2026-06-25' ORDER BY c.entry_date ASC; 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDate(1, fromDate);
+            stmt.setDate(2, toDate);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    JournalDTO dto = new JournalDTO();
+                    //to get id
+                    dto.setId(rs.getInt("id"));
+
+                    dto.setEntryDate(rs.getDate("entry_date"));
+                    // dto.setAccountId(rs.getInt("account_id"));
+                    dto.setAccountName(rs.getString("acc_name"));
+
+                    // Integer ကို null ဖြစ်နိုင်သဖြင့် getObject ဖြင့်ယူပါ
+                    dto.setCustomerId((Integer) rs.getObject("customer_id"));
+                    dto.setCustomerName(rs.getString("cus_name"));
+
+                    dto.setSupplierId((Integer) rs.getObject("supplier_id"));
+                    dto.setSuppplierName(rs.getString("sup_name"));
+
+                    System.out.println("Account: " + dto.getAccountName());
+                    System.out.println("Customer: " + dto.getCustomerName());
+                    System.out.println("Supplier: " + dto.getSuppplierName());
+
+                    dto.setVoucherNo(rs.getString("voucher_no"));
+                    dto.setDescription(rs.getString("description"));
+                    dto.setDebit(rs.getDouble("debit"));
+                    dto.setCredit(rs.getDouble("credit"));
+                   // dto.setBalance(rs.getDouble("balance"));
+
+                    list.add(dto);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     
     
     

@@ -144,7 +144,9 @@ UserDTO userDTO;
         
         if(factory.checkLogin(username, password, userType)){
             dispose();
-            //System.out.println("Good Dashboard");
+    
+          com.erp.DTO.UserSessionDTO.setSession(0, username);
+                //System.out.println("Good Dashboard");
             new ERP().setVisible(true);
             
         }

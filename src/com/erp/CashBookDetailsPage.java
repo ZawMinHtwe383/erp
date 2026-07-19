@@ -82,6 +82,8 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         searchBtn = new javax.swing.JButton();
         btnDeleteRow = new javax.swing.JButton();
         btnAddRow = new javax.swing.JButton();
+        openingBalanceTxt = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         debitTotalTxt = new javax.swing.JTextField();
@@ -89,6 +91,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         deleteBtn = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
+        closingBalanceTxt = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cashTable = new javax.swing.JTable();
@@ -120,26 +123,32 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setText("Opening Balance");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
                 .addGap(12, 12, 12)
-                .addComponent(txtToDate, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtToDate, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchBtn)
+                .addComponent(searchBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDeleteRow)
+                .addComponent(btnDeleteRow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAddRow)
-                .addContainerGap(253, Short.MAX_VALUE))
+                .addComponent(btnAddRow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(openingBalanceTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,8 +167,10 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(searchBtn)
                                     .addComponent(btnDeleteRow)
-                                    .addComponent(btnAddRow))))))
-                .addContainerGap(7, Short.MAX_VALUE))
+                                    .addComponent(btnAddRow)
+                                    .addComponent(openingBalanceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -198,13 +209,15 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 .addComponent(deleteBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnUpdate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(debitTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(creditTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(123, 123, 123))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(closingBalanceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,7 +230,8 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                         .addComponent(debitTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(creditTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(deleteBtn)
-                        .addComponent(btnUpdate)))
+                        .addComponent(btnUpdate)
+                        .addComponent(closingBalanceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
 
@@ -252,14 +266,6 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(cashTable);
-        if (cashTable.getColumnModel().getColumnCount() > 0) {
-            cashTable.getColumnModel().getColumn(8).setMinWidth(0);
-            cashTable.getColumnModel().getColumn(8).setMaxWidth(0);
-            cashTable.getColumnModel().getColumn(9).setMinWidth(0);
-            cashTable.getColumnModel().getColumn(9).setMaxWidth(0);
-            cashTable.getColumnModel().getColumn(10).setMinWidth(0);
-            cashTable.getColumnModel().getColumn(10).setMaxWidth(0);
-        }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -274,7 +280,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -298,7 +304,7 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
         // ၂။ ရက်စွဲနေရာမှာ ယနေ့ရက်စွဲကို တစ်ခါတည်းထည့်ပြီး ဇယားထဲ လိုင်းအသစ်တစ်လိုင်း တိုးပေးလိုက်မယ်
         // [ Date | Voucher | Particular | Debit | Credit ] အစီအစဉ်အတိုင်း ဖြစ်ပါတယ်
-        model.addRow(new Object[]{todayDate, "", "", "", "", 0, 0});
+        model.addRow(new Object[]{todayDate, "", "", "", "", 0, 0,null});
         updateRunningBalance();
         debitCreditTotal();
     }
@@ -332,10 +338,30 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             CashBookDetailsDAO cashBookDetailsDAO = new CashBookDetailsDAO();
             int successCount = 0; // အောင်မြင်စွာ သိမ်းနိုင်ခဲ့တဲ့ အရေအတွက်ကို မှတ်ထားရန်
-
+            int skippedCount = 0;// ဒေတာဟောင်းမို့ ကျော်သွားတဲ့ အရေအတွက် သိချင်ရင် မှတ်ရန်
+            
             // 💡 Loop စတင်ပါပြီ
             for (int i = 0; i < rowCount; i++) {
 
+                
+                
+                Object idObj = model.getValueAt(i, 8); 
+        
+        // ID က null မဟုတ်ဘူး (သို့) သုညထက်ကြီးနေရင် ဒါဟာ Database ထဲမှာ ရှိပြီးသား ဒေတာဟောင်းမို့ ကျော်သွားမယ်
+        if (idObj != null && !idObj.toString().trim().isEmpty()) {
+            try {
+                int existingId = Integer.parseInt(idObj.toString().trim());
+                if (existingId > 0) {
+                    skippedCount++; 
+                    continue; // 👈 ဤ Row ကို အောက်က Insert လုပ်မယ့်အဆင့်သို့မပေးဘဲ နောက်တစ်လိုင်းသို့ တန်းကျော်သွားခိုင်းခြင်း
+                }
+            } catch (NumberFormatException e) {
+                // Parse လုပ်လို့မရရင် (ဥပမာ null) အောက်ကို ဆက်ဆင်းပြီး အသစ်အနေနဲ့ သိမ်းမယ်
+            }
+        }
+                
+   
+                
                 // 🚀 ပြင်ဆင်ချက် ၁: DTO Object ကို Loop ထဲမှာ ဆောက်မှသာ Row တစ်ကြောင်းအတွက် DTO အသစ်တစ်ခု ရပါမည်
                 CashBookDetailsDTO cbdDTO = new CashBookDetailsDTO();
 
@@ -384,16 +410,28 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
                 cbdDTO.setDescription(descObj != null ? descObj.toString().trim() : "");
 
                 Object debitObj = model.getValueAt(i, 5);
-                cbdDTO.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
+                 if(debitObj != null && !debitObj.toString().trim().isEmpty()){
+                    String debittStr = debitObj.toString().trim().replace(",", "");
+                    cbdDTO.setCredit(Double.parseDouble(debittStr));
+                }
+                
 
                 Object creditObj = model.getValueAt(i, 6);
-                cbdDTO.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
-
+                if(creditObj != null && !creditObj.toString().trim().isEmpty()){
+                    String creditStr = creditObj.toString().trim().replace(",", "");
+                    cbdDTO.setCredit(Double.parseDouble(creditStr));
+                }
+               
                 Object balObj = model.getValueAt(i, 7);
-                cbdDTO.setBalance(balObj != null && !balObj.toString().isEmpty() ? Double.parseDouble(balObj.toString().trim()) : 0.0);
+               if (balObj != null && !balObj.toString().trim().isEmpty()) {
+                String balStr = balObj.toString().trim().replace(",", ""); // 👈 ကော်မာဖြုတ်ခြင်း
+                cbdDTO.setBalance(Double.parseDouble(balStr));
+                } else {
+                cbdDTO.setBalance(0.0);
+                }
 
                 // 🚀 ပြင်ဆင်ချက် ၂: Row တစ်ကြောင်းစီရဲ့ Data အစုံ ဖမ်းမိတာနဲ့ Database ထဲကို ချက်ချင်း လှမ်းသိမ်းပါမည်
-                boolean success = cashBookDetailsDAO.insertCashBookDetailsDAO(cbdDTO,1);
+                boolean success = cashBookDetailsDAO.insertCashBookDetailsDAO(cbdDTO, 1);
                 if (success) {
                     successCount++; // သိမ်းတာ အောင်မြင်ရင် ၁ တိုးမည်
                 }
@@ -416,70 +454,214 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
     }//GEN-LAST:event_cashTablePropertyChange
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+//        DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+//
+//        // Fetch dates directly from JDateChooser
+//        java.util.Date parsedFrom = txtFromDate.getDate();
+//        java.util.Date parsedTo = txtToDate.getDate();
+//
+//        // Check if dates are selected; if not, show a warning and return
+//        if (parsedFrom == null || parsedTo == null) {
+//            JOptionPane.showMessageDialog(this, "Please select both From Date and To Date.", "Warning", JOptionPane.WARNING_MESSAGE);
+//            return;
+//        }
+//
+//        try {
+//            // Convert util.Date directly to sql.Date
+//            java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
+//            java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+//
+//            CashBookDetailsDAO dao = new CashBookDetailsDAO();
+//            
+//            
+//            //to get opening balance
+////            int cashAccountId = 1;
+////            double openingBalance = dao.getOpeningBalance(fromDate, cashAccountId);
+////            System.out.println(openingBalance);
+//            
+//            
+//            
+//            List<CashBookDetailsDTO> searchResult = dao.searchByDateRange(fromDate, toDate);
+//
+//            // Clear existing table data
+//            model.setRowCount(0);
+//
+//            if (searchResult.isEmpty()) {
+//                JOptionPane.showMessageDialog(this, "No records found for the selected dates.", "No Data", JOptionPane.INFORMATION_MESSAGE);
+//                return;
+//            }
+//
+//            // Format the date for displaying on the table
+//            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+//
+//            // Populate the table with search results
+//            for (CashBookDetailsDTO dto : searchResult) {
+//                String displayDate = format.format(dto.getEntryDate());
+//
+//                // Create ComboIdName objects for ComboBox columns
+//                ComboIdName accountCombo = new ComboIdName(dto.getAccountId(), dto.getAccountName());
+//
+//                // Check whether it is a customer or supplier to create the correct ComboIdName
+//                ComboIdName custOrSupCombo = null;
+//                if (dto.getCustomerId() != null) {
+//                    custOrSupCombo = new ComboIdName(dto.getCustomerId(), dto.getCustomerName());
+//                } else if (dto.getSupplierId() != null) {
+//                    custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
+//                }
+//
+//                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+//                model.addRow(new Object[]{
+//                    displayDate,
+//                    accountCombo, // Now displays Account Name instead of ID
+//                    custOrSupCombo, // Now displays Customer/Supplier Name instead of ID
+//                    dto.getVoucherNo(),
+//                    dto.getDescription(),
+//                    df.format(dto.getDebit()),
+//                    df.format(dto.getCredit()),
+//                    df.format(dto.getBalance()),
+//                    dto.getId() // to search for id index 8
+//                });
+//                //System.out.println(dto.getId());
+//            }
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
+//            e.printStackTrace();
+//        }
 
-        // Fetch dates directly from JDateChooser
-        java.util.Date parsedFrom = txtFromDate.getDate();
-        java.util.Date parsedTo = txtToDate.getDate();
 
-        // Check if dates are selected; if not, show a warning and return
-        if (parsedFrom == null || parsedTo == null) {
-            JOptionPane.showMessageDialog(this, "Please select both From Date and To Date.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+// *********************************************test ***************************************************
+DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+
+    // Fetch dates directly from JDateChooser
+    java.util.Date parsedFrom = txtFromDate.getDate();
+    java.util.Date parsedTo = txtToDate.getDate();
+
+    // Check if dates are selected; if not, show a warning and return
+    if (parsedFrom == null || parsedTo == null) {
+        JOptionPane.showMessageDialog(this, "Please select both From Date and To Date.", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    try {
+        // Convert util.Date directly to sql.Date
+        java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
+        java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+        
+        CashBookDetailsDAO dao = new CashBookDetailsDAO();
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+        
+        // =========================================================================
+        // 🧮 [အဆင့် ၁] Opening Balance ကို DB ကနေ လှမ်းယူပြီး JTextField ထဲ ထည့်ခြင်း
+        // =========================================================================
+        int cashAccountId = 1; // 💡 အစ်ကို့ Cash Account ID ကို သတ်မှတ်ပါ
+        double openingBalance = dao.getOpeningBalance(fromDate, cashAccountId);
+        
+        model.addRow(new Object[]{
+            dateFormat.format(fromDate), // ရက်စွဲ
+            "Opening Balance",           // Account Name နေရာတွင် ပြသရန်
+            "",                          // Customer/Supplier
+            "",                          // Voucher No
+            "စဥ်ဆက်မပြတ် အဖွင့်လက်ကျန်ငွေ", // Description
+            "0.00",                      // Debit
+            "0.00",                      // Credit
+            df.format(openingBalance),   // 👈 ရလာတဲ့ အဖွင့်လက်ကျန်အား Balance ကော်လံတွင် ပြခြင်း
+            null                         // ID
+        });
+  
+        
+        // 🚀 UI က openingBalanceTxt ထဲသို့ Format ချပြီး တန်းပြလိုက်ခြင်း
+        openingBalanceTxt.setText(df.format(openingBalance));
+
+        // Clear existing table data
+        model.setRowCount(0);
+
+        // Date Range အတွင်းရှိ Transactions များကို ဆွဲထုတ်ခြင်း
+        List<CashBookDetailsDTO> searchResult = dao.searchByDateRange(fromDate, toDate);
+ 
+        
+        // 💡 [ပြင်ဆင်ချက်] ဒေတာမရှိလျှင်လည်း Opening Balance ကို Textbox မှာ မြင်ရပြီးသားဖြစ်အောင်
+        // model.setRowCount(0) လုပ်ပြီးမှ Message ပြပြီး Return ပြန်ခိုင်းရပါမယ်
+        if (searchResult.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No records found for the selected dates.", "No Data", JOptionPane.INFORMATION_MESSAGE);
+            
+            // ဒေတာမရှိသော်လည်း Closing Balance သည် Opening Balance အတိုင်း ဖြစ်နေမည်
+            closingBalanceTxt.setText(df.format(openingBalance)); 
+            debitTotalTxt.setText("0.00");
+            creditTotalTxt.setText("0.00");
             return;
         }
 
-        try {
-            // Convert util.Date directly to sql.Date
-            java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
-            java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+        // Format the date for displaying on the table
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
 
-            CashBookDetailsDAO dao = new CashBookDetailsDAO();
-            List<CashBookDetailsDTO> searchResult = dao.searchByDateRange(fromDate, toDate);
+        // =========================================================================
+        // 🔄 [အဆင့် ၂] Running Balance ကို Opening Balance မှ စတင်တွက်ချက်ခြင်း
+        // =========================================================================
+        double currentRunningBalance = openingBalance;
+        double totalDebit = 0.0;
+        double totalCredit = 0.0;
 
-            // Clear existing table data
-            model.setRowCount(0);
+        // Populate the table with search results
+        for (CashBookDetailsDTO dto : searchResult) {
+            String displayDate = format.format(dto.getEntryDate());
 
-            if (searchResult.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No records found for the selected dates.", "No Data", JOptionPane.INFORMATION_MESSAGE);
-                return;
+            // Create ComboIdName objects for ComboBox columns
+            ComboIdName accountCombo = new ComboIdName(dto.getAccountId(), dto.getAccountName());
+
+            // Check whether it is a customer or supplier to create the correct ComboIdName
+            ComboIdName custOrSupCombo = null;
+            if (dto.getCustomerId() != null) {
+                custOrSupCombo = new ComboIdName(dto.getCustomerId(), dto.getCustomerName());
+            } else if (dto.getSupplierId() != null) {
+                custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
             }
 
-            // Format the date for displaying on the table
-            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            // 🧮 Running Balance တွက်ချက်ခြင်း (Debit ပေါင်း၊ Credit နုတ်)
+            currentRunningBalance = currentRunningBalance + dto.getDebit() - dto.getCredit();
+            
+            // Total တွက်ရန် စုဆောင်းခြင်း
+            totalDebit += dto.getDebit();
+            totalCredit += dto.getCredit();
 
-            // Populate the table with search results
-            for (CashBookDetailsDTO dto : searchResult) {
-                String displayDate = format.format(dto.getEntryDate());
-
-                // Create ComboIdName objects for ComboBox columns
-                ComboIdName accountCombo = new ComboIdName(dto.getAccountId(), dto.getAccountName());
-
-                // Check whether it is a customer or supplier to create the correct ComboIdName
-                ComboIdName custOrSupCombo = null;
-                if (dto.getCustomerId() != null) {
-                    custOrSupCombo = new ComboIdName(dto.getCustomerId(), dto.getCustomerName());
-                } else if (dto.getSupplierId() != null) {
-                    custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
-                }
-                
-                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
-                model.addRow(new Object[]{
-                    displayDate,
-                    accountCombo, // Now displays Account Name instead of ID
-                    custOrSupCombo, // Now displays Customer/Supplier Name instead of ID
-                    dto.getVoucherNo(),
-                    dto.getDescription(),
-                    df.format(dto.getDebit()),
-                    df.format(dto.getCredit()),
-                    df.format(dto.getBalance()),
-                    dto.getId() // to search for id index 8
-                });
-                //System.out.println(dto.getId());
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            model.addRow(new Object[]{
+                displayDate,
+                accountCombo, 
+                custOrSupCombo, 
+                dto.getVoucherNo(),
+                dto.getDescription(),
+                df.format(dto.getDebit()),
+                df.format(dto.getCredit()),
+                df.format(currentRunningBalance), // 👈 တွက်ပြီးသား စစ်စစ်ကြီး ပြပါမယ်
+                dto.getId() 
+            });
         }
+        
+        // =========================================================================
+        // 📊 [အဆင့် ၃] အောက်ခြေ Total Textbox များကို Update လုပ်ခြင်း
+        // =========================================================================
+        debitTotalTxt.setText(df.format(totalDebit));
+        creditTotalTxt.setText(df.format(totalCredit));
+        closingBalanceTxt.setText(df.format(currentRunningBalance)); // အပိတ်လက်ကျန်
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -594,19 +776,40 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
             Object descObj = model.getValueAt(selectedRow, 4);
             cbdDTO.setDescription(descObj != null ? descObj.toString().trim() : "");
 
-            Object debitObj = model.getValueAt(selectedRow, 5);
-            cbdDTO.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
+             Object debitObj = model.getValueAt(selectedRow, 5);
+                 if(debitObj != null && !debitObj.toString().trim().isEmpty()){
+                    String debittStr = debitObj.toString().trim().replace(",", "");
+                    cbdDTO.setCredit(Double.parseDouble(debittStr));
+                }
+                
 
-            Object creditObj = model.getValueAt(selectedRow, 6);
-            cbdDTO.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
+                Object creditObj = model.getValueAt(selectedRow, 6);
+                if(creditObj != null && !creditObj.toString().trim().isEmpty()){
+                    String creditStr = creditObj.toString().trim().replace(",", "");
+                    cbdDTO.setCredit(Double.parseDouble(creditStr));
+                }
+               
+                Object balObj = model.getValueAt(selectedRow, 7);
+               if (balObj != null && !balObj.toString().trim().isEmpty()) {
+                String balStr = balObj.toString().trim().replace(",", ""); // 👈 ကော်မာဖြုတ်ခြင်း
+                cbdDTO.setBalance(Double.parseDouble(balStr));
+                } else {
+                cbdDTO.setBalance(0.0);
+                }
 
-            Object balObj = model.getValueAt(selectedRow, 7);
-            cbdDTO.setBalance(balObj != null && !balObj.toString().isEmpty() ? Double.parseDouble(balObj.toString().trim()) : 0.0);
+//            Object debitObj = model.getValueAt(selectedRow, 5);
+//            cbdDTO.setDebit(debitObj != null && !debitObj.toString().isEmpty() ? Double.parseDouble(debitObj.toString().trim()) : 0.0);
+//
+//            Object creditObj = model.getValueAt(selectedRow, 6);
+//            cbdDTO.setCredit(creditObj != null && !creditObj.toString().isEmpty() ? Double.parseDouble(creditObj.toString().trim()) : 0.0);
+//
+//            Object balObj = model.getValueAt(selectedRow, 7);
+//            cbdDTO.setBalance(balObj != null && !balObj.toString().isEmpty() ? Double.parseDouble(balObj.toString().trim()) : 0.0);
 
             // 8. Call DAO to update the database row
             CashBookDetailsDAO dao = new CashBookDetailsDAO();
 
-            boolean isUpdated = dao.updateRecord(cbdDTO,1);
+            boolean isUpdated = dao.updateRecord(cbdDTO, 1);
 
             if (isUpdated) {
                 JOptionPane.showMessageDialog(this, "Row updated successfully in database.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -727,62 +930,61 @@ public class CashBookDetailsPage extends javax.swing.JPanel {
 
     }
 
-    public void debitOrCreditClose(){
+    public void debitOrCreditClose() {
         // Table ထဲက ဒေတာ အပြောင်းအလဲဖြစ်တိုင်း လှမ်းတွက်မည့် Listener
-cashTable.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
-    private boolean isUpdating = false; // Infinite Loop မဖြစ်စေရန် တားဆီးသည့် Flag
+        cashTable.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
+            private boolean isUpdating = false; // Infinite Loop မဖြစ်စေရန် တားဆီးသည့် Flag
 
-    @Override
-    public void tableChanged(javax.swing.event.TableModelEvent e) {
-        if (isUpdating) return; // ကုဒ်ကနေ ပြန်ပြင်နေချိန်ဆိုလျှင် ကျော်မည်
-        
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        
-        // Debit (Index 5) သို့မဟုတ် Credit (Index 6) ကို ပြင်မိမှသာ တွက်ချက်မည်
-        if (column == 5 || column == 6) {
-            isUpdating = true;
-            try {
-                DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
-                
-                // ဒေတာများကို ရယူခြင်း
-                double debit = 0.0;
-                double credit = 0.0;
-                
-                Object debitVal = model.getValueAt(row, 5);
-                Object creditVal = model.getValueAt(row, 6);
-                
-                if (debitVal != null && !debitVal.toString().trim().isEmpty()) {
-                    debit = Double.parseDouble(debitVal.toString().trim());
+            @Override
+            public void tableChanged(javax.swing.event.TableModelEvent e) {
+                if (isUpdating) {
+                    return; // ကုဒ်ကနေ ပြန်ပြင်နေချိန်ဆိုလျှင် ကျော်မည်
                 }
-                if (creditVal != null && !creditVal.toString().trim().isEmpty()) {
-                    credit = Double.parseDouble(creditVal.toString().trim());
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+
+                // Debit (Index 5) သို့မဟုတ် Credit (Index 6) ကို ပြင်မိမှသာ တွက်ချက်မည်
+                if (column == 5 || column == 6) {
+                    isUpdating = true;
+                    try {
+                        DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
+
+                        // ဒေတာများကို ရယူခြင်း
+                        double debit = 0.0;
+                        double credit = 0.0;
+
+                        Object debitVal = model.getValueAt(row, 5);
+                        Object creditVal = model.getValueAt(row, 6);
+
+                        if (debitVal != null && !debitVal.toString().trim().isEmpty()) {
+                            debit = Double.parseDouble(debitVal.toString().trim());
+                        }
+                        if (creditVal != null && !creditVal.toString().trim().isEmpty()) {
+                            credit = Double.parseDouble(creditVal.toString().trim());
+                        }
+
+                        // 🚀 Logic ၁။ Debit ရိုက်လျှင် Credit ကို ဝိုင်ပစ်၊ Credit ရိုက်လျှင် Debit ကို ဝိုင်ပစ်
+                        if (column == 5 && debit > 0) {
+                            model.setValueAt(0.0, row, 6); // Credit ကို 0.0 ပြန်ပြောင်း
+                            credit = 0.0;
+                        } else if (column == 6 && credit > 0) {
+                            model.setValueAt(0.0, row, 5); // Debit ကို 0.0 ပြန်ပြောင်း
+                            debit = 0.0;
+                        }
+
+                        // 🚀 Logic ၂။ Balance ကို Row အားလုံးအတွက် Cumulative Carry Forward ပြန်တွက်ခြင်း
+                        updateRunningBalance();
+
+                    } catch (NumberFormatException ex) {
+                        // ဂဏန်းမဟုတ်တာ ရိုက်ထည့်မိပါက လက်ခံမည်မဟုတ်ကြောင်း ပြသရန်
+                    } finally {
+                        isUpdating = false;
+                    }
                 }
-
-                // 🚀 Logic ၁။ Debit ရိုက်လျှင် Credit ကို ဝိုင်ပစ်၊ Credit ရိုက်လျှင် Debit ကို ဝိုင်ပစ်
-                if (column == 5 && debit > 0) {
-                    model.setValueAt(0.0, row, 6); // Credit ကို 0.0 ပြန်ပြောင်း
-                    credit = 0.0;
-                } else if (column == 6 && credit > 0) {
-                    model.setValueAt(0.0, row, 5); // Debit ကို 0.0 ပြန်ပြောင်း
-                    debit = 0.0;
-                }
-
-                // 🚀 Logic ၂။ Balance ကို Row အားလုံးအတွက် Cumulative Carry Forward ပြန်တွက်ခြင်း
-                updateRunningBalance();
-
-            } catch (NumberFormatException ex) {
-                // ဂဏန်းမဟုတ်တာ ရိုက်ထည့်မိပါက လက်ခံမည်မဟုတ်ကြောင်း ပြသရန်
-            } finally {
-                isUpdating = false;
             }
-        }
+        });
     }
-});
-    }
-    
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddRow;
@@ -790,16 +992,19 @@ cashTable.getModel().addTableModelListener(new javax.swing.event.TableModelListe
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JTable cashTable;
+    private javax.swing.JTextField closingBalanceTxt;
     private javax.swing.JTextField creditTotalTxt;
     private javax.swing.JTextField debitTotalTxt;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField openingBalanceTxt;
     private javax.swing.JButton searchBtn;
     private com.toedter.calendar.JDateChooser txtFromDate;
     private com.toedter.calendar.JDateChooser txtToDate;
@@ -814,31 +1019,79 @@ cashTable.getModel().addTableModelListener(new javax.swing.event.TableModelListe
             return;
         }
         isUpdating = true;
-
+//        java.util.Date parsedFrom = txtFromDate.getDate();
+//        java.util.Date parsedTo = txtToDate.getDate();
+        
         DefaultTableModel model = (DefaultTableModel) cashTable.getModel();
-        CashBookDetailsDAO cbdDAO = new CashBookDetailsDAO();
-        double cd = cbdDAO.openingBalance();
-        double currentBalance = cd;
-        for (int i = 0; i < model.getRowCount(); i++) {
-            double debit = 0.0;
-            double credit = 0.0;
-
-            try {
-                if (model.getValueAt(i, 5) != null) {
-                    debit = Double.parseDouble(model.getValueAt(i, 5).toString());
-
-                }
-                if (model.getValueAt(i, 6) != null) {
-                    credit = Double.parseDouble(model.getValueAt(i, 6).toString());
-                }
-            } catch (Exception e) {
-            }
-
-            currentBalance = currentBalance + debit - credit;
-
-            model.setValueAt(currentBalance, i, 7);
-
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+//        java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
+//        java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+        double currentBalance = 0.0;
+    try {
+        String openingText = openingBalanceTxt.getText().trim().replace(",", ""); // ကော်မာ ( , ) ပါရင် ဖြုတ်ပစ်မယ်
+        if (!openingText.isEmpty()) {
+            currentBalance = Double.parseDouble(openingText);
         }
-        isUpdating = false;
+    } catch (Exception e) {
+        currentBalance = 0.0; // Textbox ထဲမှာ စာရိုက်မှားနေရင် 0.0 ကနေ စတွက်မယ်
+    }
+    
+    // Table ထဲရှိ Row များအား ပတ်ပြီး Running Balance တွက်ခြင်း
+    for (int i = 0; i < model.getRowCount(); i++) {
+        double debit = 0.0;
+        double credit = 0.0;
+
+        try {
+            if (model.getValueAt(i, 5) != null && !model.getValueAt(i, 5).toString().isEmpty()) {
+                debit = Double.parseDouble(model.getValueAt(i, 5).toString().replace(",", ""));
+            }
+            if (model.getValueAt(i, 6) != null && !model.getValueAt(i, 6).toString().isEmpty()) {
+                credit = Double.parseDouble(model.getValueAt(i, 6).toString().replace(",", ""));
+            }
+        } catch (Exception e) {
+            // စာရိုက်မှားရင် 0.0 အတိုင်းပဲ ထားမယ်
+        }
+
+        // စာရင်းကိုင် Logic (Debit ပေါင်း၊ Credit နုတ်)
+        currentBalance = currentBalance + debit - credit;
+
+        // Balance ကော်လံ (Index 7) ထဲသို့ format ချပြီး ထည့်သွင်းခြင်း
+        model.setValueAt(df.format(currentBalance), i, 7);
+    }
+    
+    // နောက်ဆုံး အပိတ်လက်ကျန် (Closing Balance) ကိုပါ တစ်ခါတည်း အောက်ခြေ Textbox မှာ သွားပြပေးမယ်
+    if (closingBalanceTxt != null) {
+        closingBalanceTxt.setText(df.format(currentBalance));
+    }
+
+    isUpdating = false;
+        
+        
+//        CashBookDetailsDAO cbdDAO = new CashBookDetailsDAO();
+//
+//        double cd = cbdDAO.openingBalance();
+//        double currentBalance = cd;
+//        
+//        for (int i = 0; i < model.getRowCount(); i++) {
+//            double debit = 0.0;
+//            double credit = 0.0;
+//
+//            try {
+//                if (model.getValueAt(i, 5) != null) {
+//                    debit = Double.parseDouble(model.getValueAt(i, 5).toString());
+//
+//                }
+//                if (model.getValueAt(i, 6) != null) {
+//                    credit = Double.parseDouble(model.getValueAt(i, 6).toString());
+//                }
+//            } catch (Exception e) {
+//            }
+//
+//            currentBalance = currentBalance + debit - credit;
+//
+//            model.setValueAt(currentBalance, i, 7);
+//
+//        }
+//        isUpdating = false;
     }
 }

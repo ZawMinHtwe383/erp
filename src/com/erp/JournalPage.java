@@ -58,8 +58,8 @@ public class JournalPage extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        fromDate = new com.toedter.calendar.JDateChooser();
+        toDate = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
@@ -108,11 +108,11 @@ public class JournalPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -131,8 +131,8 @@ public class JournalPage extends javax.swing.JPanel {
                         .addComponent(deleteRowBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(newRowBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(toDate, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                        .addComponent(fromDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(7, Short.MAX_VALUE))
@@ -253,38 +253,75 @@ public class JournalPage extends javax.swing.JPanel {
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-       
+       DefaultTableModel model = (DefaultTableModel) journalTable.getModel();
+
+        // Fetch dates directly from JDateChooser
+        java.util.Date parsedFrom = fromDate.getDate();
+        java.util.Date parsedTo = toDate.getDate();
+
+        // Check if dates are selected; if not, show a warning and return
+        if (parsedFrom == null || parsedTo == null) {
+            JOptionPane.showMessageDialog(this, "Please select both From Date and To Date.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Convert util.Date directly to sql.Date
+            java.sql.Date fromDate = new java.sql.Date(parsedFrom.getTime());
+            java.sql.Date toDate = new java.sql.Date(parsedTo.getTime());
+
+            JournalDAO dao = new JournalDAO();
+            List<JournalDTO> searchResult = dao.searchByDateRange(fromDate, toDate);
+
+            // Clear existing table data
+            model.setRowCount(0);
+
+            if (searchResult.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No records found for the selected dates.", "No Data", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Format the date for displaying on the table
+            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+
+            // Populate the table with search results
+            for (JournalDTO dto : searchResult) {
+                String displayDate = format.format(dto.getEntryDate());
+
+                // Create ComboIdName objects for ComboBox columns
+                ComboIdName accountCombo = new ComboIdName(dto.getAccountId(), dto.getAccountName());
+
+                // Check whether it is a customer or supplier to create the correct ComboIdName
+                ComboIdName custOrSupCombo = null;
+                if (dto.getCustomerId() != null) {
+                    custOrSupCombo = new ComboIdName(dto.getCustomerId(), dto.getCustomerName());
+                } else if (dto.getSupplierId() != null) {
+                    custOrSupCombo = new ComboIdName(dto.getSupplierId(), dto.getSuppplierName());
+                }
+
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+                model.addRow(new Object[]{
+                    displayDate,
+                    accountCombo, // Now displays Account Name instead of ID
+                    custOrSupCombo, // Now displays Customer/Supplier Name instead of ID
+                    dto.getVoucherNo(),
+                    dto.getDescription(),
+                    df.format(dto.getDebit()),
+                    df.format(dto.getCredit()),
+                   // df.format(dto.getBalance()),
+                    dto.getId() // to search for id index 8
+                });
+                //System.out.println(dto.getId());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while searching.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
      private JournalDTO getJournalDTOFromRow(DefaultTableModel model, int rowIndex) {
     JournalDTO dto = new JournalDTO();
     
- 
-//    try {
-//        Object dateObj = model.getValueAt(rowIndex, 0);
-//        if (dateObj != null && !dateObj.toString().trim().isEmpty()) {
-//            String dateStr = dateObj.toString().trim();
-//            
-//            // JCalendar / JDateChooser သုံးထားရင် java.util.Date Object အဖြစ် တိုက်ရိုက်ဝင်နေတတ်သည်
-//            if (dateObj instanceof java.util.Date) {
-//                dto.setEntryDate(new java.sql.Date(((java.util.Date) dateObj).getTime()));
-//                
-//            } else {
-//                // စာသား (String) အနေနဲ့ ရှိနေရင် Parse လုပ်မည်
-//                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
-//                java.util.Date utilDate = format.parse(dateStr);
-//                dto.setEntryDate(new java.sql.Date(utilDate.getTime()));
-//                
-//            }
-//        } else {
-//            // တကယ်လို့ Table ထဲမှာ ရက်စွဲမပါခဲ့ရင် ယနေ့ရက်စွဲကို Default ထည့်ပေးမည်
-//            dto.setEntryDate(new java.sql.Date(System.currentTimeMillis()));
-//        }
-//    } catch (Exception e) {
-//        System.err.println("🔴 ရက်စွဲ Parse လုပ်ရာတွင် Error တက်သဖြင့် ယနေ့ရက်စွဲ အစားထိုးပါသည်: " + e.getMessage());
-//        dto.setEntryDate(new java.sql.Date(System.currentTimeMillis())); // Error တက်ရင်လည်း '0' မဖြစ်အောင် ကာကွယ်ခြင်း
-//    }
-
-            try {
+             try {
                     Object dateObj = model.getValueAt(rowIndex, 0);
                     if (dateObj != null) {
                         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
@@ -468,9 +505,8 @@ public class JournalPage extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton deleteRowBtn;
+    private com.toedter.calendar.JDateChooser fromDate;
     private javax.swing.JButton jButton4;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -480,6 +516,7 @@ public class JournalPage extends javax.swing.JPanel {
     private javax.swing.JTable journalTable;
     private javax.swing.JButton newRowBtn;
     private javax.swing.JButton saveBtn;
+    private com.toedter.calendar.JDateChooser toDate;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 
