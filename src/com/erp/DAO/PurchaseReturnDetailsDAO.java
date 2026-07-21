@@ -20,11 +20,11 @@ import java.sql.ResultSet;
  *
  * @author Zaw Min Htwe
  */
-public class PurchaseReturnDAO {
+public class PurchaseReturnDetailsDAO {
     
     private Connection conn;
 
-    public PurchaseReturnDAO() {
+    public PurchaseReturnDetailsDAO() {
                conn = new ConnectionFactory().getConn();
     }
     
@@ -33,15 +33,17 @@ public class PurchaseReturnDAO {
 //        
 //    }
     
-    public List<String> getVouchersBySupplier(int supplierId) {
-        List<String> vouchers = new ArrayList<>();
-        String sql = "SELECT voucher_no FROM purchase_vouchers WHERE supplier_id = ? ORDER BY voucher_id DESC";
+    public List<ComboIdName> getVouchersBySupplier(int supplierId) {
+        List<ComboIdName> vouchers = new ArrayList<>();
+        String sql = "SELECT voucher_id,voucher_no FROM purchase_vouchers WHERE supplier_id = ? ORDER BY voucher_id DESC";
         
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, supplierId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    vouchers.add(rs.getString("voucher_no"));
+                    //vouchers.add(rs.getString("voucher_no"));
+                  
+                    vouchers.add(new ComboIdName(rs.getInt("voucher_id"), rs.getString("voucher_no")));
                 }
             }
         } catch (SQLException e) {
@@ -53,14 +55,15 @@ public class PurchaseReturnDAO {
     // 🔍 ၂။ ရွေးချယ်လိုက်သော Voucher No ထဲတွင်ပါဝင်သည့် Item (ဆေးဝါး) များကို ရှာပေးရန်
     public List<ComboIdName> getItemsByVoucher(String voucherNo) {
         List<ComboIdName> itemList = new ArrayList<>();
-         String sql = "SELECT pd.product_id,pd.price, m.product_name FROM purchase_details pd INNER JOIN products m ON pd.product_id = m.product_id INNER JOIN purchase_vouchers pv ON pd.voucher_id = pv.voucher_id WHERE pv.voucher_no = ?";
+         String sql = "SELECT pd.product_id,pd.price, m.product_name,pd.voucher_id  FROM purchase_details pd INNER JOIN products m ON pd.product_id = m.product_id INNER JOIN purchase_vouchers pv ON pd.voucher_id = pv.voucher_id WHERE pv.voucher_no = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, voucherNo);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                      double price = rs.getDouble("price");
-                    itemList.add(new ComboIdName(rs.getInt("product_id"), rs.getString("product_name"),price));
+                     int vid = rs.getInt("voucher_id");
+                    itemList.add(new ComboIdName(rs.getInt("product_id"), rs.getString("product_name"),price,vid));
                     
                 }
             }

@@ -4,10 +4,13 @@
  */
 package com.erp;
 
-import com.erp.DAO.PurchaseReturnDAO;
+import com.erp.DAO.PurchaseReturnDetailsDAO;
+import com.erp.DAO.PurchaseReturnHeaderDAO;
 import com.erp.DAO.SupplierDAO;
 import com.erp.DTO.ComboIdName;
-import com.erp.DTO.PurchaseReturnDTO;
+import com.erp.DTO.PurchaseDetailDTO;
+import com.erp.DTO.PurchaseReturnDetailsDTO;
+import com.erp.DTO.PurchaseReturnHeaderDTO;
 import com.erp.DTO.SupplierDTO;
 import com.erp.DTO.UserSessionDTO;
 import java.util.List;
@@ -31,17 +34,17 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         loadSupplierToCombo();
 
         String currentUser = UserSessionDTO.getLoggedInUserName();
-        txtAuthorisedBy.setText(currentUser);
+        authorisedByTxt.setText(currentUser);
 
         // 🔒 User က လက်ရှိ Authorised By နာမည်ကို လျှောက်ပြင်လို့မရအောင် Lock ချထားခြင်း
-        txtAuthorisedBy.setEditable(false);
+        authorisedByTxt.setEditable(false);
 
         // 🎨 နောက်ခံအရောင်လေးကိုပါ အနည်းငယ်မှိန်ပြီး ပြင်မရကြောင်း visual ပြသချင်ပါက (Optional)
-        txtAuthorisedBy.setBackground(new java.awt.Color(240, 240, 240));
-        txtAuthorisedBy.setForeground(java.awt.Color.BLACK);
+        authorisedByTxt.setBackground(new java.awt.Color(240, 240, 240));
+        authorisedByTxt.setForeground(java.awt.Color.BLACK);
         
         subTotal();
-
+        autoGenerateVoucherNo();
     }
 
     @SuppressWarnings("unchecked")
@@ -62,13 +65,17 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         issueDateCombo = new com.toedter.calendar.JDateChooser();
         jLabel8 = new javax.swing.JLabel();
-        txtAuthorisedBy = new javax.swing.JTextField();
+        authorisedByTxt = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         priceTxt = new javax.swing.JTextField();
         discountTxt = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        purchaseReturnNoTxt = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        purchaseReturnReasonTxt = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         subTotalTxt = new javax.swing.JTextField();
@@ -101,6 +108,8 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
 
         jLabel4.setText("Return Qty");
 
+        returnFocTxt.setText("0");
+
         jLabel5.setText("Return FOC");
 
         jLabel6.setText("Item");
@@ -111,8 +120,21 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
 
         jLabel9.setText("Price");
 
+        discountTxt.setText("0");
+
         jLabel10.setText("Discount %");
 
+        jLabel13.setText("Return No");
+
+        jButton3.setBackground(new java.awt.Color(255, 0, 0));
+        jButton3.setText("Delete Row");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setBackground(new java.awt.Color(0, 255, 0));
         jButton1.setText("Add Row");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,12 +142,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("Delete Row");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
+        jLabel14.setText("Reason");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,50 +151,56 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(supplierCombo, 0, 138, Short.MAX_VALUE)
+                    .addComponent(referenceCombo, 0, 138, Short.MAX_VALUE)
+                    .addComponent(itemCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(supplierCombo, 0, 141, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(4, 4, 4))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(referenceCombo, 0, 141, Short.MAX_VALUE)
-                            .addComponent(itemCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(returnQtyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                    .addComponent(returnFocTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                    .addComponent(issueDateCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+                    .addComponent(returnQtyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(returnFocTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(issueDateCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                         .addGap(6, 6, 6))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(12, 12, 12)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(priceTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                    .addComponent(discountTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                    .addComponent(txtAuthorisedBy, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(priceTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                    .addComponent(discountTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                    .addComponent(authorisedByTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(purchaseReturnNoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(purchaseReturnReasonTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,7 +209,9 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
-                        .addComponent(priceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(priceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel13)
+                        .addComponent(purchaseReturnNoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(supplierCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -195,9 +220,11 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(purchaseReturnReasonTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel10)
-                        .addComponent(discountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3))
+                        .addComponent(discountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel2)
                         .addComponent(referenceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -212,16 +239,23 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                     .addComponent(issueDateCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel8)
-                        .addComponent(txtAuthorisedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(authorisedByTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton3)
                         .addComponent(jButton1)))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         jLabel3.setText("Sub Total");
 
+        jButton2.setBackground(new java.awt.Color(0, 255, 0));
         jButton2.setText("Save");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("Grand Total");
 
@@ -236,7 +270,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 484, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 641, Short.MAX_VALUE)
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -291,7 +325,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 956, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -318,6 +352,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Select Row");
         }
+        subTotal();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void supplierComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierComboActionPerformed
@@ -339,10 +374,10 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         itemCombo.removeAllItems(); // Item ပြားကိုပါ တစ်ခါတည်း ရှင်းပစ်မည်
 
         // Database မှ ဒေတာခေါ်ပြီး ပြန်ထည့်ခြင်း
-        PurchaseReturnDAO dao = new PurchaseReturnDAO();
-        List<String> vouchers = dao.getVouchersBySupplier(supplierId);
+        PurchaseReturnDetailsDAO dao = new PurchaseReturnDetailsDAO();
+        List<ComboIdName> vouchers = dao.getVouchersBySupplier(supplierId);
 
-        for (String vNo : vouchers) {
+        for (ComboIdName vNo : vouchers) {
             referenceCombo.addItem(vNo);
         }
     }//GEN-LAST:event_supplierComboActionPerformed
@@ -359,7 +394,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         itemCombo.removeAllItems();
 
         // Database မှ အဲ့ဒီ Voucher ထဲက ဆေးဝါးများကို ယူခြင်း
-        PurchaseReturnDAO dao = new PurchaseReturnDAO();
+        PurchaseReturnDetailsDAO dao = new PurchaseReturnDetailsDAO();
         List<ComboIdName> items = dao.getItemsByVoucher(selectedVoucherNo);
 
         for (ComboIdName item : items) {
@@ -373,6 +408,68 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_referenceComboActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        if (purchaseReturnNoTxt.getText().trim().isEmpty() || 
+                purchaseReturnReasonTxt.getText().trim().isEmpty() || 
+                issueDateCombo.getDate().toString().isEmpty()
+                
+                ) {
+        JOptionPane.showMessageDialog(this, "Please fill for reason");
+        return; 
+    }
+
+    PurchaseReturnHeaderDTO prhDTO = new PurchaseReturnHeaderDTO();
+    
+         
+//to get id from comboBox
+        SupplierDTO selectedSup = null;
+        Object catItem = supplierCombo.getSelectedItem();
+        if (catItem instanceof SupplierDTO) {
+            selectedSup = (SupplierDTO) catItem;
+        }
+        int supplierId = selectedSup.getId();
+        prhDTO.setSupplierId(supplierId);
+        prhDTO.setSupplier(supplierCombo.getSelectedItem().toString());
+        
+         if (itemCombo.getSelectedItem() != null) {
+            // 🚀 ၁။ Selected Item ကို ComboIdName Object အဖြစ် ပြောင်းယူခြင်း
+            ComboIdName selectedProduct = (ComboIdName) itemCombo.getSelectedItem();
+            int vid = selectedProduct.getVid();
+            prhDTO.setPurchaseInvoiceNoId(vid);
+        }
+        
+        
+       
+       
+        prhDTO.setPurchaseInvoiceNo(referenceCombo.getSelectedItem().toString());
+    
+         
+         
+    prhDTO.setPurchaseReturnNo(purchaseReturnNoTxt.getText().trim());
+    prhDTO.setReturnDate(issueDateCombo.getDate());
+    prhDTO.setReasonReturn(purchaseReturnReasonTxt.getText().trim());
+    prhDTO.setAuthorisedByTxt(authorisedByTxt.getText().trim());
+
+        
+        System.out.println(prhDTO );
+        System.out.println(supplierId);
+    
+    PurchaseReturnHeaderDAO prhDAO = new PurchaseReturnHeaderDAO();
+    boolean success = prhDAO.insertReturnHeaderDAO(prhDTO);
+    
+    if (success) {
+        //  loadDataSet();
+        // clearFields();
+        JOptionPane.showMessageDialog(this, "Purchase Return Header Filled");
+    } else {
+        // 💡 ခေါင်းစဉ်ကို ပြောင်းလိုက်ပါပြီ (ဒါမှ ဒေတာဘေ့စ်ဆာဗာ ဒေါင်းနေရင်လည်း သိနိုင်မှာပါ)
+        JOptionPane.showMessageDialog(this, "Purchase Return Header Unfilled");
+    }
+
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void newRow() {
         DefaultTableModel model = (DefaultTableModel) purchaseReturnTable.getModel();
 
@@ -381,7 +478,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
 
         // ၂။ ရက်စွဲနေရာမှာ ယနေ့ရက်စွဲကို တစ်ခါတည်းထည့်ပြီး ဇယားထဲ လိုင်းအသစ်တစ်လိုင်း တိုးပေးလိုက်မယ်
         // [ Date | Voucher | Particular | Debit | Credit ] အစီအစဉ်အတိုင်း ဖြစ်ပါတယ်
-        PurchaseReturnDTO purchaseReturnDTO = new PurchaseReturnDTO();
+        PurchaseReturnDetailsDTO purchaseReturnDTO = new PurchaseReturnDetailsDTO();
 
         String itemName = null;
         if (itemCombo.getSelectedItem() != null) {
@@ -392,9 +489,9 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
             int itemId = selectedProduct.getId();          // Item ID ရယူရန်
             itemName = selectedProduct.getName();    // Item Name ရယူရန်
             double itemPrice = selectedProduct.getPrice();  // Item Price (ဈေးနှုန်း) ရယူရန်
-
+            int vid = selectedProduct.getVid();
             // စမ်းသပ်ကြည့်ရန် Console မှာ ထုတ်ပြခြင်း
-            System.out.println("ID: " + itemId + ", Name: " + itemName + ", Price: " + itemPrice);
+            System.out.println("ID: " + itemId + ", Name: " + itemName + ", Price: " + itemPrice + ", Vid: " + vid);
         }
 
         int qty = Integer.parseUnsignedInt(returnQtyTxt.getText());
@@ -470,6 +567,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField authorisedByTxt;
     private javax.swing.JTextField discountTxt;
     private com.toedter.calendar.JDateChooser issueDateCombo;
     private javax.swing.JComboBox itemCombo;
@@ -480,6 +578,8 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -495,13 +595,14 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField priceTxt;
+    private javax.swing.JTextField purchaseReturnNoTxt;
+    private javax.swing.JTextField purchaseReturnReasonTxt;
     private javax.swing.JTable purchaseReturnTable;
     private javax.swing.JComboBox referenceCombo;
     private javax.swing.JTextField returnFocTxt;
     private javax.swing.JTextField returnQtyTxt;
     private javax.swing.JTextField subTotalTxt;
     private javax.swing.JComboBox supplierCombo;
-    private javax.swing.JTextField txtAuthorisedBy;
     // End of variables declaration//GEN-END:variables
 
     private void subTotal() {
@@ -530,5 +631,17 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         subTotalTxt.setText(String.valueOf(subTotal));
 
         
+    }
+    
+    private void autoGenerateVoucherNo() {
+        // 1. DAO ကို လှမ်းခေါ်တယ်
+        com.erp.DAO.PurchaseReturnHeaderDAO dao = new com.erp.DAO.PurchaseReturnHeaderDAO();
+
+        // 2. နောက်ထပ်ဖြစ်မယ့် ဘောချာနံပါတ်ကို လှမ်းတောင်းတယ်
+        String nextVoucherNo = dao.getNextVoucherNo();
+
+        // 3. ရလာတဲ့ နံပါတ်ကို UI က TextBox ထဲ ထည့်ပေးတယ်
+        purchaseReturnNoTxt.setText(nextVoucherNo);
+        purchaseReturnNoTxt.setEditable(false);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Zaw Min Htwe
  */
-public class PurchaseVoucherDTO {
+public class PurchaseHeaderDTO {
     private int voucherId;
     private int purchaseId =16;
     private int purchaseDiscountId =17;

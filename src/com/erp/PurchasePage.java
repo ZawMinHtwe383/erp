@@ -9,7 +9,7 @@ import com.erp.DAO.SupplierDAO;
 import com.erp.DAO.UnitDAO;
 import com.erp.DTO.ProductDTO;
 import com.erp.DTO.PurchaseDetailDTO;
-import com.erp.DTO.PurchaseVoucherDTO;
+import com.erp.DTO.PurchaseHeaderDTO;
 import com.erp.DTO.SupplierDTO;
 import com.erp.DTO.UnitDTO;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class PurchasePage extends javax.swing.JPanel {
     
     private void autoGenerateVoucherNo() {
         // 1. DAO ကို လှမ်းခေါ်တယ်
-        com.erp.DAO.PurchaseVoucherDAO dao = new com.erp.DAO.PurchaseVoucherDAO();
+        com.erp.DAO.PurchaseHeaderDAO dao = new com.erp.DAO.PurchaseHeaderDAO();
 
         // 2. နောက်ထပ်ဖြစ်မယ့် ဘောချာနံပါတ်ကို လှမ်းတောင်းတယ်
         String nextVoucherNo = dao.getNextVoucherNo();
@@ -110,6 +110,12 @@ public class PurchasePage extends javax.swing.JPanel {
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Voucher No");
+
+        voucherNoTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                voucherNoTxtActionPerformed(evt);
+            }
+        });
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Date");
@@ -331,15 +337,14 @@ public class PurchasePage extends javax.swing.JPanel {
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(grandTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(subTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(discountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(discountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -511,7 +516,7 @@ public class PurchasePage extends javax.swing.JPanel {
         
         try {
             // Create the main Voucher DTO and add header data
-            PurchaseVoucherDTO voucherDTO = new PurchaseVoucherDTO();
+            PurchaseHeaderDTO voucherDTO = new PurchaseHeaderDTO();
             voucherDTO.setVoucherNo(voucherNoTxt.getText().trim());
 
             //to get id from comboBox
@@ -555,7 +560,7 @@ public class PurchasePage extends javax.swing.JPanel {
             }
 
             // ၄။ DAO ကို ခေါ်ပြီး DTO တစ်ခုတည်းကိုပဲ Parameter အနေနဲ့ ပစ်ပေးလိုက်တော့မယ်
-            com.erp.DAO.PurchaseVoucherDAO dao = new com.erp.DAO.PurchaseVoucherDAO();
+            com.erp.DAO.PurchaseHeaderDAO dao = new com.erp.DAO.PurchaseHeaderDAO();
             boolean isSuccess = dao.savePurchaseVoucher(voucherDTO); // 👈 ဒေတာထုပ်ကြီး သွားပြီ
 
             if (isSuccess) {
@@ -586,6 +591,10 @@ public class PurchasePage extends javax.swing.JPanel {
     private void batchTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_batchTxtKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_batchTxtKeyReleased
+
+    private void voucherNoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voucherNoTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_voucherNoTxtActionPerformed
     private void calculateTotals() {
         DefaultTableModel model = (DefaultTableModel) purchaseTable.getModel();
         double subTotal = 0.0;

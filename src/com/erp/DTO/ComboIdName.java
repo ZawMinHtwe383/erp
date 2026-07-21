@@ -10,6 +10,15 @@ public class ComboIdName {
     private int id;
     private String name;
     private double price;
+    private int vid;
+
+    public int getVid() {
+        return vid;
+    }
+
+    public void setVid(int vid) {
+        this.vid = vid;
+    }
 
     public double getPrice() {
         return price;
@@ -28,6 +37,13 @@ public class ComboIdName {
         this.id = id;
         this.name = name;
         this.price = price;
+    }
+    
+     public ComboIdName(int id, String name, double price,int vid) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.vid = vid;
     }
 
     public int getId() {

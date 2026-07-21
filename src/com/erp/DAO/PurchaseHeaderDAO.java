@@ -5,7 +5,7 @@
 package com.erp.DAO;
 
 import com.erp.DTO.PurchaseDetailDTO;
-import com.erp.DTO.PurchaseVoucherDTO;
+import com.erp.DTO.PurchaseHeaderDTO;
 import com.erp.Database.ConnectionFactory;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PurchaseVoucherDAO {
+public class PurchaseHeaderDAO {
 
     private Connection conn = null;
 
-    public PurchaseVoucherDAO() {
+    public PurchaseHeaderDAO() {
         try {
             conn = new ConnectionFactory().getConn();
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class PurchaseVoucherDAO {
     }
 
    
-    public boolean savePurchaseVoucher(PurchaseVoucherDTO voucherDTO) {
+    public boolean savePurchaseVoucher(PurchaseHeaderDTO voucherDTO) {
     String insertHeaderSql = "INSERT INTO purchase_vouchers (voucher_no, supplier_id, purchase_date, sub_total, voucher_discount, grand_total) VALUES (?, ?, ?, ?, ?, ?)";
     // 💡 VALUES ထဲတွင် Null နှင့် ? စုစုပေါင်း ၈ ခု ကွက်တိ ဖြစ်စေရန် ပြင်ဆင်ထားပါသည်
     String insertLedgerSQL = "INSERT INTO general_ledger (journal_detail_id, purchase_detail_id, entry_date, account_id, voucher_no, description, debit, credit) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
@@ -159,7 +159,7 @@ public class PurchaseVoucherDAO {
             try {
                 stockDAO.updateStockAndLedgerFromPurchase(conn, itemList, voucherDTO.getVoucherNo());
             } catch (Exception ex) {
-                Logger.getLogger(PurchaseVoucherDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PurchaseHeaderDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             if (isDetailsSaved) {

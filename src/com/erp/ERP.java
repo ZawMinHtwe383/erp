@@ -267,6 +267,11 @@ public void showPanel(javax.swing.JPanel panel) {
         jMenu4.add(jMenuItem10);
 
         jMenuItem18.setText("Cash Book");
+        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem18ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem18);
 
         jMenuItem19.setText("Journal");
@@ -390,6 +395,10 @@ public void showPanel(javax.swing.JPanel panel) {
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         showPanel(new PurchaseReturnPage());
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+        showPanel(new CashBookDetailsPage());
+    }//GEN-LAST:event_jMenuItem18ActionPerformed
 
     
     

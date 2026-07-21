@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Zaw Min Htwe
  */
-public class PurchaseReturnDTO {
+public class PurchaseReturnDetailsDTO {
    // return_id	return_no	purchase_voucher_id	product_id	batch_no	qty	return_reason	return_date
     private String returnNo;
     private String purchaseVoucherNo;
