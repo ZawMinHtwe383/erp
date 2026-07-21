@@ -29,10 +29,10 @@ public class PurchaseReturnHeaderDAO {
     }
     public boolean insertReturnHeaderDAO(PurchaseReturnHeaderDTO prhDTO) {
         
-        String insertSql = "INSERT INTO purchase_returns(return_no,purchase_voucher_id,authorized,return_reason,return_date) VALUES (?,?,?,?,?)";
+        String insertSql = "INSERT INTO purchase_returns(return_no,purchase_voucher_id,authorized,return_reason,return_date,sub_total,voucher_discount,grand_total) VALUES (?,?,?,?,?,?,?,?)";
  
            // After checking, we will insert it only if it is not there.
-         //  return_no	purchase_voucher_id	batch_no	return_reason	return_date	
+
             try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
                 ps.setString(1, prhDTO.getPurchaseReturnNo());
                 ps.setInt(2, prhDTO.getPurchaseInvoiceNoId());
@@ -44,6 +44,13 @@ public class PurchaseReturnHeaderDAO {
         } else {
             ps.setDate(5, new java.sql.Date(System.currentTimeMillis()));
         }
+                 ps.setDouble(6, prhDTO.getSubTotal());
+                 ps.setDouble(7, prhDTO.getVoucherDiscount());
+                 ps.setDouble(8, prhDTO.getGrandTotal());
+               
+                 
+                 
+                 
                 ps.executeUpdate();
                 return true; // Returns true if successful
             }

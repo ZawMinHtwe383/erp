@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 /**
  *
  * @author Zaw Min Htwe
@@ -162,7 +163,7 @@ UserDTO userDTO;
     public static void main(String args[]) {
          // setting UI theme and LookAndFeel of the application
         try {
-            javax.swing.UIManager.setLookAndFeel(new FlatLightOwlContrastIJTheme());
+            javax.swing.UIManager.setLookAndFeel(new MetalLookAndFeel());
             } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } 

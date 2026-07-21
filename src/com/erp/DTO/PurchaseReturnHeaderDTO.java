@@ -21,7 +21,36 @@ public class PurchaseReturnHeaderDTO {
     private String PurchaseInvoiceNo;
     private String ReasonReturn;
     private String authorisedByTxt;
+    private double subTotal;
+    private double voucherDiscount;
+    private double grandTotal;
 
+    public double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public double getVoucherDiscount() {
+        return voucherDiscount;
+    }
+
+    public void setVoucherDiscount(double voucherDiscount) {
+        this.voucherDiscount = voucherDiscount;
+    }
+
+    public double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(double grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+    
+    
+    
     public int getSupplierId() {
         return SupplierId;
     }
@@ -102,6 +131,9 @@ public class PurchaseReturnHeaderDTO {
                 "purchaseInvNoandId=" + PurchaseInvoiceNo +" and "+ this.PurchaseInvoiceNoId + '\n' + 
                  "ReasonReturn=" + ReasonReturn + '\n' + 
                  "AuthorisedBy=" + authorisedByTxt + '\n' + 
+                 "Subtotal=" + subTotal + '\n' + 
+                 "DiscountTotal=" + voucherDiscount + '\n' + 
+                 "Grand Total=" + grandTotal + '\n' + 
                 '}';
     }
     

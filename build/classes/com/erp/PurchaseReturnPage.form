@@ -307,7 +307,7 @@
                           <EmptySpace pref="641" max="32767" attributes="0"/>
                           <Component id="jLabel11" min="-2" pref="92" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jTextField7" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="grandTotalTxt" min="-2" pref="139" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -320,7 +320,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel12" min="-2" pref="92" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jTextField8" min="-2" pref="139" max="-2" attributes="0"/>
+                                  <Component id="discountTotalTxt" min="-2" pref="139" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -340,14 +340,14 @@
                   <EmptySpace pref="9" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField8" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="discountTotalTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="grandTotalTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
@@ -379,14 +379,20 @@
             <Property name="text" type="java.lang.String" value="Grand Total"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField7">
+        <Component class="javax.swing.JTextField" name="grandTotalTxt">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delear Discount"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField8">
+        <Component class="javax.swing.JTextField" name="discountTotalTxt">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="discountTotalTxtKeyReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

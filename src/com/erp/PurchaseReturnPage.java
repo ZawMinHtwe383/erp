@@ -43,7 +43,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         authorisedByTxt.setBackground(new java.awt.Color(240, 240, 240));
         authorisedByTxt.setForeground(java.awt.Color.BLACK);
         
-        subTotal();
+      //  subTotal();
         autoGenerateVoucherNo();
     }
 
@@ -81,9 +81,9 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         subTotalTxt = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        grandTotalTxt = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        discountTotalTxt = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         purchaseReturnTable = new javax.swing.JTable();
@@ -261,6 +261,13 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
 
         jLabel12.setText("Delear Discount");
 
+        discountTotalTxt.setText("0");
+        discountTotalTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                discountTotalTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -273,7 +280,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 641, Short.MAX_VALUE)
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(grandTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,7 +291,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(discountTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -297,13 +304,13 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(discountTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel11)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(grandTotalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17))
         );
 
@@ -342,6 +349,7 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         newRow();
         subTotal();
+        calculateTotals();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -450,7 +458,9 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     prhDTO.setReturnDate(issueDateCombo.getDate());
     prhDTO.setReasonReturn(purchaseReturnReasonTxt.getText().trim());
     prhDTO.setAuthorisedByTxt(authorisedByTxt.getText().trim());
-
+    prhDTO.setSubTotal(Double.valueOf(subTotalTxt.getText().trim()));
+    prhDTO.setVoucherDiscount(Double.valueOf(discountTotalTxt.getText().trim()));
+    prhDTO.setGrandTotal(Double.valueOf(grandTotalTxt.getText().trim()));
         
         System.out.println(prhDTO );
         System.out.println(supplierId);
@@ -469,6 +479,10 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
 
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void discountTotalTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discountTotalTxtKeyReleased
+        calculateTotals();
+    }//GEN-LAST:event_discountTotalTxtKeyReleased
 
     private void newRow() {
         DefaultTableModel model = (DefaultTableModel) purchaseReturnTable.getModel();
@@ -568,7 +582,9 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField authorisedByTxt;
+    private javax.swing.JTextField discountTotalTxt;
     private javax.swing.JTextField discountTxt;
+    private javax.swing.JTextField grandTotalTxt;
     private com.toedter.calendar.JDateChooser issueDateCombo;
     private javax.swing.JComboBox itemCombo;
     private javax.swing.JButton jButton1;
@@ -592,8 +608,6 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField priceTxt;
     private javax.swing.JTextField purchaseReturnNoTxt;
     private javax.swing.JTextField purchaseReturnReasonTxt;
@@ -643,5 +657,37 @@ public class PurchaseReturnPage extends javax.swing.JPanel {
         // 3. ရလာတဲ့ နံပါတ်ကို UI က TextBox ထဲ ထည့်ပေးတယ်
         purchaseReturnNoTxt.setText(nextVoucherNo);
         purchaseReturnNoTxt.setEditable(false);
+    }
+    
+    private void calculateTotals() {
+        DefaultTableModel model = (DefaultTableModel) purchaseReturnTable.getModel();
+        double subTotal = 0.0;
+        double disTotal = 0.0;
+
+        // ဇယားထဲရှိ အတန်းအားလုံးကို ပတ်ပြီး Amount ကော်လံ (နောက်ဆုံးကော်လံ Index 8) ကို ပေါင်းခြင်း
+        for (int i = 0; i < model.getRowCount(); i++) {
+            subTotal += (double) model.getValueAt(i, 6);
+        }
+        
+        subTotalTxt.setText(String.valueOf(subTotal));
+
+        // item discount total
+        //    for (int i = 0; i < model.getRowCount(); i++) {
+//          disTotal += (double) model.getValueAt(i, 7);
+//    }
+//    discountTxt.setText(String.valueOf(disTotal));
+        // ဘောချာတစ်ခုလုံးစာ ပေးမယ့် Discount ကို ဖတ်ခြင်း
+        double voucherDiscount = 0.0;
+        try {
+            if (!discountTotalTxt.getText().trim().isEmpty()) {
+                voucherDiscount = Double.parseDouble(discountTotalTxt.getText().trim());
+            }
+        } catch (NumberFormatException e) {
+            voucherDiscount = 0.0; // ဂဏန်းမဟုတ်တာ ရိုက်ထားရင် 0 လို့ပဲ ယူမယ်
+        }
+
+        // အပြီးသတ် ကျသင့်ငွေ = SubTotal - Voucher Discount
+        double grandTotal = subTotal - voucherDiscount;
+        grandTotalTxt.setText(String.valueOf(grandTotal));
     }
 }
